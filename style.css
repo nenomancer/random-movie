@@ -1,7 +1,32 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  max-width: 780px;
+}
+
 .card {
   border: 1px solid black;
-  padding: 12px;
-  text-align: center;
+  padding: .5rem;
+  display: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  &.active {
+    display: block;
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+  }
+
+  .poster {
+    width: 100%;
+  }
 }
 
 #filters {
@@ -12,6 +37,7 @@
 
 #results {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 120px);
+  /* grid-template-columns: repeat(auto-fill, 120px); */
+  display: flex;
   gap: 12px;
 }
