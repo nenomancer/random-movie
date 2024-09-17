@@ -5,10 +5,11 @@
   padding: 0;
   margin: 0;
 
-  --color-dark: hwb(216 13% 81%);
+  --color-dark: rgb(33, 39, 48);
   --color-grey: #31363f;
   --color-teal: #76abae;
   --color-white: #eeeeee;
+  --color-highlight: teal;
 }
 
 body {
@@ -31,10 +32,15 @@ header {
   max-width: 80vw;
   max-width: 860px;
   margin-inline: auto;
-  /* border: 0.5rem solid var(--color-grey); */
+  height: 80dvh;
+  padding-top: 2rem;
   background-color: var(--color-grey);
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(33, 40, 49, 0.6) 30%,
+    transparent
+  );
+  /* padding: 1rem; */
 }
 
 #filters {
@@ -52,24 +58,21 @@ header {
 }
 
 .card {
-  border: 1px solid black;
   padding: 0.25rem;
   display: none;
-  background-color: rgba(30, 40, 49, 0.5);
 
   &.active {
     display: flex;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1.25rem;
-    border-radius: 0.5rem;
     flex-wrap: wrap;
     padding-bottom: 3rem;
   }
 
   .poster {
     width: 100%;
-    height: 200px;
+    height: 20rem;
     /* height: 50%; */
   }
 
@@ -138,6 +141,10 @@ header {
       span {
         position: relative;
         white-space: nowrap;
+        &:hover {
+          color: var(--color-highlight);
+          cursor: pointer;
+        }
 
         &:not(&:last-child):after {
           content: "•";
@@ -155,12 +162,15 @@ header {
   .background {
     position: absolute;
     z-index: -1;
-    inset: -50px;
+    inset: 0;
     /* inset: 0; */
-    height: 150%;
-    width: 150%;
-    translate: -25% -25%;
-    filter: blur(50px);
+    height: 100%;
+    width: 100%;
+    /* translate: -25% -25%; */
+    filter: blur(20px);
+    scale: 1.1;
+    object-fit: cover;
     /* display: none; */
+    overflow: hidden;
   }
 }
