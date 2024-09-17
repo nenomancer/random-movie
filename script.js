@@ -72,38 +72,124 @@ function getMovies(data) {
     console.log(movie);
     const currentGenres = [];
     const card = document.createElement("div");
-    const content = document.createElement("div");
-    const title = document.createElement("h3");
-    const releaseDate = document.createElement("p");
-    const image = document.createElement("img");
     card.className = "card";
-    image.className = "poster";
+
+    const title = document.createElement("h2");
     title.innerText = movie.original_title;
+
+    const releaseDate = document.createElement("p");
+    releaseDate.className = "subtitle";
     releaseDate.innerText = movie.release_date.split("-")[0];
+
+    const poster = document.createElement("img");
+    poster.className = "poster";
+
+    const background = document.createElement("img");
+    background.className = "background";
+
+    const header = document.createElement("div");
+
+    // create table here
+    const info = document.createElement("div");
+    info.className = "info-table";
+
+    const genres = document.createElement("div");
+    const genreContent = document.createElement("div");
+    genres.className = "row genres";
+    genres.innerHTML = "<p>Genres</p>";
+
+    const plot = document.createElement("div");
+    const plotContent = document.createElement("p");
+    plot.className = "row plot";
+    plot.innerHTML = "<p>Plot</p>";
+
+    const directors = document.createElement("div");
+    directors.className = "row directors";
+    directors.innerHTML = "<p>Director</p>";
+    const directorContent = document.createElement("div");
+
+    const stars = document.createElement("div");
+    stars.className = "row stars";
+    stars.innerHTML = "<p>Stars</p>";
+    const starsContent = document.createElement("div");
+
+    genres.appendChild(genreContent);
+    directors.appendChild(directorContent);
+    stars.appendChild(starsContent);
+    plot.appendChild(plotContent);
+
+    info.appendChild(genres);
+    info.appendChild(directors);
+    info.appendChild(stars);
+    info.appendChild(plot);
+
+    header.appendChild(title);
+    header.appendChild(releaseDate);
+    header.appendChild(info);
+
+    card.appendChild(background);
+    card.appendChild(poster);
+    card.appendChild(header);
+
+    resultsContainer.appendChild(card);
+    // genre
+    // plot
+    // direction
+    // writers
+    // stars
     movie.genre_ids.forEach((genreId) => {
-      console.log("THIS IS GENRE ID: ", genreId);
       const genre = allGenres.find((genre) => genre.id == genreId);
       currentGenres.push(genre.name);
     });
 
-    console.log("GENRESZZ: ", currentGenres);
+    currentGenres.forEach((genre) => {
+      const tempGenre = document.createElement("span");
+      tempGenre.innerText = genre;
+      genreContent.appendChild(tempGenre);
+    });
+
     if (index === randomIndex) {
       card.classList.add("active");
       fetch("https://api.themoviedb.org/3/movie/" + movie.id, options)
         .then((response) => response.json())
         .then((data) => {
+          fetch(
+            "https://api.themoviedb.org/3/movie/" + movie.id + "/credits",
+            options
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("cast: ", data.cast);
+              console.log("director: ", data.crew);
+
+              const stars = data.cast.filter((person, index) => index <= 2);
+              console.log("STARRING: ", stars);
+              stars.forEach((star) => {
+                const temp = document.createElement("span");
+                temp.innerText = star.name;
+                starsContent.appendChild(temp);
+              });
+              const directors = data.crew.filter(
+                (person) => person.job == "Director"
+              );
+              console.log("ACTUAL DIRECTOR: ", directors);
+              directors.forEach((director) => {
+                const temp = document.createElement("span");
+                temp.innerText = director.name;
+                directorContent.appendChild(temp);
+              });
+            });
           console.log("data; ", data);
-          image.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
-          card.style.backgroundImage =
-            "url(https://image.tmdb.org/t/p/w780" + data.backdrop_path + ")";
+
+          poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
+          background.src =
+            "https://image.tmdb.org/t/p/w780" + data.backdrop_path;
+          console.log("overview: ", data.overview);
+          console.log("runtime: ", data.runtime);
+          plotContent.innerText = data.overview;
+          console.log("overview: ", data.overview);
         })
         .catch((err) => console.log(err));
     }
-
-    card.appendChild(image);
-    content.appendChild(title);
-    content.appendChild(releaseDate);
-    card.appendChild(content);
-    resultsContainer.appendChild(card);
   });
 }
