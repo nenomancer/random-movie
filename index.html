@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <title>Random Movies</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
-  <title>Random Movies</title>
-</head>
-
-<body>
-  <div class="container">
-    <form name="filters" id="filters">
-      <select name="countries" id="countries">
-        <option value="">Any</option>
-        <option value="UK">England</option>
-        <option value="FR">France</option>
-      </select>
-      <input type="submit" value="Find">
-    </form>
-
-    <div id="results"></div>
-  </div>
-</body>
-
+  <body>
+    <header>
+      <form name="filters" id="filters">
+        <select name="countries" id="countries">
+          <option value="">Country</option>
+          <option value="UK">England</option>
+          <option value="FR">France</option>
+          <option value="DE">Germany</option>
+          <option value="US">USA</option>
+        </select>
+        <input type="submit" value="Get Random Movie" />
+      </form>
+    </header>
+    <div class="container">
+      <div id="results"></div>
+    </div>
+  </body>
 </html>
