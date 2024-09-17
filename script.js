@@ -10,9 +10,21 @@ const options = {
 
 const resultsContainer = document.querySelector('#results')
 const formCountries = document.querySelector('form[name="filters"]')
-async function generateCountries(params) {
+let allGenres = [];
 
-  await fetch('https://api.themoviedb.org/3/configuration/countries', options)
+getGenres();
+
+function getGenres() {
+  fetch('https://api.themoviedb.org/3/genre/movie/list', options)
+    .then(response => response.json())
+    .then(response => {
+      allGenres = response.genres;
+      console.log(allGenres);
+    })
+    .catch(err => console.error(err));
+}
+function generateCountries(params) {
+  fetch('https://api.themoviedb.org/3/configuration/countries', options)
     .then(response => response.json())
     .then(response => {
       console.log('countries:');
@@ -30,10 +42,10 @@ formCountries.addEventListener('submit', e => {
 
 // Maybe generate only one movie per search?
 // Add generated movies to cookie to avoid regenerating them
-async function fetchMovies(params, totalPages = 500) {
+function fetchMovies(params, totalPages = 500) {
   console.log(params.country);
   const pageNumber = Math.floor(Math.random() * totalPages);
-  await fetch(
+  fetch(
     "https://api.themoviedb.org/3/discover/movie?page=" + pageNumber + "&with_origin_country=" + params.country,
     options
   )
@@ -50,18 +62,46 @@ async function fetchMovies(params, totalPages = 500) {
 
 
 function getMovies(data) {
-  resultsContainer.innerHTML = '';
-  data.forEach((movie) => {
-    const div = document.createElement("div");
-    div.className = "card";
-    const title = document.createElement("p");
-    title.innerText = movie.original_title;
-    const releaseDate = document.createElement("p");
-    releaseDate.innerText = movie.release_date;
+  const randomIndex = Math.floor(Math.random() * 20);
 
-    div.appendChild(title);
-    div.appendChild(releaseDate);
-    resultsContainer.appendChild(div);
+  resultsContainer.innerHTML = '';
+  data.forEach((movie, index) => {
+    console.log(movie);
+    const currentGenres = [];
+    const card = document.createElement("div");
+    const content = document.createElement("div");
+    const title = document.createElement("h3");
+    const releaseDate = document.createElement("p");
+    const image = document.createElement('img');
+    card.className = "card";
+    image.className = 'poster';
+    title.innerText = movie.original_title;
+    releaseDate.innerText = movie.release_date.split("-")[0];
+    movie.genre_ids.forEach(genreId => {
+      console.log("THIS IS GENRE ID: ", genreId);
+      const genre = allGenres.find(genre => genre.id == genreId);
+      currentGenres.push(genre.name);
+    })
+
+    console.log("GENRESZZ: ", currentGenres);
+    if (index === randomIndex) {
+      card.classList.add('active');
+      fetch("https://api.themoviedb.org/3/movie/" + movie.id, options)
+        .then(response => response.json())
+        .then(data => {
+          console.log('data; ', data)
+          image.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path;
+          card.style.backgroundImage = 'url(https://image.tmdb.org/t/p/w780' + data.backdrop_path + ")";
+        })
+        .catch(err => console.log(err));
+    }
+
+
+    card.appendChild(image);
+    content.appendChild(title);
+    content.appendChild(releaseDate);
+    card.appendChild(content);
+    resultsContainer.appendChild(card);
   });
 }
 
