@@ -14,13 +14,13 @@ const formCountries = document.querySelector('form[name="filters"]');
 let allGenres = [];
 
 getGenres();
+// generateCountries();
 
 function getGenres() {
   fetch("https://api.themoviedb.org/3/genre/movie/list", options)
     .then((response) => response.json())
     .then((response) => {
       allGenres = response.genres;
-      console.log(allGenres);
     })
     .catch((err) => console.error(err));
 }
@@ -33,7 +33,6 @@ function generateCountries(params) {
     })
     .catch((err) => console.error(err));
 }
-generateCountries();
 
 formCountries.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -41,7 +40,6 @@ formCountries.addEventListener("submit", (e) => {
   fetchMovies({ country: formCountries.querySelector("#countries").value });
 });
 
-// Maybe generate only one movie per search?
 // Add generated movies to cookie to avoid regenerating them
 function fetchMovies(params, totalPages = 500) {
   console.log(params.country);
@@ -64,12 +62,22 @@ function fetchMovies(params, totalPages = 500) {
     .catch((err) => console.error(err));
 }
 
-function getMovies(data) {
-  const randomIndex = Math.floor(Math.random() * 20);
+function getMovieCredits(id) {
+  fetch('https://api.themoviedb.org/3/person/' + id + '?append_to_response=movie_credits', options)
+  .then(response => response.json())
+  .then(response => {
+    const temp = response.movie_credits.crew.filter(credit => credit.job === "Director");
+    return getMovies(temp, temp.length);
+  })
+  .catch(err => console.error(err));
+}
 
+function getMovies(data, maxIndex = 20) {
+  const randomIndex = Math.floor(Math.random() * maxIndex);
+
+  console.log("DATA> ", data);
   resultsContainer.innerHTML = "";
   data.forEach((movie, index) => {
-    console.log(movie);
     const currentGenres = [];
     const card = document.createElement("div");
     card.className = "card";
@@ -77,6 +85,15 @@ function getMovies(data) {
     const title = document.createElement("h2");
     title.innerText = movie.original_title;
 
+    const subtitle = document.createElement('div');
+    subtitle.className ='subtitle2';
+
+    const date = document.createElement('span');
+    date.innerText =  movie.release_date.split("-")[0];
+    const runtime = document.createElement('span');
+
+    subtitle.appendChild(date);
+    subtitle.appendChild(runtime);
     const releaseDate = document.createElement("p");
     releaseDate.className = "subtitle";
     releaseDate.innerText = movie.release_date.split("-")[0];
@@ -89,9 +106,11 @@ function getMovies(data) {
 
     const header = document.createElement("div");
 
+    const content = document.createElement('div');
+    content.className = 'content';
     // create table here
     const info = document.createElement("div");
-    info.className = "info-table";
+    info.className = "info";
 
     const genres = document.createElement("div");
     const genreContent = document.createElement("div");
@@ -124,12 +143,13 @@ function getMovies(data) {
     info.appendChild(plot);
 
     header.appendChild(title);
-    header.appendChild(releaseDate);
+    header.appendChild(subtitle);
     header.appendChild(info);
 
     card.appendChild(background);
     card.appendChild(poster);
     card.appendChild(header);
+    // card.appendChild(content);
 
     resultsContainer.appendChild(card);
     // genre
@@ -159,11 +179,10 @@ function getMovies(data) {
           )
             .then((response) => response.json())
             .then((data) => {
-              console.log("cast: ", data.cast);
-              console.log("director: ", data.crew);
+              // console.log("cast: ", data.cast);
+              // console.log("director: ", data.crew);
 
               const stars = data.cast.filter((person, index) => index <= 2);
-              console.log("STARRING: ", stars);
               stars.forEach((star) => {
                 const temp = document.createElement("span");
                 temp.innerText = star.name;
@@ -172,9 +191,13 @@ function getMovies(data) {
               const directors = data.crew.filter(
                 (person) => person.job == "Director"
               );
-              console.log("ACTUAL DIRECTOR: ", directors);
               directors.forEach((director) => {
+                console.log('director: ', director);
                 const temp = document.createElement("span");
+                temp.addEventListener('click', (e) => {
+                  console.log('clicc');
+                  getMovieCredits(director.id);
+                })
                 temp.innerText = director.name;
                 directorContent.appendChild(temp);
               });
@@ -187,6 +210,8 @@ function getMovies(data) {
           console.log("overview: ", data.overview);
           console.log("runtime: ", data.runtime);
           plotContent.innerText = data.overview;
+          const runtimeMinutes = data.runtime;
+          runtime.innerText = `${Math.floor(runtimeMinutes / 60)}h ${runtimeMinutes % 60}min`;
           console.log("overview: ", data.overview);
         })
         .catch((err) => console.log(err));
