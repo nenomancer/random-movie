@@ -11,13 +11,20 @@
   <body>
     <header>
       <form name="filters" id="filters">
-        <select name="countries" id="countries">
-          <option value="">Country</option>
-          <option value="UK">England</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-          <option value="US">USA</option>
-        </select>
+        <div class="input">
+          <label for="countries">Country</label>
+          <select name="countries" id="countries">
+            <option value="">Any</option>
+          </select>
+        </div>
+        <div class="input">
+          <p>Release year:</p>
+          <label for="release-from">From</label>
+          <input id="release-from" type="number" min="1895" max="2024" />
+          <label for="release-to">To</label>
+          <input id="release-to" type="number" min="1895" max="2024" />
+        </div>
+
         <input type="submit" value="Get Random Movie" />
       </form>
     </header>
