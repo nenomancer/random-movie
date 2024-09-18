@@ -10,25 +10,40 @@ const options = {
 const resultsContainer = document.querySelector("#results");
 const formCountries = document.querySelector('form[name="filters"]');
 let allGenres = [];
+let filteredGenres = [];
 
-getGenres();
-generateCountries();
-fetchMovies();
+generateCountries().then(getGenres).then(fetchMovies);
 
 function getGenres() {
-  fetch("https://api.themoviedb.org/3/genre/movie/list", options)
+  return fetch("https://api.themoviedb.org/3/genre/movie/list", options)
     .then((response) => response.json())
     .then((response) => {
       allGenres = response.genres;
+      const container = document.querySelector("#genres");
+      const options = container.querySelector("#genre-options");
+      const toggleButton = container.querySelector(".toggle");
+      toggleButton.addEventListener("click", (e) =>
+        container.classList.toggle("open")
+      );
+      allGenres.forEach((genre) => {
+        const temp = document.createElement("div");
+        temp.setAttribute("data-id", genre.id);
+        temp.innerText = genre.name;
+        temp.className = "option";
+
+        temp.addEventListener("click", (e) => {
+          temp.classList.toggle("selected");
+        });
+        options.appendChild(temp);
+      });
+      console.log(options.children);
     })
     .catch((err) => console.error(err));
 }
 function generateCountries(params) {
-  fetch("https://api.themoviedb.org/3/configuration/countries", options)
+  return fetch("https://api.themoviedb.org/3/configuration/countries", options)
     .then((response) => response.json())
     .then((response) => {
-      console.log("countries:");
-      console.log(response);
       const countryInput = document.querySelector("#countries");
       response.forEach((country) => {
         const temp = document.createElement("option");
@@ -45,17 +60,20 @@ formCountries.addEventListener("submit", (e) => {
   fetchMovies();
 });
 
-function constructQueries() {} // Maybe continue here
-
 // Add generated movies to cookie to avoid regenerating them
 function fetchMovies(queries = "", totalPages = 500) {
   const countryOfOrigin = document.querySelector("#countries").value; //
+  const genres = document.querySelectorAll("#genres .option");
   const pageNumber = Math.floor(Math.random() * totalPages);
   const releasedFrom = document.querySelector("#release-from");
   const releasedTo = document.querySelector("#release-to");
-  let releaseYears = [];
-  let earliest = 1895;
+  let earliest = 1878;
   let latest = new Date().getFullYear();
+  let filteredGenres = [];
+
+  filteredGenres = Array.from(genres).filter(genre => genre.classList.contains("selected"));
+  console.log("FILTERED: ", filteredGenres);
+  
 
   if (releasedFrom.value !== "") {
     earliest = releasedFrom.value;
@@ -67,8 +85,13 @@ function fetchMovies(queries = "", totalPages = 500) {
 
   // ERROR CASE IF MOVIE PARAMS DONT PRODUCE RESUTLS
   let _queries = queries;
-  if (countryOfOrigin) {
-    _queries = "&with_origin_country=" + countryOfOrigin;
+
+  if (filteredGenres.length !== 0) {
+
+    _queries += "&with_genres="
+    filteredGenres.forEach((genre) => {
+      _queries += genre.getAttribute('data-id') + ","
+    });
   }
   if (releasedFrom !== "" || releasedTo !== "") {
     const fromDate = new Date(earliest, 0, 1);
@@ -78,6 +101,10 @@ function fetchMovies(queries = "", totalPages = 500) {
       fromDate +
       "&primary_release_date.lte=" +
       toDate;
+  }
+
+  if (countryOfOrigin) {
+    _queries = "&with_origin_country=" + countryOfOrigin;
   }
 
   fetch(
@@ -92,7 +119,10 @@ function fetchMovies(queries = "", totalPages = 500) {
       }
       displayResult(response.results);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...")
+    });
 }
 
 function getDirectorMovies(id) {
