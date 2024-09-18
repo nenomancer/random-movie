@@ -133,6 +133,35 @@ header {
     display: flex;
     flex-direction: column;
   } */
+  #genres {
+    color: darkred;
+    display: grid;
+    grid-template-rows: 1fr 0;
+    overflow: hidden;
+    background-color: #3e3f31;
+    position: relative;
+    transition-duration: 250ms;
+    transition-property: all;
+    transition: all 250ms linear;
+    &.open {
+      grid-template-rows: 1fr auto;
+    }
+    #genre-options {
+      /* overflow: hidden; */
+      /* position: absolute; */
+      background-color: orange;
+      top: 48px;
+      left: 0;
+
+      .option {
+        background-color: #3e3f31;
+
+        &.selected {
+          background-color: green;
+        }
+      }
+    }
+  }
 }
 
 #results {
