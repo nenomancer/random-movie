@@ -11,25 +11,39 @@
   <body>
     <header>
       <form name="filters" id="filters">
-        <div class="input">
+        <span>
           <label for="countries">Country</label>
           <select name="countries" id="countries">
             <option value="">Any</option>
           </select>
-        </div>
-        <div class="input">
-          <p>Release year:</p>
+        </span>
+        <span>
           <label for="release-from">From</label>
-          <input id="release-from" type="number" min="1895" max="2024" />
+          <input
+            id="release-from"
+            type="number"
+            min="1878"
+            max="2024"
+            placeholder=""
+          />
+        </span>
+        <span>
           <label for="release-to">To</label>
-          <input id="release-to" type="number" min="1895" max="2024" />
-        </div>
+          <input
+            id="release-to"
+            type="number"
+            min="1878"
+            max="2024"
+            placeholder=""
+          />
+        </span>
 
         <input type="submit" value="Get Random Movie" />
       </form>
     </header>
-    <div class="container">
+    <div id="container">
       <div id="results"></div>
+      <!-- <div id="backgroundContainer"></div> -->
     </div>
   </body>
 </html>
