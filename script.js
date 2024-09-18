@@ -2,8 +2,6 @@ const options = {
   method: "GET",
   headers: {
     accept: "application/json",
-    // Authorization:
-    // "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ODg3OTU1MzhmOGVmMGUxMTU5Y2E3MWJlNTM4YmU4NCIsIm5iZiI6MTcyNjM0NTM1OC4xMTg2MTEsInN1YiI6IjY2ZTVlZjYzZTgyMTFlY2QyMmIwM2I2ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KH0FgzN9_EB8DUyXpM_VGQzlpuE8-CFyzIUVBpSTOU8",
     Authorization:
       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ODg3OTU1MzhmOGVmMGUxMTU5Y2E3MWJlNTM4YmU4NCIsIm5iZiI6MTcyNjUyMjM0OS4xNTU2MzEsInN1YiI6IjY2ZTVlZjYzZTgyMTFlY2QyMmIwM2I2ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.kZ--6xTSfsDgHDDlDqhVvxXFiLSdDCmwYXdThKJQH54",
   },
@@ -14,7 +12,8 @@ const formCountries = document.querySelector('form[name="filters"]');
 let allGenres = [];
 
 getGenres();
-fetchMovies({ country: "" });
+generateCountries();
+fetchMovies();
 
 function getGenres() {
   fetch("https://api.themoviedb.org/3/genre/movie/list", options)
@@ -30,36 +29,68 @@ function generateCountries(params) {
     .then((response) => {
       console.log("countries:");
       console.log(response);
+      const countryInput = document.querySelector("#countries");
+      response.forEach((country) => {
+        const temp = document.createElement("option");
+        temp.innerText = country.english_name;
+        temp.value = country.iso_3166_1;
+        countryInput.appendChild(temp);
+      });
     })
     .catch((err) => console.error(err));
 }
 
 formCountries.addEventListener("submit", (e) => {
   e.preventDefault();
-  // get the country from select element
-  const selectedCountry = formCountries.querySelector("#countries").value;
-  fetchMovies({ country: selectedCountry });
+  fetchMovies();
 });
 
+function constructQueries() {} // Maybe continue here
+
 // Add generated movies to cookie to avoid regenerating them
-function fetchMovies(params, totalPages = 500) {
-  console.log(params.country);
+function fetchMovies(queries = "", totalPages = 500) {
+  const countryOfOrigin = document.querySelector("#countries").value; //
   const pageNumber = Math.floor(Math.random() * totalPages);
-  let queries = "";
-  if (params.country) {
-    queries = "&with_origin_country=" + params.country;
+  const releasedFrom = document.querySelector("#release-from");
+  const releasedTo = document.querySelector("#release-to");
+  let releaseYears = [];
+  let earliest = 1895;
+  let latest = new Date().getFullYear();
+
+  if (releasedFrom.value !== "") {
+    earliest = releasedFrom.value;
   }
+
+  if (releasedTo.value !== "") {
+    latest = releasedTo.value;
+  }
+
+  // ERROR CASE IF MOVIE PARAMS DONT PRODUCE RESUTLS
+  let _queries = queries;
+  if (countryOfOrigin) {
+    _queries = "&with_origin_country=" + countryOfOrigin;
+  }
+  if (releasedFrom !== "" || releasedTo !== "") {
+    const fromDate = new Date(earliest, 0, 1);
+    const toDate = new Date(latest, 0, 1);
+    _queries +=
+      "&primary_release_date.gte=" +
+      fromDate +
+      "&primary_release_date.lte=" +
+      toDate;
+  }
+
   fetch(
-    "https://api.themoviedb.org/3/discover/movie?page=" + pageNumber + queries,
+    "https://api.themoviedb.org/3/discover/movie?page=" + pageNumber + _queries,
     options
   )
     .then((response) => response.json())
     .then((response) => {
       console.log(response);
       if (response.results.length === 0) {
-        fetchMovies(params, Math.min(500, response.total_pages));
+        fetchMovies("", Math.min(500, response.total_pages));
       }
-      getMovies(response.results);
+      displayResult(response.results);
     })
     .catch((err) => console.error(err));
 }
@@ -76,7 +107,7 @@ function getDirectorMovies(id) {
       const temp = response.movie_credits.crew.filter(
         (credit) => credit.job === "Director"
       );
-      return getMovies(temp, temp.length);
+      return displayResult(temp, temp.length);
     })
     .catch((err) => console.error(err));
 }
@@ -91,22 +122,13 @@ function getActorMovies(id) {
     .then((response) => response.json())
     .then((response) => {
       const temp = response.movie_credits.cast;
-      return getMovies(temp, temp.length);
+      return displayResult(temp, temp.length);
     })
     .catch((err) => console.error(err));
 }
 
 function getGenreMovies(id) {
-  fetch(
-    "https://api.themoviedb.org/3/discover/movie?with_genres=" + id,
-    options
-  )
-    .then((response) => response.json())
-    .then((response) => {
-      const temp = response.results;
-      return getMovies(temp, temp.length);
-    })
-    .catch((err) => console.error(err));
+  fetchMovies("&with_genres=" + id);
 }
 
 function createInfoRow(name) {
@@ -120,7 +142,7 @@ function appendChildren(parent, children) {
   children.forEach((child) => parent.appendChild(child));
 }
 
-function getMovies(data, maxIndex = 20) {
+function displayResult(data, maxIndex = 20) {
   const randomIndex = Math.floor(Math.random() * maxIndex);
 
   resultsContainer.innerHTML = "";
@@ -137,7 +159,7 @@ function getMovies(data, maxIndex = 20) {
     }
 
     const subtitle = document.createElement("div");
-    subtitle.className = "subtitle2";
+    subtitle.className = "subtitle";
 
     const date = document.createElement("span");
     date.innerText = movie.release_date.split("-")[0];
@@ -185,7 +207,6 @@ function getMovies(data, maxIndex = 20) {
     function getGenres() {
       movie.genre_ids.forEach((genreId) => {
         const genre = allGenres.find((genre) => genre.id == genreId);
-        console.log("GENRE: ", genre);
         if (genre) {
           const tempGenre = document.createElement("span");
           // console.log('genre: ', genre);
@@ -230,6 +251,9 @@ function getMovies(data, maxIndex = 20) {
           background.src =
             "https://image.tmdb.org/t/p/w500" + data.backdrop_path;
           plotContent.innerText = data.overview;
+          if (data.runtime === 0) {
+            subtitle.removeChild(runtime);
+          }
           const runtimeMinutes = data.runtime;
           runtime.innerText = `${Math.floor(runtimeMinutes / 60)}h ${
             runtimeMinutes % 60
