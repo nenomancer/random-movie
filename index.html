@@ -3,52 +3,142 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style-experiment.css" />
     <script src="script.js" defer></script>
     <title>Random Movies</title>
   </head>
 
   <body>
-    <header>
-      <form name="filters" id="filters">
-        <span>
-          <label for="countries">Country</label>
-          <select name="countries" id="countries">
-            <option value="">Any</option>
-          </select>
-        </span>
-        <span>
-          <label for="release-from">From</label>
-          <input
-            id="release-from"
-            type="number"
-            min="1878"
-            max="2024"
-            placeholder=""
-          />
-        </span>
-        <span>
-          <label for="release-to">To</label>
-          <input
-            id="release-to"
-            type="number"
-            min="1878"
-            max="2024"
-            placeholder=""
-          />
-        </span>
-
-        <div id="genres">
-          <div class="toggle">Genres</div>
-          <div id="genre-options"></div>
+    <div id="main-container">
+      <section class="left">
+        <div class="rating">Rating</div>
+        <div class="extra-shit">
+          <div>Tagline</div>
+          <div>Full Release Date</div>
         </div>
+      </section>
+      <section class="mid">
+        <div class="poster-section">
+          <img src="" alt="" id="poster" />
+        </div>
+        <div class="opinions">
+          <div>votes</div>
+          <div>popularity</div>
+          <div>other shiet</div>
+        </div>
+      </section>
+      <section class="right">
+        <div class="main-panel">
+          <div class="main-panel__info">
+            <div class="row title">
+              <span>Title</span>
+              <span class="content"></span>
+            </div>
+            <div class="row subtitle">
+              <span>asd</span>
+              <span class="content"></span>
+            </div>
+            <div class="row genres">
+              <span>Genres</span>
+              <span class="content"> </span>
+            </div>
+            <div class="row directors">
+              <span> Directors </span>
+              <span class="content"> </span>
+            </div>
+            <div class="row actors">
+              <span> Actors: </span>
+              <span class="content"> </span>
+            </div>
+            <div class="row plot">
+              <span>Plot</span>
+              <span class="content"> </span>
+            </div>
+          </div>
+          <div class="main-panel__filters">
+            <form name="filters" id="filters">
+              <span>
+                <span class="row countries">
+                  <span>Country</span>
+                  <span class="value">Any</span>
+                  <span class="content">
+                  </span>
+                </span>
+              </span>
+              <span>
+                <label for="release-from">From</label>
+                <input
+                  id="release-from"
+                  type="number"
+                  min="1878"
+                  max="2024"
+                  placeholder=""
+                />
+              </span>
+              <span>
+                <label for="release-to">To</label>
+                <input
+                  id="release-to"
+                  type="number"
+                  min="1878"
+                  max="2024"
+                  placeholder=""
+                />
+              </span>
 
-        <input type="submit" value="Get Random Movie" />
-      </form>
-    </header>
-    <div id="container">
-      <div id="results"></div>
-      <!-- <div id="backgroundContainer"></div> -->
+              <div class="row genres">
+                <span class="toggle">Genres</span>
+                <span class="value">Any</span>
+                <span class="content"></span>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="button-panel">
+          <input type="submit" form="filters" value="SEARCH" />
+        </div>
+      </section>
+      <header>
+        <!-- <form name="filters" id="filters">
+          <span>
+            <label for="countries">Country</label>
+            <select name="countries" id="countries">
+              <option value="">Any</option>
+            </select>
+          </span>
+          <span>
+            <label for="release-from">From</label>
+            <input
+              id="release-from"
+              type="number"
+              min="1878"
+              max="2024"
+              placeholder=""
+            />
+          </span>
+          <span>
+            <label for="release-to">To</label>
+            <input
+              id="release-to"
+              type="number"
+              min="1878"
+              max="2024"
+              placeholder=""
+            />
+          </span>
+
+          <div id="genres">
+            <div class="toggle">Genres</div>
+            <div id="genre-options"></div>
+          </div>
+
+          <input type="submit" value="Get Random Movie" />
+        </form> -->
+      </header>
+      <div id="container">
+        <div id="results"></div>
+        <!-- <div id="backgroundContainer"></div> -->
+      </div>
     </div>
   </body>
 </html>

@@ -19,20 +19,37 @@ function getGenres() {
     .then((response) => response.json())
     .then((response) => {
       allGenres = response.genres;
-      const container = document.querySelector("#genres");
-      const options = container.querySelector("#genre-options");
-      const toggleButton = container.querySelector(".toggle");
-      toggleButton.addEventListener("click", (e) =>
+      const container = document.querySelector("#filters .genres");
+      const options = container.querySelector(".genres .content");
+      const value = container.querySelector(".value");
+      value.addEventListener("click", (e) =>
         container.classList.toggle("open")
       );
+      function displaySelectedCountry(temp) {
+        temp.classList.toggle("selected");
+        const selectedOptions = Array.from(
+          options.querySelectorAll(".selected")
+        );
+        if (selectedOptions.length !== 0) {
+          selectedOptions.forEach((item, index) => {
+            if (index === 0) {
+              value.innerText = item.innerText;
+            } else {
+              value.innerText += ", " + item.innerText;
+            }
+          });
+        } else {
+          value.innerText = "Any";
+        }
+      }
       allGenres.forEach((genre) => {
-        const temp = document.createElement("div");
+        const temp = document.createElement("span");
         temp.setAttribute("data-id", genre.id);
         temp.innerText = genre.name;
-        temp.className = "option";
+        temp.className = "option button-span";
 
         temp.addEventListener("click", (e) => {
-          temp.classList.toggle("selected");
+          displaySelectedCountry(temp);
         });
         options.appendChild(temp);
       });
@@ -44,12 +61,48 @@ function generateCountries(params) {
   return fetch("https://api.themoviedb.org/3/configuration/countries", options)
     .then((response) => response.json())
     .then((response) => {
-      const countryInput = document.querySelector("#countries");
+      const countriesList = document.querySelector(".countries .content");
+      const value = document.querySelector(".value");
+      value.addEventListener("click", (e) => {
+        countriesList.parentElement.classList.toggle("open");
+        console.log("clcick");
+      });
+
+      function toggleSelection(temp) {
+        temp.classList.toggle("selected");
+        const selected = Array.from(
+          document.querySelectorAll(".countries .content .option.selected")
+        );
+
+        selected.forEach((item) => {
+          if (item !== temp) {
+            item.classList.remove("selected");
+          }
+        });
+
+        if (selected.length == 0) {
+          value.innerText = "Any";
+          value.setAttribute("data-filter-country", "");
+        } else {
+          value.innerText = temp.innerText;
+          value.setAttribute(
+            "data-filter-country",
+            temp.getAttribute("data-country-id")
+          );
+        }
+      }
+
       response.forEach((country) => {
-        const temp = document.createElement("option");
+        const temp = document.createElement("span");
+        temp.className = "option";
+        temp.addEventListener("click", (e) => {
+          toggleSelection(temp);
+          countriesList.parentElement.classList.remove("open");
+        });
         temp.innerText = country.english_name;
+        temp.setAttribute("data-country-id", country.iso_3166_1);
         temp.value = country.iso_3166_1;
-        countryInput.appendChild(temp);
+        countriesList.appendChild(temp);
       });
     })
     .catch((err) => console.error(err));
@@ -62,18 +115,16 @@ formCountries.addEventListener("submit", (e) => {
 
 // Add generated movies to cookie to avoid regenerating them
 function fetchMovies(queries = "", totalPages = 500) {
-  const countryOfOrigin = document.querySelector("#countries").value; //
-  const genres = document.querySelectorAll("#genres .option");
+  const countryOfOrigin = document
+    .querySelector(".countries .value")
+    .getAttribute("data-filter-country"); // TUKA
+  const genres = document.querySelectorAll("#filters .genres .option");
   const pageNumber = Math.floor(Math.random() * totalPages);
   const releasedFrom = document.querySelector("#release-from");
   const releasedTo = document.querySelector("#release-to");
   let earliest = 1878;
   let latest = new Date().getFullYear();
   let filteredGenres = [];
-
-  filteredGenres = Array.from(genres).filter(genre => genre.classList.contains("selected"));
-  console.log("FILTERED: ", filteredGenres);
-  
 
   if (releasedFrom.value !== "") {
     earliest = releasedFrom.value;
@@ -83,14 +134,17 @@ function fetchMovies(queries = "", totalPages = 500) {
     latest = releasedTo.value;
   }
 
-  // ERROR CASE IF MOVIE PARAMS DONT PRODUCE RESUTLS
   let _queries = queries;
 
-  if (filteredGenres.length !== 0) {
+  // get selected genres
+  filteredGenres = Array.from(genres).filter((genre) =>
+    genre.classList.contains("selected")
+  );
 
-    _queries += "&with_genres="
+  if (filteredGenres.length !== 0) {
+    _queries += "&with_genres=";
     filteredGenres.forEach((genre) => {
-      _queries += genre.getAttribute('data-id') + ","
+      _queries += genre.getAttribute("data-id") + ",";
     });
   }
   if (releasedFrom !== "" || releasedTo !== "") {
@@ -104,6 +158,7 @@ function fetchMovies(queries = "", totalPages = 500) {
   }
 
   if (countryOfOrigin) {
+    console.log(countryOfOrigin);
     _queries = "&with_origin_country=" + countryOfOrigin;
   }
 
@@ -121,7 +176,8 @@ function fetchMovies(queries = "", totalPages = 500) {
     })
     .catch((err) => {
       console.error(err);
-      console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...")
+      console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...");
+      alert("NO MOVIES WITH THEMS PARAMTETERS, PLEASE ADJUST YA FILTERS!");
     });
 }
 
@@ -178,17 +234,19 @@ function displayResult(data, maxIndex = 20) {
   resultsContainer.innerHTML = "";
   data.forEach((movie, index) => {
     if (index === randomIndex) {
-      const currentGenres = [];
-      const card = document.createElement("div");
-      card.className = "result";
+      // const currentGenres = [];
+      // const card = document.createElement("div");
+      // card.className = "result";
 
-      console.log(movie.vote_average);
-
-      const title = document.createElement("h2");
-      title.className = "title";
+      const title = document.querySelector(".title .content");
+      title.innerHTML = "";
+      const temp = document.createElement("span");
       const titleUrl = document.createElement("a");
-      title.appendChild(titleUrl);
+
+      temp.className = "button-span";
       titleUrl.innerText = movie.original_title;
+      temp.appendChild(titleUrl);
+      title.appendChild(temp);
 
       if (
         movie.original_language !== "en" &&
@@ -197,56 +255,23 @@ function displayResult(data, maxIndex = 20) {
         titleUrl.innerText += " (" + movie.title + ")";
       }
 
-      const subtitle = document.createElement("div");
-      subtitle.className = "subtitle";
+      // const subtitle = document.createElement("div");
+      // subtitle.className = "subtitle";
 
+      const subtitle = document.querySelector(".subtitle .content");
       const date = document.createElement("span");
       date.innerText = movie.release_date.split("-")[0];
       const runtime = document.createElement("span");
       const rating = document.createElement("span"); // CONTINUE HERE
 
+      date.className = "button-span";
+      runtime.className = "button-span";
+      rating.className = "button-span"; // shouidl be COUTNRY..
+
+      subtitle.innerHTML = "";
       subtitle.appendChild(date);
       subtitle.appendChild(runtime);
       subtitle.appendChild(rating);
-
-      const poster = document.createElement("img");
-      poster.className = "poster";
-
-      const background = document.createElement("div");
-      background.className = "background";
-
-      const header = document.createElement("div");
-      const info = document.createElement("div");
-      info.className = "info";
-
-      const genres = createInfoRow("Genres");
-      const genreContent = document.createElement("div");
-
-      const plot = createInfoRow("Plot");
-      const plotContent = document.createElement("p");
-
-      const directors = createInfoRow("Directors");
-      const directorContent = document.createElement("div");
-
-      const stars = createInfoRow("Stars");
-      const starsContent = document.createElement("div");
-
-      genres.appendChild(genreContent);
-      directors.appendChild(directorContent);
-      stars.appendChild(starsContent);
-      plot.appendChild(plotContent);
-
-      appendChildren(info, [genres, directors, stars, plot]);
-
-      appendChildren(header, [title, subtitle, info]);
-
-      const backgroundContainer = document.createElement("div");
-      backgroundContainer.className = "backgroundContainer";
-      backgroundContainer.appendChild(background);
-
-      appendChildren(card, [backgroundContainer, poster, header]);
-      console.log(card);
-      resultsContainer.appendChild(card);
 
       getMovieGenres();
       getImdbUrl();
@@ -259,43 +284,36 @@ function displayResult(data, maxIndex = 20) {
           .then((response) => response.json())
           .then((data) => {
             const imdbUrl = `https://www.imdb.com/title/${data.imdb_id}/`;
-            // titleUrl.setAttribute("src", imdbUrl);
             titleUrl.href = imdbUrl;
             titleUrl.target = "_blank";
-            title.addEventListener("click", (e) => {
-              console.log(titleUrl);
-              titleUrl.click();
-            });
           })
           .catch((err) => console.error(err));
       }
 
       function getMovieGenres() {
+        const genres = document.querySelector(".row.genres .content");
+        genres.innerHTML = "";
+
         movie.genre_ids.forEach((genreId) => {
           const genre = allGenres.find((genre) => genre.id == genreId);
           if (genre) {
-            const tempGenre = document.createElement("span");
-            // console.log('genre: ', genre);
-            tempGenre.addEventListener("click", (e) =>
-              getGenreMovies(genre.id)
-            );
-            tempGenre.innerText = genre.name;
-            genreContent.appendChild(tempGenre);
+            const temp = document.createElement("span");
+            temp.addEventListener("click", (e) => getGenreMovies(genre.id));
+            temp.className = "button-span";
+            temp.innerText = genre.name;
+            genres.appendChild(temp);
           }
-          currentGenres.push(genre.name);
         });
       }
 
-      function getCastNames(data, element, onClick) {
-        data.forEach((person) => {
-          const temp = document.createElement("span");
-          temp.innerText = person.name;
-          temp.addEventListener("click", (e) => onClick(person.id));
-          element.appendChild(temp);
-        });
-      }
-
-      card.classList.add("active");
+      // function getCastNames(data, element, onClick) {
+      //   data.forEach((person) => {
+      //     const temp = document.createElement("span");
+      //     temp.innerText = person.name;
+      //     temp.addEventListener("click", (e) => onClick(person.id));
+      //     element.appendChild(temp);
+      //   });
+      // }
 
       fetch("https://api.themoviedb.org/3/movie/" + movie.id, options)
         .then((response) => response.json())
@@ -306,17 +324,45 @@ function displayResult(data, maxIndex = 20) {
           )
             .then((response) => response.json())
             .then((data) => {
-              const stars = data.cast.filter((person, index) => index <= 2);
+              const actors = data.cast.filter((person, index) => index <= 2);
               const directors = data.crew.filter(
                 (person) => person.job == "Director"
               );
 
-              getCastNames(stars, starsContent, getActorMovies);
-              getCastNames(directors, directorContent, getDirectorMovies);
+              const directorsElement = document.querySelector(
+                ".row.directors .content"
+              );
+              directorsElement.innerHTML = "";
+
+              const actorsElement = document.querySelector(
+                ".row.actors .content"
+              );
+              actorsElement.innerHTML = "";
+
+              directors.forEach((director) => {
+                const temp = document.createElement("span");
+                temp.className = "button-span";
+                temp.innerText = director.name;
+                temp.addEventListener("click", (e) =>
+                  getDirectorMovies(director.id)
+                );
+
+                directorsElement.appendChild(temp);
+              });
+
+              actors.forEach((actor) => {
+                const temp = document.createElement("span");
+                temp.addEventListener("click", (e) => getActorMovies(actor.id));
+
+                temp.className = "button-span";
+                temp.innerText = actor.name;
+                actorsElement.appendChild(temp);
+              });
             });
 
           poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
-          background.style.backgroundImage = `url(https://image.tmdb.org/t/p/w500${data.backdrop_path}`;
+          // background.style.backgroundImage = `url(https://image.tmdb.org/t/p/w500${data.backdrop_path}`;
+          const plotContent = document.querySelector(".row.plot .content");
           plotContent.innerText = data.overview;
           if (data.runtime === 0) {
             subtitle.removeChild(runtime);
