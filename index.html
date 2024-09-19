@@ -11,80 +11,91 @@
   <body>
     <div id="main-container">
       <section class="left">
-        <div class="rating">Rating</div>
-        <div class="extra-shit">
+        <div class="top">Rating</div>
+        <div class="bottom">
           <div>Tagline</div>
           <div>Full Release Date</div>
         </div>
       </section>
       <section class="mid">
-        <div class="poster-section">
-          <img src="" alt="" id="poster" />
+        <div class="top">
+          <span>
+            <span>
+              <img src="" alt="" id="poster" />
+            </span>
+          </span>
         </div>
-        <div class="opinions">
-          <div>votes</div>
-          <div>popularity</div>
-          <div>other shiet</div>
+        <div class="bottom">
+          <div data-votes>votes</div>
+          <div data-popularity>popularity</div>
+          <div data-revenue>other shiet</div>
         </div>
       </section>
       <section class="right">
-        <div class="main-panel">
-          <div class="main-panel__info">
-            <div class="row title">
-              <span>Title</span>
-              <span class="content"></span>
+        <div>
+          <span class="tabs">
+            <span class="first active">INFO</span>
+            <span class="second">FILTERS</span>
+          </span>
+          <div class="main-screen">
+            <div class="info active" data-tab="first">
+              <div class="row title">
+                <span>TTL</span>
+                <span class="content"></span>
+              </div>
+              <div class="row subtitle">
+                <!-- <span></span> -->
+                <span class="content"></span>
+              </div>
+              <div class="row genres">
+                <span>GNR</span>
+                <span class="content"> </span>
+              </div>
+              <div class="row directors">
+                <span>DIR</span>
+                <span class="content"> </span>
+              </div>
+              <div class="row actors">
+                <span>ACT</span>
+                <span class="content"> </span>
+              </div>
+              <div class="row plot">
+                <span>PLT</span>
+                <span class="content"> </span>
+              </div>
             </div>
-            <div class="row subtitle">
-              <span>asd</span>
-              <span class="content"></span>
-            </div>
-            <div class="row genres">
-              <span>Genres</span>
-              <span class="content"> </span>
-            </div>
-            <div class="row directors">
-              <span> Directors </span>
-              <span class="content"> </span>
-            </div>
-            <div class="row actors">
-              <span> Actors: </span>
-              <span class="content"> </span>
-            </div>
-            <div class="row plot">
-              <span>Plot</span>
-              <span class="content"> </span>
-            </div>
-          </div>
-          <div class="main-panel__filters">
-            <form name="filters" id="filters">
-              <span>
-                <span class="row countries">
-                  <span>Country</span>
-                  <span class="value">Any</span>
-                  <span class="content">
+            <!-- <div > -->
+            <form name="filters" class="filters" id="filters" data-tab="second">
+              <span class="row countries">
+                <span>Country</span>
+                <span class="value">Any</span>
+                <span class="content"></span>
+              </span>
+              <div class="row release-year">
+                <span>Year</span>
+                <span class="content">
+                  <span>
+                    <label for="release-from">From</label>
+                    <input
+                      id="release-from"
+                      type="number"
+                      min="1878"
+                      max="2024"
+                      placeholder=""
+                    />
+                  </span>
+                  <span>
+                    <label for="release-to">To</label>
+                    <input
+                      id="release-to"
+                      type="number"
+                      min="1878"
+                      max="2024"
+                      placeholder=""
+                    />
                   </span>
                 </span>
-              </span>
-              <span>
-                <label for="release-from">From</label>
-                <input
-                  id="release-from"
-                  type="number"
-                  min="1878"
-                  max="2024"
-                  placeholder=""
-                />
-              </span>
-              <span>
-                <label for="release-to">To</label>
-                <input
-                  id="release-to"
-                  type="number"
-                  min="1878"
-                  max="2024"
-                  placeholder=""
-                />
-              </span>
+              </div>
 
               <div class="row genres">
                 <span class="toggle">Genres</span>
@@ -92,9 +103,10 @@
                 <span class="content"></span>
               </div>
             </form>
+            <!-- </div> -->
           </div>
         </div>
-        <div class="button-panel">
+        <div class="bottom">
           <input type="submit" form="filters" value="SEARCH" />
         </div>
       </section>

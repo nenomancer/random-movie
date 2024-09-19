@@ -8,9 +8,26 @@ const options = {
 };
 
 const resultsContainer = document.querySelector("#results");
-const formCountries = document.querySelector('form[name="filters"]');
+const filterForm = document.querySelector('form[name="filters"]');
+const toggleFirstTab = document.querySelector(".tabs .first");
+const toggleSecondTab = document.querySelector(".tabs .second");
+const firstTab = document.querySelector('[data-tab="first"]');
+const secondTab = document.querySelector('[data-tab="second"]');
+toggleFirstTab.addEventListener("click", (e) => {
+  toggleFirstTab.classList.add("active");
+  toggleSecondTab.classList.remove("active");
+  firstTab.classList.add("active");
+  secondTab.classList.remove("active");
+});
+toggleSecondTab.addEventListener("click", (e) => {
+  toggleSecondTab.classList.add("active");
+  toggleFirstTab.classList.remove("active");
+  secondTab.classList.add("active");
+  firstTab.classList.remove("active");
+});
 let allGenres = [];
 let filteredGenres = [];
+let allCountries = [];
 
 generateCountries().then(getGenres).then(fetchMovies);
 
@@ -47,7 +64,6 @@ function getGenres() {
         temp.setAttribute("data-id", genre.id);
         temp.innerText = genre.name;
         temp.className = "option button-span";
-
         temp.addEventListener("click", (e) => {
           displaySelectedCountry(temp);
         });
@@ -57,6 +73,7 @@ function getGenres() {
     })
     .catch((err) => console.error(err));
 }
+
 function generateCountries(params) {
   return fetch("https://api.themoviedb.org/3/configuration/countries", options)
     .then((response) => response.json())
@@ -92,7 +109,9 @@ function generateCountries(params) {
         }
       }
 
-      response.forEach((country) => {
+      allCountries = response;
+
+      allCountries.forEach((country) => {
         const temp = document.createElement("span");
         temp.className = "option";
         temp.addEventListener("click", (e) => {
@@ -108,7 +127,7 @@ function generateCountries(params) {
     .catch((err) => console.error(err));
 }
 
-formCountries.addEventListener("submit", (e) => {
+filterForm.addEventListener("submit", (e) => {
   e.preventDefault();
   fetchMovies();
 });
@@ -117,11 +136,16 @@ formCountries.addEventListener("submit", (e) => {
 function fetchMovies(queries = "", totalPages = 500) {
   const countryOfOrigin = document
     .querySelector(".countries .value")
-    .getAttribute("data-filter-country"); // TUKA
+    .getAttribute("data-filter-country");
   const genres = document.querySelectorAll("#filters .genres .option");
   const pageNumber = Math.floor(Math.random() * totalPages);
   const releasedFrom = document.querySelector("#release-from");
   const releasedTo = document.querySelector("#release-to");
+  firstTab.classList.add("active");
+  toggleFirstTab.classList.add("active");
+  secondTab.classList.remove("active");
+  toggleSecondTab.classList.remove("active");
+  //tuka?
   let earliest = 1878;
   let latest = new Date().getFullYear();
   let filteredGenres = [];
@@ -217,12 +241,12 @@ function getGenreMovies(id) {
   fetchMovies("&with_genres=" + id);
 }
 
-function createInfoRow(name) {
-  const elem = document.createElement("div");
-  elem.className = "row " + name.toLowerCase();
-  elem.innerHTML = `<p>${name}</p>`;
-  return elem;
-}
+// function createInfoRow(name) {
+//   const elem = document.createElement("div");
+//   elem.className = "row " + name.toLowerCase();
+//   elem.innerHTML = `<p>${name}</p>`;
+//   return elem;
+// }
 
 function appendChildren(parent, children) {
   children.forEach((child) => parent.appendChild(child));
@@ -234,16 +258,14 @@ function displayResult(data, maxIndex = 20) {
   resultsContainer.innerHTML = "";
   data.forEach((movie, index) => {
     if (index === randomIndex) {
-      // const currentGenres = [];
-      // const card = document.createElement("div");
-      // card.className = "result";
-
       const title = document.querySelector(".title .content");
       title.innerHTML = "";
       const temp = document.createElement("span");
       const titleUrl = document.createElement("a");
 
       temp.className = "button-span";
+      temp.classList.add("link");
+
       titleUrl.innerText = movie.original_title;
       temp.appendChild(titleUrl);
       title.appendChild(temp);
@@ -258,20 +280,31 @@ function displayResult(data, maxIndex = 20) {
       // const subtitle = document.createElement("div");
       // subtitle.className = "subtitle";
 
+      const popularityEl = document.querySelector("[data-popularity]");
+      const votesEl = document.querySelector("[data-votes]");
+      const revenueEl = document.querySelector("[data-revenue]");
       const subtitle = document.querySelector(".subtitle .content");
       const date = document.createElement("span");
       date.innerText = movie.release_date.split("-")[0];
       const runtime = document.createElement("span");
+      const countries = document.createElement("span");
       const rating = document.createElement("span"); // CONTINUE HERE
+
+      const votes = document.createElement("span");
+      const popularity = document.createElement("span");
 
       date.className = "button-span";
       runtime.className = "button-span";
       rating.className = "button-span"; // shouidl be COUTNRY..
+      countries.className = "button-span"; // shouidl be COUTNRY..
+      votes.className = "button-span";
+      popularity.className = "button-span";
 
       subtitle.innerHTML = "";
       subtitle.appendChild(date);
       subtitle.appendChild(runtime);
       subtitle.appendChild(rating);
+      subtitle.appendChild(countries);
 
       getMovieGenres();
       getImdbUrl();
@@ -298,9 +331,10 @@ function displayResult(data, maxIndex = 20) {
           const genre = allGenres.find((genre) => genre.id == genreId);
           if (genre) {
             const temp = document.createElement("span");
-            temp.addEventListener("click", (e) => getGenreMovies(genre.id));
             temp.className = "button-span";
+            temp.classList.add("link");
             temp.innerText = genre.name;
+            temp.addEventListener("click", (e) => getGenreMovies(genre.id));
             genres.appendChild(temp);
           }
         });
@@ -318,62 +352,79 @@ function displayResult(data, maxIndex = 20) {
       fetch("https://api.themoviedb.org/3/movie/" + movie.id, options)
         .then((response) => response.json())
         .then((data) => {
-          fetch(
-            "https://api.themoviedb.org/3/movie/" + movie.id + "/credits",
-            options
-          )
-            .then((response) => response.json())
-            .then((data) => {
-              const actors = data.cast.filter((person, index) => index <= 2);
-              const directors = data.crew.filter(
-                (person) => person.job == "Director"
-              );
-
-              const directorsElement = document.querySelector(
-                ".row.directors .content"
-              );
-              directorsElement.innerHTML = "";
-
-              const actorsElement = document.querySelector(
-                ".row.actors .content"
-              );
-              actorsElement.innerHTML = "";
-
-              directors.forEach((director) => {
-                const temp = document.createElement("span");
-                temp.className = "button-span";
-                temp.innerText = director.name;
-                temp.addEventListener("click", (e) =>
-                  getDirectorMovies(director.id)
-                );
-
-                directorsElement.appendChild(temp);
-              });
-
-              actors.forEach((actor) => {
-                const temp = document.createElement("span");
-                temp.addEventListener("click", (e) => getActorMovies(actor.id));
-
-                temp.className = "button-span";
-                temp.innerText = actor.name;
-                actorsElement.appendChild(temp);
-              });
-            });
-
-          poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
-          // background.style.backgroundImage = `url(https://image.tmdb.org/t/p/w500${data.backdrop_path}`;
+          console.log("DATA: ", data);
+          if (data.poster_path) {
+            console.log('poster..? ', poster);
+            poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
+          }
           const plotContent = document.querySelector(".row.plot .content");
+          const runtimeMinutes = data.runtime;
+          popularityEl.innerText = "popularity: " + data.popularity;
+          votesEl.innerText = "votes: " + data.vote_count;
+          revenueEl.innerText = "revenue: " + data.revenue;
           plotContent.innerText = data.overview;
+
+          if (data.overview === "") {
+            plotContent.innerText =
+              "No plot found for this movie. You're gonna have to watch it";
+          }
           if (data.runtime === 0) {
             subtitle.removeChild(runtime);
           }
-          const runtimeMinutes = data.runtime;
+
+          const found = allCountries.find(
+            (el) => el.iso_3166_1 == data.origin_country[0]
+          );
+
+          countries.innerText = found.native_name;
           rating.innerText = data.vote_average;
           runtime.innerText = `${Math.floor(runtimeMinutes / 60)}h ${
             runtimeMinutes % 60
           }min`;
+          getMovieCredits(movie.id);
         })
         .catch((err) => console.log(err));
     }
   });
+
+  function getMovieCredits(id) {
+    fetch("https://api.themoviedb.org/3/movie/" + id + "/credits", options)
+      .then((response) => response.json())
+      .then((data) => {
+        const actors = data.cast.filter((person, index) => index <= 2);
+        const directors = data.crew.filter(
+          (person) => person.job == "Director"
+        );
+
+        const directorsElement = document.querySelector(
+          ".row.directors .content"
+        );
+        directorsElement.innerHTML = "";
+
+        const actorsElement = document.querySelector(".row.actors .content");
+        actorsElement.innerHTML = "";
+
+        directors.forEach((director) => {
+          const temp = document.createElement("span");
+          temp.className = "button-span";
+          temp.classList.add("link");
+          temp.innerText = director.name;
+          temp.addEventListener("click", (e) => getDirectorMovies(director.id));
+
+          directorsElement.appendChild(temp);
+        });
+
+        actors.forEach((actor) => {
+          const temp = document.createElement("span");
+          temp.className = "button-span";
+          temp.classList.add("link");
+          temp.innerText = actor.name;
+          temp.addEventListener("click", (e) => {
+            getActorMovies(actor.id);
+          });
+
+          actorsElement.appendChild(temp);
+        });
+      });
+  }
 }
