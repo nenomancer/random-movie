@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Tiny5&display=swap");
 *,
 *::before,
 *::after {
@@ -23,18 +23,19 @@
   --screen-color: #c0d2d3;
   --color-screen-dark: #1e2a1e;
   --color-screen-light: #334a38;
-  --shadow-offset: 0.15rem;
-  --shadow-blur: 1px;
+  --shadow-offset: 0.1rem;
+  --shadow-blur: 0px;
   --shadow-color: rgba(0, 0, 0, 0.3);
 
   transition-duration: 250ms;
-  transition-property: color, background-color, border-color;
+  /* transition-property: color, background-color, border-color, box-shadow; */
   scrollbar-width: none;
 }
 
 body {
   background-color: #222;
 }
+
 img {
   width: 100%;
   height: 100%;
@@ -48,6 +49,7 @@ img {
   max-width: 960px;
   margin-inline: auto;
   margin-top: 6rem;
+  box-shadow: 2px 2px 10px 0 black;
 
   section {
     display: grid;
@@ -56,6 +58,9 @@ img {
 
     /* max-height: 640px; */
 
+    background-color: rgb(77, 77, 77);
+    box-shadow: inset 1px 1px 2px 2px rgba(255, 255, 255, 0.296),
+      inset 0 0 0 1px black;
     .bottom {
       background-color: slategray;
       /* height: 200px; */
@@ -187,37 +192,65 @@ img {
         background-color: #0d5605;
         --color-dark: black;
         --color-light: darkorange;
+        position: relative;
         background: linear-gradient(
           -65deg,
           var(--color-light) 10%,
           var(--color-dark) 10%,
-          var(--color-dark) 19%,
-          var(--color-light) 19%,
-          var(--color-light) 38%,
-          var(--color-dark) 38%,
-          var(--color-dark) 47%,
-          var(--color-light) 47%,
-          var(--color-light) 66%,
-          var(--color-dark) 66%,
+          var(--color-dark) 25%,
+          var(--color-light) 25%,
+          var(--color-light) 35%,
+          var(--color-dark) 35%,
+          var(--color-dark) 50%,
+          var(--color-light) 50%,
+          var(--color-light) 60%,
+          var(--color-dark) 60%,
           var(--color-dark) 75%,
           var(--color-light) 75%,
-          var(--color-light) 95%,
-          var(--color-dark) 95%,
+          var(--color-light) 85%,
+          var(--color-dark) 85%,
           var(--color-dark) 100%
         );
 
-        display: grid;
-        place-items: center;
-        input[type="submit"] {
+        /* display: grid;
+        place-items: center; */
+        label[for="submit"] {
+          position: absolute;
+          bottom: 15%;
+          left: 50%;
+          translate: -50% 0;
+          background-color: grey;
+          padding: 0.25rem 0.5rem;
+          /* font-size: 0.75rem; */
+          font-weight: 900;
+          letter-spacing: normal;
+          box-shadow: inset 1px 1px 1px 0 white, inset -1px -1px 1px 0 black;
+        }
+        #submit {
           background-color: red;
-          width: 150px;
-          height: 150px;
+          /* width: 30%; */
+          aspect-ratio: 1/1;
+          height: 50%;
+          position: absolute;
+          left: 50%;
+          top: 15%;
+          translate: -50% 0;
           border-radius: 50%;
           border: none;
-          box-shadow: inset 2px 2px 10px white;
-          transition: box-shadow 250ms linear;
+          box-shadow: inset 0 0 5px 5px rgba(0, 0, 0, 0.75);
+          transition-duration: 250ms;
+          transition-property: box-shadow, background-color;
+          border: 5px solid grey;
+          /* border: 20px solid;
+          border-image: linear-gradient(to left, black, white);
+          border-image-slice: 10; */
           &:active {
-            box-shadow: inset -2px -2px 10px black;
+            box-shadow: inset 0 0 5px 7px rgba(0, 0, 0, 0.75);
+            background-color: darkred;
+          }
+
+          &::before {
+            content: "asdasdasiodh";
           }
         }
       }
@@ -240,7 +273,6 @@ img {
             var(--shadow-offset) var(--shadow-offset) var(--shadow-blur)
               var(--shadow-color);
           display: flex;
-          gap: 0.5rem;
 
           flex-direction: column;
           /* display: initial; */
@@ -256,10 +288,55 @@ img {
         .row {
           gap: 0.25rem;
 
+          &.title {
+            .content {
+              span:hover {
+                a {
+                  color: black;
+                }
+              }
+              a {
+                color: var(--color-highlight);
+                text-decoration: none;
+                cursor: inherit;
+              }
+            }
+          }
           &.subtitle {
             grid-template-columns: 1fr;
+            /* height: 16px; */
+            font-size: 0.75rem;
+            font-weight: 900;
+            /* font-family: "Tiny5", sans-serif; */
+            text-transform: uppercase;
+            font-style: normal;
+            .content {
+              /* display: flex; */
+              justify-content: center;
+              align-items: center;
+              box-shadow: none;
+              overflow: visible;
+              .button-span {
+                padding-block: 0;
+                border: 2px solid;
+                &:not(&:last-child) {
+                  border-right: none;
+                }
+                text-align: center;
+                box-shadow: var(--shadow-offset) var(--shadow-offset)
+                  var(--shadow-blur) var(--shadow-color);
+
+                text-shadow: var(--shadow-offset) var(--shadow-offset)
+                  var(--shadow-blur) var(--shadow-color);
+
+                flex: 1;
+              }
+            }
             > span.content:first-child {
               justify-content: flex-start;
+              justify-content: stretch;
+              /* gap: 0; */
+              border: none;
             }
           }
           &.plot {
@@ -270,6 +347,7 @@ img {
             }
             .content {
               overflow-y: scroll;
+              padding: 0.25rem 0.5rem;
             }
           }
           > span {
@@ -291,16 +369,18 @@ img {
           }
           .content {
             display: flex;
-            gap: 0.25rem;
+            /* gap: 0.25rem; */
             overflow-x: scroll;
             /* padding: 0.5rem; */
             .button-span {
               padding: 0.25rem 0.5rem;
-              background-color: #222;
+              /* background-color: #2a22; */
               white-space: nowrap;
               &.link:hover {
                 cursor: inherit;
-                background-color: #888;
+                background-color: var(--color-highlight);
+                text-shadow: none;
+                color: black;
               }
             }
           }
@@ -324,7 +404,7 @@ img {
     }
 
     > div {
-      border: 1px dashed black;
+      /* border: 1px dashed black; */
     }
   }
   /* here  */

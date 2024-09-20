@@ -302,9 +302,9 @@ function displayResult(data, maxIndex = 20) {
 
       subtitle.innerHTML = "";
       subtitle.appendChild(date);
-      subtitle.appendChild(runtime);
-      subtitle.appendChild(rating);
       subtitle.appendChild(countries);
+      subtitle.appendChild(rating);
+      subtitle.appendChild(runtime);
 
       getMovieGenres();
       getImdbUrl();
@@ -354,7 +354,7 @@ function displayResult(data, maxIndex = 20) {
         .then((data) => {
           console.log("DATA: ", data);
           if (data.poster_path) {
-            console.log('poster..? ', poster);
+            console.log("poster..? ", poster);
             poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
           }
           const plotContent = document.querySelector(".row.plot .content");
@@ -377,7 +377,8 @@ function displayResult(data, maxIndex = 20) {
           );
 
           countries.innerText = found.native_name;
-          rating.innerText = data.vote_average;
+          const rate = Math.round(data.vote_average * 10) / 10;
+          rating.innerText = rate.toFixed(1);
           runtime.innerText = `${Math.floor(runtimeMinutes / 60)}h ${
             runtimeMinutes % 60
           }min`;
