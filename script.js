@@ -132,8 +132,11 @@ filterForm.addEventListener("submit", (e) => {
   fetchMovies();
 });
 
+const mainScreen = document.querySelector(".main-screen");
+mainScreen.classList.add("loading");
 // Add generated movies to cookie to avoid regenerating them
 function fetchMovies(queries = "", totalPages = 500) {
+  mainScreen.classList.add("loading");
   const countryOfOrigin = document
     .querySelector(".countries .value")
     .getAttribute("data-filter-country");
@@ -383,6 +386,7 @@ function displayResult(data, maxIndex = 20) {
             runtimeMinutes % 60
           }min`;
           getMovieCredits(movie.id);
+          mainScreen.classList.remove("loading");
         })
         .catch((err) => console.log(err));
     }
