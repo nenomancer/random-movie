@@ -1,0 +1,148 @@
+/* #c0d2d3; #4a5488; */
+/* #c0d2d3; #4a5488; */
+.search {
+  position: relative;
+  grid-area: search;
+  padding: 2rem;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(-65deg, darkorange 10%, black 10% 25%, darkorange 25% 35%, black 35% 50%, darkorange 50% 60%, black 60% 75%, darkorange 75% 85%, black 85% 100%);
+  /* display: grid;
+        place-items: center; */
+}
+.search #submit {
+  background-color: red;
+  /* width: 30%; */
+  aspect-ratio: 1/1;
+  height: 150px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), inset 0 0 6px 10px rgba(255, 150, 150, 0.7);
+  transition-duration: 250ms;
+  transition-property: box-shadow, background-color;
+  border: 5px solid grey;
+  /* border: 20px solid;
+        border-image: linear-gradient(to left, black, white);
+        border-image-slice: 10; */
+}
+.search #submit:active {
+  box-shadow: inset 0 0 5px 7px rgb(0, 0, 0), inset 0 0 6px 10px rgba(255, 150, 150, 0.6);
+  /* background-color: darkred; */
+}
+.rating {
+  grid-area: rating;
+  background-color: blue;
+}
+
+@media screen and (max-width: 768px) {
+  .extra-1,
+  .extra-2 {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .extra-3 {
+    display: none;
+  }
+}
+
+.extra-1 {
+  background-color: orange;
+  grid-area: extra-1;
+}
+
+.extra-2 {
+  background-color: purple;
+  grid-area: extra-2;
+}
+
+.extra-3 {
+  background-color: darkred;
+  grid-area: extra-3;
+}
+
+.monitor {
+  font-family: "Handjet", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.25ch;
+  font-style: normal;
+  grid-area: main;
+  padding: 1rem;
+}
+
+.temp-container {
+  position: relative;
+  height: 100%;
+  padding: 0.5rem;
+  display: grid;
+  grid-template-rows: 6% 94%;
+}
+.temp-container::before {
+  content: "";
+  position: absolute;
+  display: block;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+  pointer-events: none;
+}
+.temp-container::after {
+  position: absolute;
+  display: block;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15) 30%, transparent 90%);
+  pointer-events: none;
+}
+
+.tabs {
+  display: flex;
+  z-index: 1;
+}
+.tabs span {
+  padding-inline: 0.75rem;
+  border: 2px solid rgb(65, 203, 44);
+  border-bottom: none;
+  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+  color: black;
+}
+.tabs span:hover {
+  color: rgb(65, 203, 44);
+}
+.tabs span.active {
+  background-color: rgb(65, 203, 44);
+  box-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+  color: black;
+  text-shadow: none;
+}
+
+.main-screen {
+  height: 100%;
+  z-index: 1;
+  background-color: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+}
+.main-screen.loading::after {
+  content: "LOADING DATA...";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  inset: 1rem;
+  background-color: var(--color-screen-bg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+}
+.row.plot {
+  grid-template-columns: 1fr;
+  text-align: center;
+  overflow-y: scroll;
+}
+.row.plot > span {
+  justify-content: center;
+}
+.row.plot .content {
+  align-items: start;
+}/*# sourceMappingURL=main-screen.css.map */

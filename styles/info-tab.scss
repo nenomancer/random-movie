@@ -1,0 +1,110 @@
+@import "./variables.scss";
+
+.info {
+  display: none;
+  padding: 0.5rem;
+  // background: $screen-bg;
+  box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
+
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+  color: $color-highlight;
+
+  &.active {
+    border: 2px solid $color-highlight;
+    box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
+      $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+    display: flex;
+    flex-direction: column;
+  }
+  flex-direction: column;
+  gap: 0.25rem;
+  .row {
+    gap: 0.25rem;
+    .content {
+      display: flex;
+      overflow-x: scroll;
+      .button-span {
+        padding: 0.25rem 0.5rem;
+        white-space: nowrap;
+        &.link:hover {
+          cursor: inherit;
+          background-color: $color-highlight;
+          text-shadow: none;
+          color: black;
+        }
+      }
+    }
+    &.title {
+      .content {
+        span:hover {
+          a {
+            color: black;
+          }
+        }
+        a {
+          color: $color-highlight;
+          text-decoration: none;
+          cursor: inherit;
+        }
+      }
+    }
+    &.subtitle {
+      grid-template-columns: 1fr;
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-style: normal;
+
+      .content {
+        justify-content: center;
+        align-items: center;
+        box-shadow: none;
+        overflow: visible;
+        .button-span {
+          padding-block: 0;
+          border: 2px solid;
+          text-align: center;
+          box-shadow: var(--screen-shadow);
+
+          text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+
+          flex: 1;
+          &:not(&:last-child) {
+            border-right: none;
+          }
+        }
+      }
+      > span.content:first-child {
+        justify-content: flex-start;
+        justify-content: stretch;
+        /* gap: 0; */
+        border: none;
+      }
+    }
+    &.plot {
+      grid-template-columns: 1fr;
+      text-align: center;
+      > span {
+        justify-content: center;
+      }
+      .content {
+        overflow-y: scroll;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+    > span {
+      &:first-child {
+        justify-content: center;
+      }
+      display: flex;
+      align-items: center;
+      border: 2px solid $color-highlight;
+      position: relative;
+      box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
+        $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+      text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+    }
+  }
+}

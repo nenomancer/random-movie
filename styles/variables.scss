@@ -1,0 +1,30 @@
+$max-width: 960px;
+
+$breakpoint-md: 640px;
+
+$color-dark: rgb(33, 39, 48);
+$color-grey: #3e3f31;
+$color-teal: #76abae;
+$color-white: #eeeeee;
+$color-highlight: rgb(65, 203, 44);
+/* #c0d2d3; #4a5488; */
+
+$screen-color: #c0d2d3;
+$color-screen-dark: #1e2a1e;
+$color-screen-light: #334a38;
+$shadow-offset: 0.1rem;
+$shadow-blur: 0px;
+$shadow-color: rgba(0, 0, 0, 0.3);
+$screen-shadow: inset$shadow-offset $shadow-offset $shadow-blur $shadow-color,
+  $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+
+$screen-bg: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+
+$screen-width: 480px;
+$poster-width: 360px;
+
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+
+$screen-padding: 1rem;

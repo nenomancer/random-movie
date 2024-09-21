@@ -4,37 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style-experiment.css" />
-    <script src="script.js" defer></script>
+    <!-- <link rel="stylesheet" href="poster-screen.css" />
+    <link rel="stylesheet" href="main-screen.css" />
+    <link rel="stylesheet" href="info-tab.css" />
+    <link rel="stylesheet" href="filter-tab.css" /> -->
+    <link rel="stylesheet" href="/styles/main.css" />
+
+    <script src="./scripts/script2.js" defer></script>
     <title>Random Movies</title>
   </head>
 
   <body>
     <div id="main-container">
-      <section class="left">
-        <div class="top">
-          Rating, hover info screen (tooltip) maybe just that ^
-        </div>
-        <div class="bottom">
-          <div>Tagline</div>
-          <div>Full Release Date</div>
-        </div>
-      </section>
-      <section class="mid">
-        <div class="top">
-          <span>
-            <span>
-              <img src="" alt="" id="poster" />
-            </span>
-          </span>
-        </div>
-        <div class="bottom">
-          <div data-votes>votes</div>
-          <div data-popularity>popularity</div>
-          <div data-revenue>other shiet</div>
-        </div>
-      </section>
-      <section class="right">
-        <div>
+      <div class="extra-1">
+        Rating, hover info screen (tooltip) maybe just that ^
+      </div>
+      <div class="extra-2">
+        <div>Tagline</div>
+        <div>Full Release Date</div>
+      </div>
+      <div class="poster-screen">
+        <img src="" alt="" id="poster" />
+      </div>
+
+      <div class="extra-3">
+        <div data-votes>votes</div>
+        <div data-popularity>popularity</div>
+        <div data-revenue>other shiet</div>
+      </div>
+      <div class="rating">
+        <div data-votes>votes</div>
+        <div data-popularity>popularity</div>
+        <div data-revenue>other shiet</div>
+      </div>
+
+      <div class="monitor">
+        <div class="temp-container">
           <span class="tabs">
             <span class="first active">INFO</span>
             <span class="second">FILTERS</span>
@@ -66,8 +71,7 @@
                 <span class="content"> </span>
               </div>
             </div>
-            <!-- <div > -->
-            <form name="filters" class="filters" id="filters" data-tab="second">
+            <form name="filters" class="filters" data-tab="second">
               <span class="row countries">
                 <span>Country</span>
                 <span class="value">Any</span>
@@ -105,18 +109,16 @@
                 <span class="content"></span>
               </div>
             </form>
-            <!-- </div> -->
           </div>
         </div>
-        <div class="search">
-          <label for="submit">SEARCH SHIE</label>
-          <input id="submit" type="submit" form="filters" value="" />
-        </div>
-      </section>
+      </div>
+      <div class="search">
+        <span class="">SEARCH SHIE</span>
+        <button id="submit"></button>
+      </div>
 
       <div id="container">
         <div id="results"></div>
-        <!-- <div id="backgroundContainer"></div> -->
       </div>
     </div>
   </body>
