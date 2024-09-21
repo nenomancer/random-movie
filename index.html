@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="main-screen.css" />
     <link rel="stylesheet" href="info-tab.css" />
     <link rel="stylesheet" href="filter-tab.css" /> -->
-    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="./styles/main.css" />
 
-    <script src="./scripts/script2.js" defer></script>
+    <script src="./scripts/script3.js" defer></script>
     <title>Random Movies</title>
   </head>
 
@@ -24,7 +24,7 @@
         <div>Full Release Date</div>
       </div>
       <div class="poster-screen">
-        <img src="" alt="" id="poster" />
+        <span class="container"><img src="" alt="" id="poster" /></span>
       </div>
 
       <div class="extra-3">
@@ -73,15 +73,25 @@
             </div>
             <form name="filters" class="filters" data-tab="second">
               <span class="row countries">
-                <span>Country</span>
-                <span class="value">Any</span>
+                <span class="header">
+                  <span>Country</span>
+                  <span class="value">Any</span>
+                </span>
                 <span class="content"></span>
               </span>
+
+              <div class="row genres">
+                <span class="header">
+                  <span class="toggle">Genres</span>
+                  <span class="value">Any</span>
+                </span>
+                <span class="content"></span>
+              </div>
+
               <div class="row release-year">
-                <span>Year</span>
-                <span class="content">
-                  <span>
-                    <label for="release-from">From</label>
+                <span class="header">
+                  <span>Year</span>
+                  <span class="content">
                     <input
                       id="release-from"
                       type="number"
@@ -89,9 +99,6 @@
                       max="2024"
                       placeholder=""
                     />
-                  </span>
-                  <span>
-                    <label for="release-to">To</label>
                     <input
                       id="release-to"
                       type="number"
@@ -101,12 +108,6 @@
                     />
                   </span>
                 </span>
-              </div>
-
-              <div class="row genres">
-                <span class="toggle">Genres</span>
-                <span class="value">Any</span>
-                <span class="content"></span>
               </div>
             </form>
           </div>

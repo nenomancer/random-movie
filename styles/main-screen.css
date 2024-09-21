@@ -41,7 +41,7 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 640px) {
   .extra-3 {
     display: none;
   }
@@ -63,10 +63,6 @@
 }
 
 .monitor {
-  font-family: "Handjet", sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.25ch;
-  font-style: normal;
   grid-area: main;
   padding: 1rem;
 }
@@ -87,11 +83,13 @@
   pointer-events: none;
 }
 .temp-container::after {
+  content: "";
   position: absolute;
   display: block;
   inset: 0;
   background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15) 30%, transparent 90%);
   pointer-events: none;
+  box-shadow: inset 1px 1px 3px 3px black;
 }
 
 .tabs {
@@ -105,6 +103,7 @@
   box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: black;
+  line-height: 1.1;
 }
 .tabs span:hover {
   color: rgb(65, 203, 44);

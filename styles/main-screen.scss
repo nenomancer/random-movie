@@ -2,18 +2,22 @@
 @import "./extras.scss";
 
 .monitor {
-  font-family: "Handjet", sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.25ch;
-  font-style: normal;
+  // font-family: "Handjet", sans-serif;
+  // font-family: "Tiny5", sans-serif;
+  // font-family: "Press Start 2P", system-ui;
+  // font-family: "VT323", monospace;
+  // font-weight: 400;
+  // font-style: normal;
+  // font-weight: 700;
+  // letter-spacing: 0.25ch;
+  // font-style: normal;
   grid-area: main;
   padding: $screen-padding;
-
 }
 .temp-container {
   position: relative;
   height: 100%;
-  padding: .5rem;
+  padding: 0.5rem;
   // display: flex;
   // flex-direction: column;
 
@@ -29,7 +33,7 @@
     pointer-events: none;
   }
   &::after {
-    // content: "";
+    content: "";
     position: absolute;
     display: block;
     inset: 0;
@@ -39,7 +43,9 @@
       rgba(255, 255, 255, 0.15) 30%,
       transparent 90%
     );
+
     pointer-events: none;
+    box-shadow: inset 1px 1px 3px 3px black;
   }
 }
 .tabs {
@@ -54,6 +60,7 @@
 
     text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
     color: black;
+    line-height: 1.1;
     &:hover {
       color: $color-highlight;
     }

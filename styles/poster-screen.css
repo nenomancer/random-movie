@@ -1,15 +1,19 @@
+/* #c0d2d3; #4a5488; */
 .poster-screen {
   display: block;
-  padding: 0.5rem;
+  padding: 1rem;
   position: relative;
   height: 100%;
   grid-area: poster;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .poster-screen::before {
   content: "";
   display: block;
   position: absolute;
-  inset: 0.5rem;
+  inset: 1rem;
   background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
   box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
 }
@@ -17,13 +21,34 @@
   content: "";
   display: block;
   position: absolute;
-  inset: 0.5rem;
+  inset: 1rem;
   background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.15) 30%, transparent 90%);
   pointer-events: none;
   box-shadow: inset 1px 1px 3px 3px black;
 }
-.poster-screen #poster {
+.poster-screen .container {
+  display: block;
   mix-blend-mode: color-dodge;
+  height: 90%;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   filter: contrast(0.75);
+  border: 2px solid rgb(65, 203, 44);
+  position: relative;
+  display: flex;
+}
+.poster-screen .container::after {
+  content: "103";
+  display: block;
+  background-color: red;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% -50%;
+}
+.poster-screen #poster {
+  height: 100%;
   /* padding: 2px; */
 }/*# sourceMappingURL=poster-screen.css.map */

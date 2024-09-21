@@ -1,15 +1,21 @@
+@import "./variables.scss";
+
 .poster-screen {
   display: block;
-  padding: 0.5rem;
+  padding: $screen-padding;
   position: relative;
   height: 100%;
   grid-area: poster;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 
   &::before {
     content: "";
     display: block;
     position: absolute;
-    inset: 0.5rem;
+    inset: $screen-padding;
     background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
     box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
   }
@@ -17,7 +23,7 @@
     content: "";
     display: block;
     position: absolute;
-    inset: 0.5rem;
+    inset: $screen-padding;
     background: radial-gradient(
       circle at top left,
       rgba(255, 255, 255, 0.5),
@@ -29,9 +35,32 @@
     box-shadow: inset 1px 1px 3px 3px black;
   }
 
-  #poster {
+  .container {
+    display: block;
     mix-blend-mode: color-dodge;
+    height: 90%;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     filter: contrast(0.75);
+    border: 2px solid $color-highlight;
+    position: relative;
+    display: flex;
+    &::after {
+      content: "103";
+      display: block;
+      background-color: red;
+      // width: 80px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      translate: -50% -50%;
+    }
+  }
+
+  #poster {
+    height: 100%;
     /* padding: 2px; */
   }
 }

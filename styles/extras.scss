@@ -63,13 +63,13 @@
 
 .extra-1,
 .extra-2 {
-  @media screen and (max-width: $breakpoint-md) {
+  @media screen and (max-width: $breakpoint-lg) {
     display: none;
   }
 }
 
 .extra-3 {
-  @media screen and (max-width: $breakpoint-sm) {
+  @media screen and (max-width: $breakpoint-md) {
     display: none;
     
   }

@@ -3,13 +3,13 @@
 .info {
   display: none;
   padding: 0.5rem;
-  // background: $screen-bg;
   box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
 
   height: 100%;
-  overflow-y: scroll;
   position: relative;
   color: $color-highlight;
+  flex-direction: column;
+  gap: 0.25rem;
 
   &.active {
     border: 2px solid $color-highlight;
@@ -18,8 +18,6 @@
     display: flex;
     flex-direction: column;
   }
-  flex-direction: column;
-  gap: 0.25rem;
   .row {
     gap: 0.25rem;
     .content {
@@ -52,9 +50,9 @@
     }
     &.subtitle {
       grid-template-columns: 1fr;
-      font-size: 0.75rem;
-      font-weight: 900;
-      text-transform: uppercase;
+      font-size: 0.8rem;
+      // font-weight: 900;
+      // text-transform: uppercase;
       font-style: normal;
 
       .content {
@@ -91,6 +89,7 @@
       }
       .content {
         overflow-y: scroll;
+        overflow-x: hidden;
         padding: 0.25rem 0.5rem;
       }
     }
