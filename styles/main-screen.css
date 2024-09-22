@@ -41,7 +41,7 @@
   }
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 480px) {
   .extra-3 {
     display: none;
   }
@@ -50,6 +50,11 @@
 .extra-1 {
   background-color: orange;
   grid-area: extra-1;
+  padding: 1rem;
+}
+.extra-1 .container {
+  background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+  padding: 0.25rem 0.5rem;
 }
 
 .extra-2 {
@@ -67,14 +72,14 @@
   padding: 1rem;
 }
 
-.temp-container {
+.main-screen {
   position: relative;
   height: 100%;
-  padding: 0.5rem;
+  padding: 1rem;
   display: grid;
   grid-template-rows: 6% 94%;
 }
-.temp-container::before {
+.main-screen::before {
   content: "";
   position: absolute;
   display: block;
@@ -82,19 +87,28 @@
   background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
   pointer-events: none;
 }
-.temp-container::after {
+.main-screen::after {
   content: "";
   position: absolute;
   display: block;
   inset: 0;
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15) 30%, transparent 90%);
   pointer-events: none;
   box-shadow: inset 1px 1px 3px 3px black;
+}
+.main-screen.loading::after {
+  content: "LOADING DATA...";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: var(--color-screen-bg);
 }
 
 .tabs {
   display: flex;
-  z-index: 1;
+  z-index: 0;
 }
 .tabs span {
   padding-inline: 0.75rem;
@@ -103,7 +117,6 @@
   box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: black;
-  line-height: 1.1;
 }
 .tabs span:hover {
   color: rgb(65, 203, 44);
@@ -113,21 +126,6 @@
   box-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: black;
   text-shadow: none;
-}
-
-.main-screen {
-  height: 100%;
-  z-index: 1;
-  background-color: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
-}
-.main-screen.loading::after {
-  content: "LOADING DATA...";
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  inset: 1rem;
-  background-color: var(--color-screen-bg);
 }
 
 .row {

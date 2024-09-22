@@ -7,11 +7,19 @@ const options = {
   },
 };
 
-const resultsContainer = document.querySelector("#results");
 const firstTabButton = document.querySelector(".tabs .first");
 const secondTabButton = document.querySelector(".tabs .second");
 const firstTab = document.querySelector('[data-tab="first"]');
 const secondTab = document.querySelector('[data-tab="second"]');
+const tooltipDisplay = document.querySelector("[data-tooltip-display]");
+
+const genreFilterContainer = document.querySelector(".filters .genres");
+bindHoverTooltip(genreFilterContainer);
+const countriesFilterList = document.querySelector(".countries .content");
+bindHoverTooltip(countriesFilterList.parentElement);
+let allGenres = [];
+let filteredGenres = [];
+let allCountries = [];
 
 firstTabButton.addEventListener("click", (e) => {
   firstTabButton.classList.add("active");
@@ -25,15 +33,18 @@ secondTabButton.addEventListener("click", (e) => {
   secondTab.classList.add("active");
   firstTab.classList.remove("active");
 });
-let allGenres = [];
-let filteredGenres = [];
-let allCountries = [];
+
+function bindHoverTooltip(element) {
+  element.addEventListener("mouseover", (e) => {
+    tooltipDisplay.innerText = element.getAttribute("data-tooltip");
+  });
+  element.addEventListener("mouseout", (e) => {
+    tooltipDisplay.innerText = "sguueeet";
+  });
+}
 
 generateCountries().then(generateGenres).then(fetchMovies);
 submit.addEventListener("click", (e) => fetchMovies());
-
-const genreFilterContainer = document.querySelector(".filters .genres");
-const countriesFilterList = document.querySelector(".countries .content");
 
 function generateGenres() {
   return fetch("https://api.themoviedb.org/3/genre/movie/list", options)
@@ -175,6 +186,7 @@ function fetchMovies(queries = "", totalPages = 500) {
       _queries += genre.getAttribute("data-id") + ",";
     });
   }
+
   if (releasedFrom !== "" || releasedTo !== "") {
     const fromDate = new Date(earliest, 0, 1);
     const toDate = new Date(latest, 0, 1);
@@ -250,7 +262,6 @@ function getGenreMovies(id) {
 function displayResult(data, maxIndex = 20) {
   const randomIndex = Math.floor(Math.random() * maxIndex);
 
-  resultsContainer.innerHTML = "";
   data.forEach((movie, index) => {
     if (index === randomIndex) {
       const title = document.querySelector(".title .content");
@@ -274,10 +285,16 @@ function displayResult(data, maxIndex = 20) {
 
       // const subtitle = document.createElement("div");
       // subtitle.className = "subtitle";
-
+      const movieIdDisplay = document.querySelector(
+        ".poster-screen .container"
+      );
+      movieIdDisplay.setAttribute("data-movie-id", movie.id);
       const popularityEl = document.querySelector("[data-popularity]");
       const votesEl = document.querySelector("[data-votes]");
       const revenueEl = document.querySelector("[data-revenue]");
+      const ratingEl = document.querySelector("[data-rating]");
+      const runtimeEl = document.querySelector("[data-runtime]");
+      const locationEl = document.querySelector("[data-location]");
       const subtitle = document.querySelector(".subtitle .content");
       const date = document.createElement("span");
       date.innerText = movie.release_date.split("-")[0];
@@ -356,7 +373,10 @@ function displayResult(data, maxIndex = 20) {
           const runtimeMinutes = data.runtime;
           popularityEl.innerText = "popularity: " + data.popularity;
           votesEl.innerText = "votes: " + data.vote_count;
+          ratingEl.innerText = "average: " + data.vote_average;
           revenueEl.innerText = "revenue: " + data.revenue;
+          runtimeEl.innerText = "runtime: " + data.runtime;
+
           plotContent.innerText = data.overview;
 
           if (data.overview === "") {
@@ -370,6 +390,7 @@ function displayResult(data, maxIndex = 20) {
           const found = allCountries.find(
             (el) => el.iso_3166_1 == data.origin_country[0]
           );
+          locationEl.innerText = "lcoations: " + found.native_name;
 
           countries.innerText = found.native_name;
           const rate = Math.round(data.vote_average * 10) / 10;

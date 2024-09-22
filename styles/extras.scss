@@ -60,7 +60,7 @@
   grid-area: rating;
   background-color: blue;
 }
-
+// .extra-3,
 .extra-1,
 .extra-2 {
   @media screen and (max-width: $breakpoint-lg) {
@@ -71,12 +71,16 @@
 .extra-3 {
   @media screen and (max-width: $breakpoint-md) {
     display: none;
-    
   }
 }
 .extra-1 {
   background-color: orange;
   grid-area: extra-1;
+  padding: $screen-padding;
+  .container {
+    background: $screen-bg;
+    padding: 0.25rem 0.5rem;
+  }
 }
 
 .extra-2 {

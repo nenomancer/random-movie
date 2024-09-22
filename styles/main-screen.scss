@@ -14,10 +14,10 @@
   grid-area: main;
   padding: $screen-padding;
 }
-.temp-container {
+.main-screen {
   position: relative;
   height: 100%;
-  padding: 0.5rem;
+  padding: 1rem;
   // display: flex;
   // flex-direction: column;
 
@@ -37,20 +37,32 @@
     position: absolute;
     display: block;
     inset: 0;
-    background: radial-gradient(
-      circle at top left,
-      rgba(255, 255, 255, 0.25),
-      rgba(255, 255, 255, 0.15) 30%,
-      transparent 90%
-    );
+    // background: radial-gradient(
+    //   circle at top left,
+    //   rgba(255, 255, 255, 0.25),
+    //   rgba(255, 255, 255, 0.15) 30%,
+    //   transparent 90%
+    // );
 
     pointer-events: none;
     box-shadow: inset 1px 1px 3px 3px black;
   }
+
+  &.loading::after {
+    content: "LOADING DATA...";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    // inset: $screen-padding;
+    inset: 0;
+    z-index: 1;
+    background-color: var(--color-screen-bg);
+  }
 }
 .tabs {
   display: flex;
-  z-index: 1;
+  z-index: 0;
   span {
     padding-inline: 0.75rem;
     border: 2px solid $color-highlight;
@@ -60,7 +72,6 @@
 
     text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
     color: black;
-    line-height: 1.1;
     &:hover {
       color: $color-highlight;
     }
@@ -73,20 +84,11 @@
   }
 }
 
-.main-screen {
-  height: 100%;
-  z-index: 1;
-  background-color: $screen-bg;
-  &.loading::after {
-    content: "LOADING DATA...";
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    inset: $screen-padding;
-    background-color: var(--color-screen-bg);
-  }
-}
+// .main-screen {
+//   height: 100%;
+//   z-index: 1;
+//   background-color: $screen-bg;
+// }
 
 .row {
   display: grid;

@@ -49,6 +49,11 @@
 .extra-1 {
   background-color: orange;
   grid-area: extra-1;
+  padding: 1rem;
+}
+.extra-1 .container {
+  background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+  padding: 0.25rem 0.5rem;
 }
 
 .extra-2 {

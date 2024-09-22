@@ -17,14 +17,18 @@
   <body>
     <div id="main-container">
       <div class="extra-1">
-        Rating, hover info screen (tooltip) maybe just that ^
+        <div class="container">
+          <div class="tooltip" data-tooltip-display>TOOLTIP:</div>
+          <div>Tagline</div>
+        </div>
       </div>
       <div class="extra-2">
-        <div>Tagline</div>
         <div>Full Release Date</div>
       </div>
       <div class="poster-screen">
-        <span class="container"><img src="" alt="" id="poster" /></span>
+        <span class="container" data-movie-id="">
+          <img src="" alt="" id="poster" />
+        </span>
       </div>
 
       <div class="extra-3">
@@ -33,18 +37,21 @@
         <div data-revenue>other shiet</div>
       </div>
       <div class="rating">
-        <div data-votes>votes</div>
-        <div data-popularity>popularity</div>
-        <div data-revenue>other shiet</div>
+        <div data-rating>popularity</div>
+        <div data-runtime>runtime</div>
+        <div data-location>other shiet</div>
       </div>
 
       <div class="monitor">
-        <div class="temp-container">
+        <div
+          class="main-screen"
+          data-tooltip="Now hovering over the Main screen.."
+        >
           <span class="tabs">
             <span class="first active">INFO</span>
             <span class="second">FILTERS</span>
           </span>
-          <div class="main-screen">
+          <div>
             <div class="info active" data-tab="first">
               <div class="row title">
                 <span>TTL</span>
@@ -72,7 +79,10 @@
               </div>
             </div>
             <form name="filters" class="filters" data-tab="second">
-              <span class="row countries">
+              <span
+                class="row countries"
+                data-tooltip="Choose a country of origin for the movie"
+              >
                 <span class="header">
                   <span>Country</span>
                   <span class="value">Any</span>
@@ -80,7 +90,10 @@
                 <span class="content"></span>
               </span>
 
-              <div class="row genres">
+              <div
+                class="row genres"
+                data-tooltip="Pick one or multiple genres to find a movie"
+              >
                 <span class="header">
                   <span class="toggle">Genres</span>
                   <span class="value">Any</span>

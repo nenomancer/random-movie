@@ -15,9 +15,12 @@ $color-screen-light: #334a38;
 $shadow-offset: 0.1rem;
 $shadow-blur: 0px;
 $shadow-color: rgba(0, 0, 0, 0.3);
-$screen-shadow: inset$shadow-offset $shadow-offset $shadow-blur $shadow-color,
-  $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-
+// $screen-shadow: inset$shadow-offset $shadow-offset $shadow-blur $shadow-color,
+// $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+$screen-shadow-outside: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+$screen-shadow-inside: inset$shadow-offset $shadow-offset $shadow-blur
+  $shadow-color;
+$screen-shadow: $screen-shadow-inside, $screen-shadow-outside;
 $screen-bg: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
 
 $screen-width: 480px;

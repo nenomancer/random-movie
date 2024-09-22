@@ -8,59 +8,85 @@
   grid-area: poster;
   display: flex;
   justify-content: center;
-  align-items: center;
-  
+  align-items: flex-end;
+  // background-color: orange;
 
   &::before {
     content: "";
     display: block;
     position: absolute;
     inset: $screen-padding;
-    background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
-    box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
+    // background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+    // box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
+    background: $screen-bg;
   }
   &::after {
     content: "";
     display: block;
     position: absolute;
     inset: $screen-padding;
-    background: radial-gradient(
-      circle at top left,
-      rgba(255, 255, 255, 0.5),
-      rgba(255, 255, 255, 0.15) 30%,
-      transparent 90%
-    );
-
+    // background: radial-gradient(
+    //   circle at top left,
+    //   rgba(255, 255, 255, 0.25),
+    //   rgba(255, 255, 255, 0.15) 30%,
+    //   transparent 90%
+    // );
     pointer-events: none;
     box-shadow: inset 1px 1px 3px 3px black;
   }
 
   .container {
     display: block;
-    mix-blend-mode: color-dodge;
-    height: 90%;
-    width: 90%;
+    height: 93%;
+    // width: 93%;
     display: flex;
     justify-content: center;
     align-items: center;
-    filter: contrast(0.75);
-    border: 2px solid $color-highlight;
+    // filter: contrast(0.75);
     position: relative;
     display: flex;
-    &::after {
-      content: "103";
+    padding-bottom: 1rem;
+    padding-inline: 1rem;
+    // box-shadow: $screen-shadow;
+    // border: 2px solid $color-highlight;
+    &::before {
+      content: "";
       display: block;
-      background-color: red;
+      position: absolute;
+      top: 0.5rem;
+      left: 50%;
+      translate: -50% 0;
+      width: 2px;
+      height: 0.4rem;
+      background-color: $color-highlight;
+    }
+
+    &::after {
+      content: attr(data-movie-id);
+      display: block;
+      border: 2px solid $color-highlight;
       // width: 80px;
       position: absolute;
       top: 0;
       left: 50%;
       translate: -50% -50%;
+      // box-shadow: $screen-shadow;
+      font-size: 0.75rem;
+      padding-inline: 0.5rem;
+      background: darkred;
+      // box-shadow: 2px 2px black;;
     }
   }
 
   #poster {
     height: 100%;
-    /* padding: 2px; */
+    width: 100%;
+    // width: 94%;
+    object-fit: contain;
+    // mix-blend-mode: color-dodge;
+    border: 2px solid $color-highlight;
+    box-shadow: $screen-shadow;
+    padding: 0.5rem;
+    padding-top: 0.75rem;
   }
 }
