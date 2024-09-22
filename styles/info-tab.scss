@@ -2,8 +2,7 @@
 
 .info {
   display: none;
-  padding: 0.5rem;
-  box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
+  padding-block: 0.5rem;
 
   height: 100%;
   position: relative;
@@ -12,11 +11,14 @@
   gap: 0.25rem;
 
   &.active {
-    border: 2px solid $color-highlight;
-    box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
-      $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-    display: flex;
-    flex-direction: column;
+    // border: 2px solid $color-highlight;
+    // box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
+    // $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+    // display: flex;
+    display: grid;
+
+    // flex-direction: column;
+    align-content: start;
   }
   .row {
     gap: 0.25rem;
@@ -24,8 +26,13 @@
       display: flex;
       overflow-x: scroll;
       .button-span {
-        padding: 0.25rem 0.5rem;
+        // padding: 0.25rem 0.5rem;
+        padding-inline: 0.5rem;
         white-space: nowrap;
+        height: 100%;
+        display: flex;
+        align-items: center;
+
         &.link:hover {
           cursor: inherit;
           background-color: $color-highlight;
@@ -36,12 +43,16 @@
     }
     &.title {
       .content {
+        .button-span {
+          flex: 1;
+        }
         span:hover {
           a {
             color: black;
           }
         }
         a {
+          flex: 1;
           color: $color-highlight;
           text-decoration: none;
           cursor: inherit;
@@ -88,14 +99,19 @@
     }
     &.plot {
       grid-template-columns: 1fr;
+      grid-template-rows: unset;
       text-align: center;
-      > span {
+      overflow-y: scroll;
+
+      > span:first-child {
         justify-content: center;
+        height: 1.25rem;
       }
       .content {
         overflow-y: scroll;
         overflow-x: hidden;
         text-align: left;
+        align-items: start;
         padding: 0.25rem 0.5rem;
       }
     }
@@ -107,9 +123,9 @@
       align-items: center;
       border: 2px solid $color-highlight;
       position: relative;
-      box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
-        $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-      text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+      // box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
+      //   $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+      // text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
     }
   }
 }

@@ -14,8 +14,10 @@ const secondTab = document.querySelector('[data-tab="second"]');
 const tooltipDisplay = document.querySelector("[data-tooltip-display]");
 
 const genreFilterContainer = document.querySelector(".filters .genres");
-bindHoverTooltip(genreFilterContainer);
 const countriesFilterList = document.querySelector(".countries .content");
+bindHoverTooltip(genreFilterContainer);
+bindHoverTooltip(firstTabButton);
+bindHoverTooltip(secondTabButton);
 bindHoverTooltip(countriesFilterList.parentElement);
 let allGenres = [];
 let filteredGenres = [];
@@ -61,6 +63,7 @@ function generateGenres() {
 
       function displaySelectedCountry(temp) {
         temp.classList.toggle("selected");
+        filteredGenres.push(temp.id);
         const selectedOptions = Array.from(
           options.querySelectorAll(".selected")
         );
@@ -88,7 +91,9 @@ function generateGenres() {
       });
       console.log(options.children);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.log("error code: ", err.status_code);
+    });
 }
 
 function generateCountries() {
@@ -141,10 +146,13 @@ function generateCountries() {
         countriesFilterList.appendChild(temp);
       });
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.log("error code: ", err.status_code);
+    });
 }
 
 const mainScreen = document.querySelector(".main-screen");
+const posterScreen = document.querySelector(".poster-screen");
 mainScreen.classList.add("loading");
 // Add generated movies to cookie to avoid regenerating them
 function fetchMovies(queries = "", totalPages = 500) {
@@ -152,7 +160,7 @@ function fetchMovies(queries = "", totalPages = 500) {
   const countryOfOrigin = document
     .querySelector(".countries .value")
     .getAttribute("data-filter-country");
-  const genres = document.querySelectorAll("#filters .genres .option");
+  const genres = document.querySelectorAll(".filters .genres .option");
   const pageNumber = Math.floor(Math.random() * totalPages);
   const releasedFrom = document.querySelector("#release-from");
   const releasedTo = document.querySelector("#release-to");
@@ -176,9 +184,13 @@ function fetchMovies(queries = "", totalPages = 500) {
   let _queries = queries;
 
   // get selected genres
-  filteredGenres = Array.from(genres).filter((genre) =>
-    genre.classList.contains("selected")
-  );
+  Array.from(genres).forEach((genre) => {
+    if (genre.classList.contains("selected")) {
+      filteredGenres.push(genre);
+    }
+  });
+  console.log(filteredGenres);
+  console.log(genres);
 
   if (filteredGenres.length !== 0) {
     _queries += "&with_genres=";
@@ -218,8 +230,12 @@ function fetchMovies(queries = "", totalPages = 500) {
     })
     .catch((err) => {
       console.error(err);
+      console.log("error code: ", err.status_code);
       console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...");
       alert("NO MOVIES WITH THEMS PARAMTETERS, PLEASE ADJUST YA FILTERS!");
+    })
+    .finally((e) => {
+      mainScreen.classList.remove("loading");
     });
 }
 
@@ -237,7 +253,9 @@ function getDirectorMovies(id) {
       );
       return displayResult(temp, temp.length);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.log("error code: ", err.status_code);
+    });
 }
 
 function getActorMovies(id) {
@@ -252,7 +270,9 @@ function getActorMovies(id) {
       const temp = response.movie_credits.cast;
       return displayResult(temp, temp.length);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.log("error code: ", err.status_code);
+    });
 }
 
 function getGenreMovies(id) {
@@ -265,6 +285,7 @@ function displayResult(data, maxIndex = 20) {
   data.forEach((movie, index) => {
     if (index === randomIndex) {
       const title = document.querySelector(".title .content");
+      bindHoverTooltip(title);
       title.innerHTML = "";
       const temp = document.createElement("span");
       const titleUrl = document.createElement("a");
@@ -292,6 +313,8 @@ function displayResult(data, maxIndex = 20) {
       const popularityEl = document.querySelector("[data-popularity]");
       const votesEl = document.querySelector("[data-votes]");
       const revenueEl = document.querySelector("[data-revenue]");
+      const budgetEl = document.querySelector("[data-budget]");
+      const profitEl = document.querySelector("[data-profit]");
       const ratingEl = document.querySelector("[data-rating] #arrow");
       const runtimeEl = document.querySelector("[data-runtime]");
       const locationEl = document.querySelector("[data-location]");
@@ -312,11 +335,11 @@ function displayResult(data, maxIndex = 20) {
       votes.className = "button-span";
       popularity.className = "button-span";
 
-      subtitle.innerHTML = "";
-      subtitle.appendChild(date);
-      subtitle.appendChild(countries);
-      subtitle.appendChild(rating);
-      subtitle.appendChild(runtime);
+      // subtitle.innerHTML = "";
+      // subtitle.appendChild(date);
+      // subtitle.appendChild(countries);
+      // subtitle.appendChild(rating);
+      // subtitle.appendChild(runtime);
 
       getMovieGenres();
       getImdbUrl();
@@ -343,10 +366,15 @@ function displayResult(data, maxIndex = 20) {
           const genre = allGenres.find((genre) => genre.id == genreId);
           if (genre) {
             const temp = document.createElement("span");
-            temp.className = "button-span";
-            temp.classList.add("link");
+            temp.className = "button-span link";
+            // temp.classList.add("link");
+            temp.setAttribute(
+              "data-tooltip",
+              `Genres of this movie, click here to get a random ${genre.name} movie`
+            );
             temp.innerText = genre.name;
             temp.addEventListener("click", (e) => getGenreMovies(genre.id));
+            bindHoverTooltip(temp);
             genres.appendChild(temp);
           }
         });
@@ -382,8 +410,20 @@ function displayResult(data, maxIndex = 20) {
           const normalized = data.vote_average / 10;
           const deg = normalized * 180;
           ratingEl.style.setProperty("--rotation", `${deg}deg`);
-          revenueEl.innerText = data.revenue;
+          if (data.revenue === 0) {
+            revenueEl.innerText = padNumber("0");
+          } else {
+            revenueEl.innerText = padNumber(data.revenue);
+          }
+          if (data.budget === 0) {
+            budgetEl.innerText = padNumber("0");
+          } else {
+            budgetEl.innerText = padNumber(data.budget);
+          }
           runtimeEl.innerText = data.runtime;
+          profitEl.innerText = padNumber(data.revenue - data.budget);
+
+          bindHoverTooltip(budgetEl);
 
           plotContent.innerText = data.overview;
           locationEl.innerText = found.native_name;
@@ -408,6 +448,10 @@ function displayResult(data, maxIndex = 20) {
     }
   });
 
+  function padNumber(number, size = 10) {
+    const temp = "0000000000" + number;
+    return temp.substring(temp.length - size);
+  }
   function getMovieCredits(id) {
     fetch("https://api.themoviedb.org/3/movie/" + id + "/credits", options)
       .then((response) => response.json())

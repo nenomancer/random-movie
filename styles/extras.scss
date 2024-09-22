@@ -61,8 +61,10 @@
   grid-area: rating;
   background-color: blue;
   display: grid;
-  grid-template-rows: 3fr 1fr;
-
+  grid-template-rows: fit-content 1fr;
+  border-radius: $monitor-border-radius;
+  box-shadow: $monitor-bevel-outer;
+  // padding: $monitor-padding;
   .container {
     background-color: gold;
     height: 150px;
@@ -73,11 +75,12 @@
       inset 0 0 6px 2px black, $monitor-bevel-inner;
   }
   // --overshot: calc(var(--rotation) + var(--rotation-overshoot));
-  > div:nth-child(2) {
-    background-color: beige;
+  &-extra {
+    // background-color: pink;
     // display: flex;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+
   }
 
   [data-rating] {
@@ -86,40 +89,29 @@
     position: relative;
     --rotation: 0deg;
     --rotation-overshoot: 30deg;
-    background-color: darkblue;
     padding: 0.5rem;
   }
   #arrow {
-    --rotation: 0deg;
+    --rotation: 15deg;
     position: absolute;
     bottom: 50%;
     right: 50%;
-    translate: 0 50%;
+    // translate: 0 50%;
     transition: rotate 250ms;
-
-    /*     rotate: calc(var(--rotation) + 50deg); */
-
+    transform: rotate(-90deg) translateY(-2px);
     rotate: var(--rotation);
-    transform-origin: right;
+    transform-origin: bottom;
     border: 0.4rem solid transparent;
     border-right-color: black;
     border-right-width: 4rem;
+    border: none;
+    width: 4px;
+    height: 3rem;
+    background-color: red;
     z-index: 2;
     animation: rotationz 4s forwards;
     animation-iteration-count: 1;
-
-    &::before {
-      content: "";
-      display: block;
-      // background-color: green;
-      position: absolute;
-      transform-origin: right;
-      border: 0.25rem solid transparent;
-      border-right-color: red;
-      border-right-width: 4.4rem;
-      top: -6px;
-      left: -8px;
-    }
+    box-shadow: 2px 2px black;
   }
   [data-runtime] {
     background-color: darkcyan;
@@ -132,10 +124,12 @@
     place-items: center;
   }
 }
-.extra-3,
+// .extra-3,
 .extra-1,
 .extra-2 {
   // font-family: "Orbitron", sans-serif;
+  border-radius: $monitor-border-radius;
+  overflow: hidden;
   @media screen and (max-width: $breakpoint-lg) {
     display: none;
   }
@@ -164,6 +158,10 @@
 .extra-3 {
   background-color: darkred;
   grid-area: extra-3;
+
+  @media screen and (max-width: $breakpoint-sm) {
+    display: none;
+  }
 
   [data-popularity] {
     background-color: peru;

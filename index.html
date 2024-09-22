@@ -18,7 +18,7 @@
     <div id="main-container">
       <div class="extra-1">
         <div class="container">
-          <div class="tooltip" data-tooltip-display>TOOLTIP:</div>
+          <!-- <div class="tooltip" data-tooltip-display>TOOLTIP:</div> -->
           <div>Tagline</div>
         </div>
       </div>
@@ -34,15 +34,26 @@
         <div data-votes>votes</div>
         <div data-popularity>popularity</div>
         <div data-location>other shiet</div>
+        <div data-runtime>runtime</div>
+        <div class="tooltip" data-tooltip-display>TOOLTIP:</div>
       </div>
       <div class="rating">
         <div data-rating>
-          <div class="container">DASHES</div>
+          <div class="container"></div>
           <div id="arrow" data-rotation></div>
         </div>
-        <div>
-          <div data-runtime>runtime</div>
-          <div data-revenue>other shiet</div>
+        <div class="rating-extra">
+          <div class="protif">
+            <div data-revenue data-tooltip="Revenue of the movie">revenue</div>
+            <div data-budget data-tooltip="Budget of the movie">budget</div>
+            <div data-profit data-tooltip="Profit of the movie">profit</div>
+          </div>
+          <div class="themes">
+            <div class="theme-blue">blue</div>
+            <div class="theme-green">green</div>
+            <div class="theme-red">red</div>
+            <div class="theme-orange">orange</div>
+          </div>
         </div>
       </div>
 
@@ -52,19 +63,25 @@
           data-tooltip="Now hovering over the Main screen.."
         >
           <span class="tabs">
-            <span class="first active">INFO</span>
-            <span class="second">FILTERS</span>
+            <span class="first active" data-tooltip="View movie details"
+              >INFO</span
+            >
+            <span class="second" data-tooltip="Click to see the filter tab"
+              >FILTERS</span
+            >
           </span>
           <div>
             <div class="info active" data-tab="first">
               <div class="row title">
                 <span>TTL</span>
-                <span class="content"></span>
+                <span
+                  class="content"
+                  data-tooltip="Title of the movie. Click to view on IMDB."
+                ></span>
               </div>
-              <div class="row subtitle">
-                <!-- <span></span> -->
+              <!-- <div class="row subtitle">
                 <span class="content"></span>
-              </div>
+              </div> -->
               <div class="row genres">
                 <span>GNR</span>
                 <span class="content"> </span>
@@ -105,7 +122,10 @@
                 <span class="content"></span>
               </div>
 
-              <div class="row release-year">
+              <div
+                class="row release-year"
+                data-tooltip="Filter based on release date [from - to]"
+              >
                 <span class="header">
                   <span>Year</span>
                   <span class="content">

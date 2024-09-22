@@ -1,8 +1,7 @@
 /* #c0d2d3; #4a5488; */
 .info {
   display: none;
-  padding: 0.5rem;
-  box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
+  padding-block: 0.5rem;
   height: 100%;
   position: relative;
   color: rgb(65, 203, 44);
@@ -10,10 +9,8 @@
   gap: 0.25rem;
 }
 .info.active {
-  border: 2px solid rgb(65, 203, 44);
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  align-content: start;
 }
 .info .row {
   gap: 0.25rem;
@@ -23,8 +20,11 @@
   overflow-x: scroll;
 }
 .info .row .content .button-span {
-  padding: 0.25rem 0.5rem;
+  padding-inline: 0.5rem;
   white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .info .row .content .button-span.link:hover {
   cursor: inherit;
@@ -32,10 +32,14 @@
   text-shadow: none;
   color: black;
 }
+.info .row.title .content .button-span {
+  flex: 1;
+}
 .info .row.title .content span:hover a {
   color: black;
 }
 .info .row.title .content a {
+  flex: 1;
   color: rgb(65, 203, 44);
   text-decoration: none;
   cursor: inherit;
@@ -71,15 +75,19 @@
 }
 .info .row.plot {
   grid-template-columns: 1fr;
+  grid-template-rows: unset;
   text-align: center;
+  overflow-y: scroll;
 }
-.info .row.plot > span {
+.info .row.plot > span:first-child {
   justify-content: center;
+  height: 1.25rem;
 }
 .info .row.plot .content {
   overflow-y: scroll;
   overflow-x: hidden;
   text-align: left;
+  align-items: start;
   padding: 0.25rem 0.5rem;
 }
 .info .row > span {
@@ -87,8 +95,6 @@
   align-items: center;
   border: 2px solid rgb(65, 203, 44);
   position: relative;
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
 }
 .info .row > span:first-child {
   justify-content: center;

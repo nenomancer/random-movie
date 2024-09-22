@@ -1,11 +1,8 @@
 @import "./variables.scss";
 
 .filters {
-  /* background-color: var(--inactive-color); */
   display: none;
-  padding: 0.5rem;
-  box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
-
+  padding-block: 0.5rem;
   height: 100%;
   position: relative;
   color: $color-highlight;
@@ -13,9 +10,6 @@
   flex-direction: column;
 
   &.active {
-    border: 2px solid $color-highlight;
-    box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
-      $shadow-offset $shadow-offset $shadow-blur $shadow-color;
     display: flex;
     flex-direction: column;
   }
@@ -39,6 +33,7 @@
       .button-span {
         padding: 0.25rem 0.5rem;
         white-space: nowrap;
+        height: 100%;
         &.link:hover {
           cursor: inherit;
           background-color: $color-highlight;
@@ -49,7 +44,6 @@
     }
     &.genres,
     &.countries {
-      background-color: #3e3f31;
       grid-template-rows: 1fr 0;
       overflow: hidden;
       transition-property: row-gap;
@@ -100,6 +94,7 @@
       }
       .content {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        grid-template-columns: repeat(3, minmax(30%, 1fr));
         // gap: 0.25rem;
         // span {
         //   display: grid;

@@ -13,7 +13,7 @@
   // font-style: normal;
   grid-area: main;
   padding: $monitor-padding;
-  box-shadow: $monitor-bevel-outer, 0 0 2px 2px black;
+  box-shadow: $monitor-bevel-outer, $monitor-shadow-outer;
   border-radius: $monitor-border-radius;
   background-color: $monitor-color;
 }
@@ -21,6 +21,7 @@
   position: relative;
   height: 100%;
   padding: 1rem;
+  min-height: 360px;
   // display: flex;
   // flex-direction: column;
   box-shadow: $monitor-bevel-inner;
@@ -43,13 +44,6 @@
     position: absolute;
     display: block;
     inset: 0;
-    // background: radial-gradient(
-    //   circle at top left,
-    //   rgba(255, 255, 255, 0.25),
-    //   rgba(255, 255, 255, 0.15) 30%,
-    //   transparent 90%
-    // );
-
     pointer-events: none;
     box-shadow: $monitor-bevel-inner, $monitor-shadow-inner, $monitor-glow;
     border-radius: $monitor-border-radius;
@@ -65,22 +59,29 @@
     inset: 0;
     z-index: 2;
     background: $screen-bg;
+    color: $color-highlight;
   }
 }
 .tabs {
-  display: flex;
+  // display: flex;
   z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  grid-template-rows: 1.25rem;
+  @media screen and (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   span {
     padding-inline: 0.75rem;
     border: 2px solid $color-highlight;
-    border-bottom: none;
+    // border-bottom: none;
     box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
       $shadow-offset $shadow-offset $shadow-blur $shadow-color;
 
     text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-    color: black;
+    // color: black;
+    color: $color-highlight;
     &:hover {
-      color: $color-highlight;
     }
     &.active {
       background-color: $color-highlight;
@@ -101,16 +102,17 @@
   display: grid;
   grid-template-columns: 1fr 6fr;
 
-  &.plot {
-    grid-template-columns: 1fr;
-    text-align: center;
-    // max-height: 6rem;
-    overflow-y: scroll;
-    > span {
-      justify-content: center;
-    }
-    .content {
-      align-items: start;
-    }
-  }
+  grid-template-rows: 2rem;
+  // &.plot {
+  //   grid-template-columns: 1fr;
+  //   text-align: center;
+  //   // max-height: 6rem;
+  //   overflow-y: scroll;
+  //   > span {
+  //     justify-content: center;
+  //   }
+  //   .content {
+  //     align-items: start;
+  //   }
+  // }
 }
