@@ -292,7 +292,7 @@ function displayResult(data, maxIndex = 20) {
       const popularityEl = document.querySelector("[data-popularity]");
       const votesEl = document.querySelector("[data-votes]");
       const revenueEl = document.querySelector("[data-revenue]");
-      const ratingEl = document.querySelector("[data-rating]");
+      const ratingEl = document.querySelector("[data-rating] #arrow");
       const runtimeEl = document.querySelector("[data-runtime]");
       const locationEl = document.querySelector("[data-location]");
       const subtitle = document.querySelector(".subtitle .content");
@@ -369,15 +369,29 @@ function displayResult(data, maxIndex = 20) {
             console.log("poster..? ", poster);
             poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
           }
+          const found = allCountries.find(
+            (el) => el.iso_3166_1 == data.origin_country[0]
+          );
           const plotContent = document.querySelector(".row.plot .content");
           const runtimeMinutes = data.runtime;
-          popularityEl.innerText = "popularity: " + data.popularity;
-          votesEl.innerText = "votes: " + data.vote_count;
-          ratingEl.innerText = "average: " + data.vote_average;
-          revenueEl.innerText = "revenue: " + data.revenue;
-          runtimeEl.innerText = "runtime: " + data.runtime;
+          const rate = Math.round(data.vote_average * 10) / 10;
+          popularityEl.innerText = data.popularity;
+          votesEl.innerText = data.vote_count;
+          // ratingEl.innerText = data.vote_average;
+          // ratingEl.setAttribute("data-rotation", data.vote_average + "deg");
+          const normalized = data.vote_average / 10;
+          const deg = normalized * 180;
+          ratingEl.style.setProperty("--rotation", `${deg}deg`);
+          revenueEl.innerText = data.revenue;
+          runtimeEl.innerText = data.runtime;
 
           plotContent.innerText = data.overview;
+          locationEl.innerText = found.native_name;
+          countries.innerText = found.native_name;
+          rating.innerText = rate.toFixed(1);
+          runtime.innerText = `${Math.floor(runtimeMinutes / 60)}h ${
+            runtimeMinutes % 60
+          }min`;
 
           if (data.overview === "") {
             plotContent.innerText =
@@ -387,17 +401,6 @@ function displayResult(data, maxIndex = 20) {
             subtitle.removeChild(runtime);
           }
 
-          const found = allCountries.find(
-            (el) => el.iso_3166_1 == data.origin_country[0]
-          );
-          locationEl.innerText = "lcoations: " + found.native_name;
-
-          countries.innerText = found.native_name;
-          const rate = Math.round(data.vote_average * 10) / 10;
-          rating.innerText = rate.toFixed(1);
-          runtime.innerText = `${Math.floor(runtimeMinutes / 60)}h ${
-            runtimeMinutes % 60
-          }min`;
           getMovieCredits(movie.id);
           mainScreen.classList.remove("loading");
         })

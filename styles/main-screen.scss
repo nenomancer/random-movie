@@ -12,7 +12,10 @@
   // letter-spacing: 0.25ch;
   // font-style: normal;
   grid-area: main;
-  padding: $screen-padding;
+  padding: $monitor-padding;
+  box-shadow: $monitor-bevel-outer, 0 0 2px 2px black;
+  border-radius: $monitor-border-radius;
+  background-color: $monitor-color;
 }
 .main-screen {
   position: relative;
@@ -20,6 +23,8 @@
   padding: 1rem;
   // display: flex;
   // flex-direction: column;
+  box-shadow: $monitor-bevel-inner;
+  border-radius: $monitor-border-radius;
 
   display: grid;
   grid-template-rows: 6% 94%;
@@ -31,6 +36,7 @@
     inset: 0;
     background: $screen-bg;
     pointer-events: none;
+    border-radius: $monitor-border-radius;
   }
   &::after {
     content: "";
@@ -45,7 +51,8 @@
     // );
 
     pointer-events: none;
-    box-shadow: inset 1px 1px 3px 3px black;
+    box-shadow: $monitor-bevel-inner, $monitor-shadow-inner, $monitor-glow;
+    border-radius: $monitor-border-radius;
   }
 
   &.loading::after {
@@ -54,10 +61,10 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    // inset: $screen-padding;
+    // inset: $monitor-padding;
     inset: 0;
-    z-index: 1;
-    background-color: var(--color-screen-bg);
+    z-index: 2;
+    background: $screen-bg;
   }
 }
 .tabs {

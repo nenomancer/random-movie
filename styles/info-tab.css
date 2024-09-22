@@ -50,23 +50,24 @@
   align-items: center;
   box-shadow: none;
   overflow: visible;
+  overflow-x: scroll;
+  border: 2px solid;
+  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--screen-shadow);
 }
 .info .row.subtitle .content .button-span {
   padding-block: 0;
-  border: 2px solid;
   text-align: center;
-  box-shadow: var(--screen-shadow);
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+  border-right: 2px solid;
   flex: 1;
 }
-.info .row.subtitle .content .button-span:not(.info .row.subtitle .content .button-span:last-child) {
-  border-right: none;
+.info .row.subtitle .content .button-span:last-child {
+  border: none;
 }
 .info .row.subtitle > span.content:first-child {
   justify-content: flex-start;
   justify-content: stretch;
   /* gap: 0; */
-  border: none;
 }
 .info .row.plot {
   grid-template-columns: 1fr;
@@ -78,6 +79,7 @@
 .info .row.plot .content {
   overflow-y: scroll;
   overflow-x: hidden;
+  text-align: left;
   padding: 0.25rem 0.5rem;
 }
 .info .row > span {

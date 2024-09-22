@@ -1,70 +1,51 @@
 /* #c0d2d3; #4a5488; */
 .poster-screen {
   display: block;
-  padding: 1rem;
+  padding: 2rem;
   position: relative;
   height: 100%;
   grid-area: poster;
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
 }
 .poster-screen::before {
   content: "";
   display: block;
   position: absolute;
-  inset: 1rem;
+  inset: 2rem;
   background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
+  border-radius: 1rem;
 }
 .poster-screen::after {
   content: "";
   display: block;
   position: absolute;
-  inset: 1rem;
+  inset: 2rem;
   pointer-events: none;
-  box-shadow: inset 1px 1px 3px 3px black;
+  box-shadow: inset 0 0 6px 3px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(0, 0, 0, 0.6), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6), 0 0 2px 1px rgba(65, 203, 44, 0.9);
+  border-radius: 1rem;
 }
 .poster-screen .container {
   display: block;
-  height: 93%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   display: flex;
-  padding-bottom: 1rem;
+  padding-block: 1rem;
   padding-inline: 1rem;
-}
-.poster-screen .container::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  translate: -50% 0;
-  width: 2px;
-  height: 0.4rem;
-  background-color: rgb(65, 203, 44);
-}
-.poster-screen .container::after {
-  content: attr(data-movie-id);
-  display: block;
-  border: 2px solid rgb(65, 203, 44);
-  position: absolute;
-  top: 0;
-  left: 50%;
-  translate: -50% -50%;
-  font-size: 0.75rem;
-  padding-inline: 0.5rem;
-  background: darkred;
+  border-radius: 1rem;
+  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
 .poster-screen #poster {
   height: 100%;
   width: 100%;
   -o-object-fit: contain;
      object-fit: contain;
-  border: 2px solid rgb(65, 203, 44);
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   padding: 0.5rem;
   padding-top: 0.75rem;
 }/*# sourceMappingURL=poster-screen.css.map */

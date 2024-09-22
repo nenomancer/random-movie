@@ -18,7 +18,7 @@ $shadow-color: rgba(0, 0, 0, 0.3);
 // $screen-shadow: inset$shadow-offset $shadow-offset $shadow-blur $shadow-color,
 // $shadow-offset $shadow-offset $shadow-blur $shadow-color;
 $screen-shadow-outside: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-$screen-shadow-inside: inset$shadow-offset $shadow-offset $shadow-blur
+$screen-shadow-inside: inset $shadow-offset $shadow-offset $shadow-blur
   $shadow-color;
 $screen-shadow: $screen-shadow-inside, $screen-shadow-outside;
 $screen-bg: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
@@ -26,9 +26,26 @@ $screen-bg: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
 $screen-width: 480px;
 $poster-width: 360px;
 
+$breakpoint-xs: 320px;
 $breakpoint-sm: 480px;
 $breakpoint-md: 640px;
 $breakpoint-lg: 768px;
 $breakpoint-xl: 1024px;
 
-$screen-padding: 1rem;
+$monitor-padding: 2rem;
+
+$monitor-bevel-outer: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3),
+  inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
+
+$monitor-bevel-inner: 2px 2px 1px 0 rgba(255, 255, 255, 0.15),
+  -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
+
+$monitor-shadow-inner: inset 0 0 6px 3px rgba(0, 0, 0, 0.6),
+  0 0 1px 1px rgba(0, 0, 0, 0.6);
+$monitor-glow:
+//  0 0 10px 6px rgba($color-highlight, 0.2),
+  // 0 0 20px 10px rgba($color-highlight, 0.2),
+  0 0 2px 1px rgba($color-highlight, 0.9);
+
+$monitor-border-radius: 1rem;
+$monitor-color: darkred;

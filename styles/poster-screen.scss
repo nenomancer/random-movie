@@ -2,7 +2,7 @@
 
 .poster-screen {
   display: block;
-  padding: $screen-padding;
+  padding: $monitor-padding;
   position: relative;
   height: 100%;
   grid-area: poster;
@@ -10,34 +10,31 @@
   justify-content: center;
   align-items: flex-end;
   // background-color: orange;
+  box-shadow: $monitor-bevel-outer;
+  border-radius: $monitor-border-radius;
 
   &::before {
     content: "";
     display: block;
     position: absolute;
-    inset: $screen-padding;
-    // background: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
-    // box-shadow: inset 3px 3px 20px 1px rgba(255, 255, 255, 0.25);
+    inset: $monitor-padding;
     background: $screen-bg;
+    border-radius: $monitor-border-radius;
   }
   &::after {
     content: "";
     display: block;
     position: absolute;
-    inset: $screen-padding;
-    // background: radial-gradient(
-    //   circle at top left,
-    //   rgba(255, 255, 255, 0.25),
-    //   rgba(255, 255, 255, 0.15) 30%,
-    //   transparent 90%
-    // );
+    inset: $monitor-padding;
+
     pointer-events: none;
-    box-shadow: inset 1px 1px 3px 3px black;
+    box-shadow: $monitor-shadow-inner, $monitor-bevel-inner, $monitor-glow;
+    border-radius: $monitor-border-radius;
   }
 
   .container {
     display: block;
-    height: 93%;
+    height: 100%;
     // width: 93%;
     display: flex;
     justify-content: center;
@@ -45,37 +42,13 @@
     // filter: contrast(0.75);
     position: relative;
     display: flex;
-    padding-bottom: 1rem;
+    padding-block: 1rem;
     padding-inline: 1rem;
+    border-radius: $monitor-border-radius;
+    box-shadow: $monitor-bevel-inner;
+
     // box-shadow: $screen-shadow;
     // border: 2px solid $color-highlight;
-    &::before {
-      content: "";
-      display: block;
-      position: absolute;
-      top: 0.5rem;
-      left: 50%;
-      translate: -50% 0;
-      width: 2px;
-      height: 0.4rem;
-      background-color: $color-highlight;
-    }
-
-    &::after {
-      content: attr(data-movie-id);
-      display: block;
-      border: 2px solid $color-highlight;
-      // width: 80px;
-      position: absolute;
-      top: 0;
-      left: 50%;
-      translate: -50% -50%;
-      // box-shadow: $screen-shadow;
-      font-size: 0.75rem;
-      padding-inline: 0.5rem;
-      background: darkred;
-      // box-shadow: 2px 2px black;;
-    }
   }
 
   #poster {
@@ -84,8 +57,8 @@
     // width: 94%;
     object-fit: contain;
     // mix-blend-mode: color-dodge;
-    border: 2px solid $color-highlight;
-    box-shadow: $screen-shadow;
+    // border: 2px solid $color-highlight;
+    // box-shadow: $screen-shadow;
     padding: 0.5rem;
     padding-top: 0.75rem;
   }
