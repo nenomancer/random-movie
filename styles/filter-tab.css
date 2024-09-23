@@ -1,0 +1,104 @@
+/* #c0d2d3; #4a5488; */
+.filters {
+  display: none;
+  padding-block: 0.5rem;
+  height: 100%;
+  position: relative;
+  color: rgb(65, 203, 44);
+  gap: 0.25rem;
+  flex-direction: column;
+}
+.filters.active {
+  display: flex;
+  flex-direction: column;
+}
+.filters .row {
+  grid-template-columns: 1fr;
+}
+.filters .row .header {
+  border: 2px solid rgb(65, 203, 44);
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+.filters .row .header > span {
+  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+.filters .row .content .button-span {
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+  height: 100%;
+}
+.filters .row .content .button-span.link:hover {
+  cursor: inherit;
+  background-color: rgb(65, 203, 44);
+  text-shadow: none;
+  color: black;
+}
+.filters .row.genres, .filters .row.countries {
+  grid-template-rows: 1fr 0;
+  overflow: hidden;
+  transition-property: row-gap;
+}
+.filters .row.genres.open, .filters .row.countries.open {
+  grid-template-rows: min-content min-content;
+  row-gap: 0.25rem;
+}
+.filters .row.genres .value:hover, .filters .row.countries .value:hover {
+  background-color: rgb(65, 203, 44);
+  color: black;
+  text-shadow: none;
+}
+.filters .row.genres .content, .filters .row.countries .content {
+  display: flex;
+  flex-direction: column;
+  max-height: 11.62rem;
+  overflow-y: scroll;
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 2px solid rgb(65, 203, 44);
+  scroll-snap-type: y mandatory;
+}
+.filters .row.genres .option, .filters .row.countries .option {
+  scroll-snap-align: start;
+}
+.filters .row.genres .option.selected, .filters .row.countries .option.selected {
+  background-color: rgb(65, 203, 44);
+  color: black;
+  text-shadow: none;
+}
+.filters .row.genres .option.selected:hover, .filters .row.countries .option.selected:hover {
+  color: white;
+}
+.filters .row.genres .value {
+  white-space: nowrap;
+  overflow-x: scroll;
+}
+.filters .row.genres .content {
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(3, minmax(30%, 1fr));
+}
+.filters .row.genres .content .option {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.filters .row.release-year input[type=text] {
+  border: 2px solid rgb(65, 203, 44);
+  max-width: 8ch;
+  background: none;
+  color: rgb(65, 203, 44);
+  font: inherit;
+  text-align: center;
+}
+.filters .row > span {
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
+}
+.filters .row > span:first-child {
+  justify-content: center;
+}/*# sourceMappingURL=filter-tab.css.map */
