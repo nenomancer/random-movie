@@ -49,7 +49,7 @@ body {
   /* font-family: "VT323", monospace; */
   font-weight: 400;
   font-family: "Handjet", sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   /* font-family: "Kode Mono", monospace; */
 
   font-style: normal;
@@ -61,7 +61,6 @@ body {
 #main-container {
   display: flex;
   /* background: grey; */
-  max-height: 640px;
   max-width: 960px;
   margin-inline: auto;
   margin-top: 6rem;
@@ -94,6 +93,8 @@ body {
   }
 
   @media screen and (max-width: 580px) {
+    max-height: 640px;
+
     grid-template-areas:
       "poster poster"
       "main main"

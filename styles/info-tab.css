@@ -46,8 +46,9 @@
 }
 .info .row.subtitle {
   grid-template-columns: 1fr;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-style: normal;
+  grid-template-rows: 1.25rem;
 }
 .info .row.subtitle .content {
   justify-content: center;
@@ -56,12 +57,11 @@
   overflow: visible;
   overflow-x: scroll;
   border: 2px solid;
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   box-shadow: var(--screen-shadow);
 }
 .info .row.subtitle .content .button-span {
   padding-block: 0;
-  text-align: center;
+  justify-content: center;
   border-right: 2px solid;
   flex: 1;
 }
@@ -89,6 +89,7 @@
   text-align: left;
   align-items: start;
   padding: 0.25rem 0.5rem;
+  max-height: 200px;
 }
 .info .row > span {
   display: flex;

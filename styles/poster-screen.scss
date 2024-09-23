@@ -49,7 +49,32 @@
     box-shadow: $monitor-bevel-inner;
 
     // box-shadow: $screen-shadow;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: $monitor-border-radius;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        rgba($screen-bg, 0.4) 50%,
+        rgba($screen-bg, 0.9) 90%
+      );
+    }
     // border: 2px solid $color-highlight;
+    &.loading::after {
+      content: "LOADING IMAGE...";
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      // inset: $monitor-padding;
+      inset: 0;
+      z-index: 2;
+      background: $screen-bg;
+      color: $color-highlight;
+      border-radius: $monitor-border-radius;
+    }
   }
 
   #poster {
@@ -61,8 +86,10 @@
     }
     // width: 94%;
     object-fit: contain;
-    // mix-blend-mode: color-dodge;
-    border: 2px solid $color-highlight;
+    mix-blend-mode: color-dodge;
+    filter: contrast(0.5) brightness(1.25);
+    // border: 2px solid $color-highlight;
+
     // box-shadow: $screen-shadow;
     // padding: 0.5rem;
     // padding-top: 0.75rem;

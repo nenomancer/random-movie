@@ -47,6 +47,11 @@
     pointer-events: none;
     box-shadow: $monitor-bevel-inner, $monitor-shadow-inner, $monitor-glow;
     border-radius: $monitor-border-radius;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      rgba($screen-bg, 0.55) 100%
+    );
   }
 
   &.loading::after {
@@ -60,6 +65,11 @@
     z-index: 2;
     background: $screen-bg;
     color: $color-highlight;
+    background: radial-gradient(
+      ellipse at center,
+      rgba($screen-bg, 1) 30%,
+      rgba($screen-bg, 1) 90%
+    );
   }
 }
 .tabs {
@@ -68,6 +78,7 @@
   display: grid;
   grid-template-columns: repeat(2, min-content);
   grid-template-rows: 1.25rem;
+  align-items: flex-start;
   @media screen and (max-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -78,7 +89,7 @@
     box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
       $shadow-offset $shadow-offset $shadow-blur $shadow-color;
 
-    text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
+    // text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
     // color: black;
     color: $color-highlight;
     &:hover {
@@ -87,7 +98,7 @@
       background-color: $color-highlight;
       box-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
       color: black;
-      text-shadow: none;
+      // text-shadow: none;
     }
   }
 }

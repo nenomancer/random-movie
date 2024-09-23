@@ -18,6 +18,7 @@
   /* width: 30%; */
   aspect-ratio: 1/1;
   height: 100%;
+  max-height: 150px;
   border-radius: 50%;
   border: none;
   box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
@@ -33,7 +34,7 @@
 }
 .rating {
   grid-area: rating;
-  background-color: blue;
+  background-color: darkred;
   display: grid;
   grid-template-rows: fit-content 1fr;
   border-radius: 1rem;
@@ -42,9 +43,10 @@
 .rating .container {
   background-color: gold;
   height: 150px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  margin: auto;
+  width: 80%;
+  border-radius: 150px;
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
   box-shadow: inset 0 0 15px 6px black, inset 5px 3px 30px 4px black, inset 0 0 6px 2px black, 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
 .rating-extra {
@@ -58,11 +60,14 @@
   --rotation: 0deg;
   --rotation-overshoot: 30deg;
   padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .rating #arrow {
-  --rotation: 15deg;
+  --rotation: 0deg;
   position: absolute;
-  bottom: 50%;
+  bottom: 30%;
   right: 50%;
   transition: rotate 250ms;
   transform: rotate(-90deg) translateY(-2px);
@@ -72,9 +77,8 @@
   border-right-color: black;
   border-right-width: 4rem;
   border: none;
-  width: 4px;
-  height: 3rem;
-  background-color: red;
+  width: 0.1rem;
+  height: 5rem;
   z-index: 2;
   animation: rotationz 4s forwards;
   animation-iteration-count: 1;
@@ -87,6 +91,7 @@
 }
 .rating [data-revenue] {
   background-color: maroon;
+  background-color: chartreuse;
   display: grid;
   place-items: center;
 }
@@ -109,7 +114,7 @@
   padding: 2rem;
 }
 .extra-1 .container {
-  background: black;
+  background: #222;
   padding: 0.25rem 0.5rem;
 }
 
@@ -118,8 +123,19 @@
   grid-area: extra-2;
 }
 
+.themes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.themes [class^=theme-] {
+  border: 1px solid black;
+}
+
 .extra-3 {
-  background-color: darkred;
+  background-color: chartreuse;
+  box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
   grid-area: extra-3;
 }
 @media screen and (max-width: 580px) {
@@ -127,16 +143,6 @@
     display: none;
   }
 }
-.extra-3 [data-popularity] {
-  background-color: peru;
-}
-.extra-3 [data-votes] {
-  background-color: cadetblue;
-}
-.extra-3 [data-location] {
-  background-color: darkolivegreen;
-}
-
 .monitor {
   grid-area: main;
   padding: 2rem;
@@ -160,7 +166,7 @@
   position: absolute;
   display: block;
   inset: 0;
-  background: black;
+  background: #222;
   pointer-events: none;
   border-radius: 1rem;
 }
@@ -172,6 +178,7 @@
   pointer-events: none;
   box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6), inset 0 0 6px 3px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(0, 0, 0, 0.6), 0 0 2px 1px rgba(65, 203, 44, 0.9);
   border-radius: 1rem;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(34, 34, 34, 0.55) 100%);
 }
 .main-screen.loading::after {
   content: "LOADING DATA...";
@@ -181,8 +188,9 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: black;
+  background: #222;
   color: rgb(65, 203, 44);
+  background: radial-gradient(ellipse at center, #222222 30%, #222222 90%);
 }
 
 .tabs {
@@ -190,6 +198,7 @@
   display: grid;
   grid-template-columns: repeat(2, min-content);
   grid-template-rows: 1.25rem;
+  align-items: flex-start;
 }
 @media screen and (max-width: 640px) {
   .tabs {
@@ -200,14 +209,12 @@
   padding-inline: 0.75rem;
   border: 2px solid rgb(65, 203, 44);
   box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: rgb(65, 203, 44);
 }
 .tabs span.active {
   background-color: rgb(65, 203, 44);
   box-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: black;
-  text-shadow: none;
 }
 
 .row {
@@ -235,7 +242,7 @@
   display: block;
   position: absolute;
   inset: 2rem;
-  background: black;
+  background: #222;
   border-radius: 1rem;
 }
 .poster-screen::after {
@@ -261,12 +268,32 @@
   border-radius: 1rem;
   box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
+.poster-screen .container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(34, 34, 34, 0.4) 50%, rgba(34, 34, 34, 0.9) 90%);
+}
+.poster-screen .container.loading::after {
+  content: "LOADING IMAGE...";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #222;
+  color: rgb(65, 203, 44);
+  border-radius: 1rem;
+}
 .poster-screen #poster {
   max-height: 100%;
   max-width: 100%;
   -o-object-fit: contain;
      object-fit: contain;
-  border: 2px solid rgb(65, 203, 44);
+  mix-blend-mode: color-dodge;
+  filter: contrast(0.5) brightness(1.25);
 }
 @media screen and (max-width: 580px) {
   .poster-screen #poster {
@@ -322,8 +349,9 @@
 }
 .info .row.subtitle {
   grid-template-columns: 1fr;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-style: normal;
+  grid-template-rows: 1.25rem;
 }
 .info .row.subtitle .content {
   justify-content: center;
@@ -332,12 +360,11 @@
   overflow: visible;
   overflow-x: scroll;
   border: 2px solid;
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   box-shadow: var(--screen-shadow);
 }
 .info .row.subtitle .content .button-span {
   padding-block: 0;
-  text-align: center;
+  justify-content: center;
   border-right: 2px solid;
   flex: 1;
 }
@@ -365,6 +392,7 @@
   text-align: left;
   align-items: start;
   padding: 0.25rem 0.5rem;
+  max-height: 200px;
 }
 .info .row > span {
   display: flex;
@@ -491,6 +519,7 @@
   /* width: 30%; */
   aspect-ratio: 1/1;
   height: 100%;
+  max-height: 150px;
   border-radius: 50%;
   border: none;
   box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
@@ -506,7 +535,7 @@
 }
 .rating {
   grid-area: rating;
-  background-color: blue;
+  background-color: darkred;
   display: grid;
   grid-template-rows: fit-content 1fr;
   border-radius: 1rem;
@@ -515,9 +544,10 @@
 .rating .container {
   background-color: gold;
   height: 150px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  margin: auto;
+  width: 80%;
+  border-radius: 150px;
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
   box-shadow: inset 0 0 15px 6px black, inset 5px 3px 30px 4px black, inset 0 0 6px 2px black, 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
 .rating-extra {
@@ -531,11 +561,14 @@
   --rotation: 0deg;
   --rotation-overshoot: 30deg;
   padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .rating #arrow {
-  --rotation: 15deg;
+  --rotation: 0deg;
   position: absolute;
-  bottom: 50%;
+  bottom: 30%;
   right: 50%;
   transition: rotate 250ms;
   transform: rotate(-90deg) translateY(-2px);
@@ -545,9 +578,8 @@
   border-right-color: black;
   border-right-width: 4rem;
   border: none;
-  width: 4px;
-  height: 3rem;
-  background-color: red;
+  width: 0.1rem;
+  height: 5rem;
   z-index: 2;
   animation: rotationz 4s forwards;
   animation-iteration-count: 1;
@@ -560,6 +592,7 @@
 }
 .rating [data-revenue] {
   background-color: maroon;
+  background-color: chartreuse;
   display: grid;
   place-items: center;
 }
@@ -582,7 +615,7 @@
   padding: 2rem;
 }
 .extra-1 .container {
-  background: black;
+  background: #222;
   padding: 0.25rem 0.5rem;
 }
 
@@ -591,21 +624,23 @@
   grid-area: extra-2;
 }
 
+.themes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.themes [class^=theme-] {
+  border: 1px solid black;
+}
+
 .extra-3 {
-  background-color: darkred;
+  background-color: chartreuse;
+  box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 1rem;
   grid-area: extra-3;
 }
 @media screen and (max-width: 580px) {
   .extra-3 {
     display: none;
   }
-}
-.extra-3 [data-popularity] {
-  background-color: peru;
-}
-.extra-3 [data-votes] {
-  background-color: cadetblue;
-}
-.extra-3 [data-location] {
-  background-color: darkolivegreen;
 }/*# sourceMappingURL=main.css.map */
