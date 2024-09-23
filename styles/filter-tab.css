@@ -84,6 +84,14 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.filters .row.release-year input[type=text] {
+  border: 2px solid rgb(65, 203, 44);
+  max-width: 8ch;
+  background: none;
+  color: rgb(65, 203, 44);
+  font: inherit;
+  text-align: center;
+}
 .filters .row > span {
   display: flex;
   align-items: center;

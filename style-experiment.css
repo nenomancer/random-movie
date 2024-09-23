@@ -68,20 +68,20 @@ body {
   display: grid;
   gap: 0.15rem;
   grid-template-areas:
-    "extra-1  main main poster poster"
-    "extra-2  main main poster poster"
-    "extra-2 extra-3 rating rating search";
-  grid-template-columns: repeat(5, 1fr);
+    "main main main poster poster poster"
+    "main main main poster poster poster"
+    "extra-3 extra-3 rating rating search search";
+  grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(3, 1fr);
-
-  @media screen and (min-width: 640px) and (max-width: 768px) {
+grid-template-rows: repeat(3, 240px);
+  /* @media screen and (min-width: 640px) and (max-width: 768px) {
     grid-template-areas:
       "main main main poster poster poster"
       "main main main poster poster poster"
       "extra-3 extra-3 rating rating search search";
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(3, 1fr);
-  }
+  } */
 
   @media screen and (min-width: 580px) and (max-width: 640px) {
     grid-template-areas:
@@ -98,8 +98,9 @@ body {
     grid-template-areas:
       "poster poster"
       "main main"
-      "rating search";
+      "rating search"
+      "extra-3 extra-3";
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
   }
 }

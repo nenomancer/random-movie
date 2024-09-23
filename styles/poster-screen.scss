@@ -46,20 +46,22 @@
     padding-block: 1rem;
     padding-inline: 1rem;
     border-radius: $monitor-border-radius;
-    box-shadow: $monitor-bevel-inner;
 
     // box-shadow: $screen-shadow;
     &::after {
       content: "";
       position: absolute;
       inset: 0;
+      inset: 4px; //temp
       border-radius: $monitor-border-radius;
       background: radial-gradient(
         ellipse at center,
         transparent 30%,
         rgba($screen-bg, 0.4) 50%,
-        rgba($screen-bg, 0.9) 90%
+        rgba($screen-bg, 0.9) 100%
       );
+      transition: 250ms ease-in;
+      // box-shadow: $monitor-shadow-inner;
     }
     // border: 2px solid $color-highlight;
     &.loading::after {
@@ -69,9 +71,14 @@
       align-items: center;
       position: absolute;
       // inset: $monitor-padding;
-      inset: 0;
+      // inset: 0;
       z-index: 2;
-      background: $screen-bg;
+      background: radial-gradient(
+        ellipse at center,
+        $screen-bg 30%,
+        rgba($screen-bg, 1) 50%,
+        rgba($screen-bg, 1) 90%
+      );
       color: $color-highlight;
       border-radius: $monitor-border-radius;
     }
@@ -87,7 +94,7 @@
     // width: 94%;
     object-fit: contain;
     mix-blend-mode: color-dodge;
-    filter: contrast(0.5) brightness(1.25);
+    // filter: contrast(0.5) brightness(1.25);
     // border: 2px solid $color-highlight;
 
     // box-shadow: $screen-shadow;

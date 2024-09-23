@@ -112,6 +112,23 @@
       span {
         // display: flex;
       }
+      input[type="text"] {
+        border: 2px solid $color-highlight;
+        max-width: 8ch;
+        background: none;
+        color: $color-highlight;
+        font: inherit;
+        text-align: center;
+      }
+      // input[type="number"] {
+      //   // appearance: none;
+      //   // -webkit-appearance: none;
+      //   // -moz-appearance: textfield;
+      //   border: 2px solid $color-highlight;
+      //   background: none;
+      //   color: $color-highlight;
+      //   font: inherit;
+      // }
     }
 
     > span {

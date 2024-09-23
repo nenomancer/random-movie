@@ -38,6 +38,54 @@ const actorsElement = document.querySelector(".row.actors .content");
 
 const genreFilterContainer = document.querySelector(".filters .genres");
 const countriesFilterList = document.querySelector(".countries .content");
+
+const releasedFrom = document.querySelector("#release-from");
+const releasedTo = document.querySelector("#release-to");
+
+const min = 1500;
+const max = 2500;
+
+const earliestYear = 1878;
+const currentYear = new Date().getFullYear();
+handleNumberInput(releasedFrom);
+handleNumberInput(releasedTo);
+// releasedFrom.addEventListener("input", (e) => {
+//   e.target.value = e.target.value.replace(/[^0-9]/g, "");
+// });
+// releasedFrom.addEventListener("change", (e) => {
+//   const value = Number(e.target.value);
+//   if (value < min) {
+//     e.target.value = min;
+//   } else if (value > max) {
+//     e.target.value = max;
+//   }
+// });
+// releasedTo.addEventListener("input", (e) => {
+//   e.target.value = e.target.value.replace(/[^0-9]/g, "");
+// });
+// releasedTo.addEventListener("change", (e) => {
+//   const value = Number(e.target.value);
+//   console.log("VALUE: ", value);
+//   if (value < min) {
+//     e.target.value = min;
+//   } else if (value > max) {
+//     e.target.value = max;
+//   }
+// });
+function handleNumberInput(input) {
+  input.addEventListener("input", (e) => {
+    e.target.value = e.target.value.replace(/[^0-9]/g, "");
+  });
+  input.addEventListener("change", (e) => {
+    const value = Number(e.target.value);
+    console.log("VALUE: ", value);
+    if (value < earliestYear) {
+      e.target.value = earliestYear;
+    } else if (value > currentYear) {
+      e.target.value = currentYear;
+    }
+  });
+}
 bindHoverTooltip(genreFilterContainer);
 bindHoverTooltip(firstTabButton);
 bindHoverTooltip(secondTabButton);
@@ -181,21 +229,21 @@ function fetchMovies(queries = "", totalPages = 500) {
   mainScreen.classList.add("loading");
   movieIdDisplay.classList.add("loading");
   ratingEl.style.setProperty("--rotation", `0deg`);
+  submit.disabled = true;
 
   const countryOfOrigin = document
     .querySelector(".countries .value")
     .getAttribute("data-filter-country");
   const genres = document.querySelectorAll(".filters .genres .option");
   const pageNumber = Math.floor(Math.random() * totalPages);
-  const releasedFrom = document.querySelector("#release-from");
-  const releasedTo = document.querySelector("#release-to");
+
   firstTab.classList.add("active");
   firstTabButton.classList.add("active");
   secondTab.classList.remove("active");
   secondTabButton.classList.remove("active");
   //tuka?
-  let earliest = 1878;
-  let latest = new Date().getFullYear();
+  let earliest = earliestYear;
+  let latest = currentYear;
   let filteredGenres = [];
 
   if (releasedFrom.value !== "") {
@@ -257,6 +305,7 @@ function fetchMovies(queries = "", totalPages = 500) {
       console.error(err);
       console.log("error code: ", err.status_code);
       console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...");
+      hideLoadingScreens();
       alert("NO MOVIES WITH THEMS PARAMTETERS, PLEASE ADJUST YA FILTERS!");
     });
 }
@@ -399,12 +448,19 @@ function displayResult(data, maxIndex = 20) {
         })
         .catch((err) => console.log(err))
         .finally((e) => {
-          mainScreen.classList.remove("loading"); // tuak
-          movieIdDisplay.classList.remove("loading");
+          hideLoadingScreens();
           return;
         });
     }
   });
+}
+
+function hideLoadingScreens() {
+  setTimeout(() => {
+    mainScreen.classList.remove("loading"); // tuak
+    movieIdDisplay.classList.remove("loading");
+    submit.disabled = false;
+  }, 500);
 }
 
 function getMovieGenres(movie) {
