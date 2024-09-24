@@ -9,79 +9,41 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background-color: $monitor-color;
-  box-shadow: $monitor-bevel-outer, $monitor-shadow-outer;
-  border-radius: $monitor-border-radius;
+  // background-color: $monitor-color;
+  // box-shadow: $monitor-bevel-outer, $monitor-shadow-outer;
+  // border-radius: $monitor-border-radius;
 
   &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    inset: $monitor-padding;
-    background: $screen-bg;
-    border-radius: $monitor-border-radius;
+    // content: "";
+    // display: block;
+    // position: absolute;
+    // inset: $monitor-padding;
+    // background: $screen-bg;
+    // border-radius: $monitor-border-radius;
   }
   &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    inset: $monitor-padding;
+    // content: "";
+    // display: block;
+    // position: absolute;
+    // inset: $monitor-padding;
 
-    pointer-events: none;
-    box-shadow: $monitor-shadow-inner, $monitor-bevel-inner, $monitor-glow;
-    border-radius: $monitor-border-radius;
+    // pointer-events: none;
+    // box-shadow: $monitor-shadow-inner, $monitor-bevel-inner, $monitor-glow;
+    // border-radius: $monitor-border-radius;
   }
 
   .container {
     display: block;
     height: 100%;
     width: 100%;
-    // width: 93%;
     display: flex;
     justify-content: center;
     align-items: center;
-    // filter: contrast(0.75);
     position: relative;
     display: flex;
     padding-block: 1rem;
     padding-inline: 1rem;
     border-radius: $monitor-border-radius;
-
-    // box-shadow: $screen-shadow;
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      inset: 4px; //temp
-      border-radius: $monitor-border-radius;
-      background: radial-gradient(
-        ellipse at center,
-        transparent 30%,
-        rgba($screen-bg, 0.4) 50%,
-        rgba($screen-bg, 0.9) 100%
-      );
-      transition: 250ms ease-in;
-      // box-shadow: $monitor-shadow-inner;
-    }
-    // border: 2px solid $color-highlight;
-    &.loading::after {
-      content: "LOADING IMAGE...";
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      // inset: $monitor-padding;
-      // inset: 0;
-      z-index: 2;
-      background: radial-gradient(
-        ellipse at center,
-        $screen-bg 30%,
-        rgba($screen-bg, 1) 50%,
-        rgba($screen-bg, 1) 90%
-      );
-      color: $color-highlight;
-      border-radius: $monitor-border-radius;
-    }
   }
 
   #poster {
@@ -91,14 +53,8 @@
     @media screen and (max-width: $breakpoint-sm) {
       max-height: 360px;
     }
-    // width: 94%;
     object-fit: contain;
-    mix-blend-mode: color-dodge;
-    // filter: contrast(0.5) brightness(1.25);
-    // border: 2px solid $color-highlight;
-
-    // box-shadow: $screen-shadow;
-    // padding: 0.5rem;
-    // padding-top: 0.75rem;
+    mix-blend-mode: lighten;
+    filter: brightness(0.75);
   }
 }

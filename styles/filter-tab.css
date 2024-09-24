@@ -1,4 +1,3 @@
-/* #c0d2d3; #4a5488; */
 .filters {
   display: none;
   padding-block: 0.5rem;
@@ -32,7 +31,6 @@
 .filters .row .content .button-span.link:hover {
   cursor: inherit;
   background-color: rgb(65, 203, 44);
-  text-shadow: none;
   color: black;
 }
 .filters .row.genres, .filters .row.countries {
@@ -47,7 +45,6 @@
 .filters .row.genres .value:hover, .filters .row.countries .value:hover {
   background-color: rgb(65, 203, 44);
   color: black;
-  text-shadow: none;
 }
 .filters .row.genres .content, .filters .row.countries .content {
   display: flex;
@@ -66,7 +63,6 @@
 .filters .row.genres .option.selected, .filters .row.countries .option.selected {
   background-color: rgb(65, 203, 44);
   color: black;
-  text-shadow: none;
 }
 .filters .row.genres .option.selected:hover, .filters .row.countries .option.selected:hover {
   color: white;
@@ -84,20 +80,28 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.filters .row.release-year .content {
+  padding: 0;
+  height: 100%;
+}
 .filters .row.release-year input[type=text] {
-  border: 2px solid rgb(65, 203, 44);
+  border: none;
   max-width: 8ch;
+  height: 100%;
   background: none;
   color: rgb(65, 203, 44);
+  padding: 0.25rem 0.5rem;
   font: inherit;
-  text-align: center;
+}
+.filters .row.release-year input[type=text]:focus-visible {
+  background-color: rgb(65, 203, 44);
+  color: black;
+  outline: none;
 }
 .filters .row > span {
   display: flex;
   align-items: center;
   position: relative;
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
 }
 .filters .row > span:first-child {
   justify-content: center;

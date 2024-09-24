@@ -35,18 +35,28 @@ const movieIdDisplay = document.querySelector(".poster-screen .container");
 const genres = document.querySelector(".row.genres .content");
 const directorsElement = document.querySelector(".row.directors .content");
 const actorsElement = document.querySelector(".row.actors .content");
-
+const plotContent = document.querySelector(".row.plot .content");
+bindHoverTooltip(plotContent);
 const genreFilterContainer = document.querySelector(".filters .genres");
 const countriesFilterList = document.querySelector(".countries .content");
 
 const releasedFrom = document.querySelector("#release-from");
 const releasedTo = document.querySelector("#release-to");
 
+const responseStatus = document.querySelector(".response");
+bindHoverTooltip(responseStatus);
+
+const successResponse = document.querySelector(".success");
+const pendingResponse = document.querySelector(".pending");
+const errorResponse = document.querySelector(".error");
+
 const min = 1500;
 const max = 2500;
 
 const earliestYear = 1878;
 const currentYear = new Date().getFullYear();
+bindHoverTooltip(releasedFrom);
+bindHoverTooltip(releasedTo);
 handleNumberInput(releasedFrom);
 handleNumberInput(releasedTo);
 // releasedFrom.addEventListener("input", (e) => {
@@ -112,7 +122,7 @@ function bindHoverTooltip(element) {
     tooltipDisplay.innerText = element.getAttribute("data-tooltip");
   });
   element.addEventListener("mouseout", (e) => {
-    tooltipDisplay.innerText = "sguueeet";
+    tooltipDisplay.innerText = "Hover on  the controls to see further info.";
   });
 }
 
@@ -229,6 +239,9 @@ function fetchMovies(queries = "", totalPages = 500) {
   mainScreen.classList.add("loading");
   movieIdDisplay.classList.add("loading");
   ratingEl.style.setProperty("--rotation", `0deg`);
+  successResponse.classList.remove("active");
+  errorResponse.classList.remove("active");
+  pendingResponse.classList.add("active");
   submit.disabled = true;
 
   const countryOfOrigin = document
@@ -262,8 +275,13 @@ function fetchMovies(queries = "", totalPages = 500) {
       filteredGenres.push(genre);
     }
   });
-  console.log(filteredGenres);
-  console.log(genres);
+  console.log("FILTERED GENRES: ", filteredGenres);
+  console.log("CHOSEN GENRES: ", genres);
+
+  if (countryOfOrigin) {
+    console.log(countryOfOrigin);
+    _queries = "&with_origin_country=" + countryOfOrigin;
+  }
 
   if (filteredGenres.length !== 0) {
     _queries += "&with_genres=";
@@ -282,11 +300,6 @@ function fetchMovies(queries = "", totalPages = 500) {
       toDate;
   }
 
-  if (countryOfOrigin) {
-    console.log(countryOfOrigin);
-    _queries = "&with_origin_country=" + countryOfOrigin;
-  }
-
   console.log("CURRENT QUERY: ", _queries);
 
   fetch(
@@ -296,12 +309,16 @@ function fetchMovies(queries = "", totalPages = 500) {
     .then((response) => response.json())
     .then((response) => {
       console.log(response);
-      if (response.results.length === 0) {
+      if (response.results?.length === 0) {
         fetchMovies("", Math.min(500, response.total_pages));
+      } else {
+        displayResult(response.results);
       }
-      displayResult(response.results);
+      // successResponse.classList.add("active");
     })
     .catch((err) => {
+      pendingResponse.classList.remove("active");
+      errorResponse.classList.add("active");
       console.error(err);
       console.log("error code: ", err.status_code);
       console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...");
@@ -404,7 +421,6 @@ function displayResult(data, maxIndex = 20) {
           const found = allCountries.find(
             (el) => el.iso_3166_1 == data.origin_country[0]
           );
-          const plotContent = document.querySelector(".row.plot .content");
           const runtimeMinutes = data.runtime;
           const rate = Math.round(data.vote_average * 10) / 10;
           popularityEl.innerText = data.popularity;
@@ -446,8 +462,13 @@ function displayResult(data, maxIndex = 20) {
             subtitle.removeChild(runtime);
           }
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          pendingResponse.classList.remove("active");
+          errorResponse.classList.add("active");
+        })
         .finally((e) => {
+          pendingResponse.classList.remove("active");
+          successResponse.classList.add("active");
           hideLoadingScreens();
           return;
         });
@@ -474,7 +495,7 @@ function getMovieGenres(movie) {
       // temp.classList.add("link");
       temp.setAttribute(
         "data-tooltip",
-        `Genres of this movie, click here to get a random ${genre.name} movie`
+        `Genres of this movie. Click to find another ${genre.name} movie`
       );
       temp.innerText = genre.name;
       temp.addEventListener("click", (e) => getGenreMovies(genre.id));
@@ -516,8 +537,13 @@ function getMovieCredits(id, directorsEl, actorsEl) {
 
       directors.forEach((director) => {
         const temp = document.createElement("span");
-        temp.className = "button-span";
-        temp.classList.add("link");
+        temp.className = "button-span link";
+        temp.setAttribute(
+          "data-tooltip",
+          `Directors of this movie. Click to find another movie directed by ${director.name}.`
+        );
+        bindHoverTooltip(temp);
+        // temp.classList.add("link");
         temp.innerText = director.name;
         temp.addEventListener("click", (e) => getDirectorMovies(director.id));
 
@@ -526,8 +552,13 @@ function getMovieCredits(id, directorsEl, actorsEl) {
 
       actors.forEach((actor) => {
         const temp = document.createElement("span");
-        temp.className = "button-span";
-        temp.classList.add("link");
+        temp.className = "button-span link";
+        // temp.classList.add("link");
+        temp.setAttribute(
+          "data-tooltip",
+          `Actors of this movie. Click to find another movie with ${actor.name}.`
+        );
+        bindHoverTooltip(temp);
         temp.innerText = actor.name;
         temp.addEventListener("click", (e) => {
           getActorMovies(actor.id);

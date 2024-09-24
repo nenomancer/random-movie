@@ -37,7 +37,6 @@
         &.link:hover {
           cursor: inherit;
           background-color: $color-highlight;
-          text-shadow: none;
           color: black;
         }
       }
@@ -57,7 +56,6 @@
         &:hover {
           background-color: $color-highlight;
           color: black;
-          text-shadow: none;
         }
       }
       .content {
@@ -78,7 +76,6 @@
         &.selected {
           background-color: $color-highlight;
           color: black;
-          text-shadow: none;
 
           &:hover {
             color: white;
@@ -112,13 +109,29 @@
       span {
         // display: flex;
       }
+
+      .content {
+        padding: 0;
+        height: 100%;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+      }
       input[type="text"] {
-        border: 2px solid $color-highlight;
+        border: none;
         max-width: 8ch;
+        height: 100%;
         background: none;
         color: $color-highlight;
+        padding: 0.25rem 0.5rem;
         font: inherit;
-        text-align: center;
+        // text-align: center;
+
+        &:focus-visible {
+          background-color: $color-highlight;
+          color: black;
+          outline: none;
+        }
       }
       // input[type="number"] {
       //   // appearance: none;
@@ -139,9 +152,6 @@
       align-items: center;
       // border: 2px solid $color-highlight;
       position: relative;
-      box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
-        $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-      text-shadow: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
     }
   }
 }
