@@ -13,3 +13,22 @@
     @content;
   }
 }
+
+@mixin lightbulb-color($color) {
+  aspect-ratio: 1 /1;
+  height: .5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  // transition: box-shadow 250ms ease-out;
+  background: $color;
+  &.active {
+    box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2),
+      0 0 1px 0 lighten($color, 40%);
+    background: radial-gradient(
+      circle at center,
+      lighten($color, 40%) 15%,
+      $color
+    );
+  }
+}

@@ -1,13 +1,10 @@
 $max-width: 960px;
 
-$breakpoint-md: 640px;
-
 $color-dark: rgb(33, 39, 48);
 $color-grey: #3e3f31;
 $color-teal: #76abae;
 $color-white: #eeeeee;
 $color-highlight: rgb(65, 203, 44);
-/* #c0d2d3; #4a5488; */
 
 $screen-color: #c0d2d3;
 $color-screen-dark: #1e2a1e;
@@ -41,13 +38,13 @@ $monitor-bevel-outer: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3),
 $monitor-bevel-inner: 2px 2px 1px 0 rgba(255, 255, 255, 0.15),
   -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 
-$monitor-shadow-inner: inset 0 0 6px 3px rgba(0, 0, 0, 0.6),
-  0 0 1px 1px rgba(0, 0, 0, 0.6);
+$monitor-shadow-inner: inset 0 0 12px 15px rgba(0, 0, 0, 0.75),
+  inset 0 0 4px 4px rgba(0, 0, 0, 1), 0 0 1px 1px rgba(0, 0, 0, 1);
 $monitor-shadow-outer: 0 0 2px 2px black;
 $monitor-glow:
 //  0 0 10px 6px rgba($color-highlight, 0.2),
   // 0 0 20px 10px rgba($color-highlight, 0.2),
   0 0 2px 1px rgba($color-highlight, 0.9);
 
-$monitor-border-radius: 1rem;
-$monitor-color: darkred;
+$monitor-border-radius: .5rem;
+$monitor-color: #c9c5b1;

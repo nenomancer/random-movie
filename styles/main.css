@@ -1,6 +1,3 @@
-/* #c0d2d3; #4a5488; */
-/* #c0d2d3; #4a5488; */
-/* #c0d2d3; #4a5488; */
 .search {
   position: relative;
   grid-area: search;
@@ -8,10 +5,15 @@
   display: grid;
   place-items: center;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background: linear-gradient(-65deg, darkorange 10%, black 10% 25%, darkorange 25% 35%, black 35% 50%, darkorange 50% 60%, black 60% 75%, darkorange 75% 85%, black 85% 100%);
   /* display: grid;
         place-items: center; */
+}
+@media screen and (max-width: 580px) {
+  .search {
+    padding: 1rem;
+  }
 }
 .search #submit {
   background-color: red;
@@ -24,48 +26,109 @@
   box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
   transition-duration: 250ms;
   transition-property: box-shadow, background-color;
-  /* border: 20px solid;
-        border-image: linear-gradient(to left, black, white);
-        border-image-slice: 10; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .search #submit:disabled {
   background-color: grey;
 }
-.search #submit:active {
+.search #submit:active:not(:disabled) {
   box-shadow: inset 0 0 5px 7px rgb(0, 0, 0), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
   /* background-color: darkred; */
 }
-.rating {
+.search #submit::before {
+  content: "asdd";
+  content: "";
+  border: 30px solid transparent;
+  border-top-width: 50px;
+  /* border-color: blue; */
+  border-top-color: beige;
+  border-bottom: 0;
+  translate: 0 20%;
+}
+
+.extra-info {
   grid-area: rating;
-  background-color: darkred;
+  background-color: #c9c5b1;
   display: grid;
   grid-template-rows: fit-content 1fr;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: relative;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-areas: "rating rating response" "tooltip tooltip tooltip";
+  padding: 1rem;
+  gap: 1rem;
 }
-.rating .container {
+.extra-info [data-rating] {
   background-color: gold;
   height: 150px;
+  grid-area: rating;
+  opacity: 0;
   width: 80%;
-  border-radius: 150px;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
+  grid-area: rating;
   box-shadow: inset 0 0 15px 6px black, inset 5px 3px 30px 4px black, inset 0 0 6px 2px black, 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
-.rating:after {
-  content: "";
+.extra-info:after {
   background-color: #222;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;
 }
-.rating-extra {
+.extra-info-extra {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-.rating [data-rating] {
+.extra-info .response {
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1fr;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  grid-area: response;
+}
+.extra-info .response .error {
+  aspect-ratio: 1/1;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  background: rgb(139, 0, 0);
+}
+.extra-info .response .error.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 #ff5858;
+  background: radial-gradient(circle at center, #ff5858 15%, rgb(139, 0, 0));
+}
+.extra-info .response .success {
+  aspect-ratio: 1/1;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  background: green;
+}
+.extra-info .response .success.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 #4dff4d;
+  background: radial-gradient(circle at center, #4dff4d 15%, green);
+}
+.extra-info .response .pending {
+  aspect-ratio: 1/1;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  background: rgb(175, 135, 5);
+}
+.extra-info .response .pending.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 #fce085;
+  background: radial-gradient(circle at center, #fce085 15%, rgb(175, 135, 5));
+}
+.extra-info [data-rating] {
   height: 100%;
   width: 100%;
   position: relative;
@@ -76,10 +139,29 @@
   justify-content: center;
   align-items: center;
 }
-.rating #arrow {
+.extra-info [data-rating]::before {
+  content: "Rate-O-Meter";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  translate: -50% -50%;
+  font-size: 0.75rem;
+}
+.extra-info [data-rating]::after {
+  content: "";
+  position: absolute;
+  inset-block: 20%;
+  inset-inline: 20px;
+  border-radius: 50%;
+  border: 2px dashed black;
+  border-bottom: none;
+  border-right-width: 0;
+  border-left-width: 0;
+}
+.extra-info #arrow {
   --rotation: 0deg;
   position: absolute;
-  bottom: 30%;
+  bottom: 35%;
   right: 50%;
   transition: rotate 1s ease-in;
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -91,30 +173,50 @@
   border-right-width: 4rem;
   border: none;
   width: 0.1rem;
-  height: 5rem;
+  height: 40%;
   z-index: 2;
   box-shadow: 2px 2px black;
-  display: none;
 }
-.rating [data-runtime] {
+.extra-info .tooltip {
+  grid-area: tooltip;
+}
+.extra-info .tooltip .screen {
+  height: 100%;
+  min-height: 6rem;
+  display: flex;
+}
+.extra-info [data-tooltip-display] {
+  color: rgb(65, 203, 44);
+  padding: 0.25rem 1.25rem;
+  text-align: center;
+  align-content: center;
+  font-size: 0.8rem;
+  width: 100%;
+  text-wrap: balance;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.extra-info [data-runtime] {
   background-color: darkcyan;
   display: grid;
   place-items: center;
 }
-.rating [data-revenue] {
+.extra-info [data-revenue] {
   background-color: maroon;
   background-color: chartreuse;
   display: grid;
   place-items: center;
 }
 
+.extra-3,
 .extra-1,
 .extra-2 {
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   display: none;
   overflow: hidden;
 }
 @media screen and (max-width: 768px) {
+  .extra-3,
   .extra-1,
   .extra-2 {
     display: none;
@@ -148,24 +250,62 @@
 .extra-3 {
   background-color: chartreuse;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   position: relative;
   grid-area: extra-3;
 }
 .extra-3:after {
   content: "";
   background-color: #222;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;
 }
-.monitor {
-  grid-area: main;
+.monitor-outer {
   padding: 2rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6), 0 0 2px 2px black;
-  border-radius: 1rem;
-  background-color: darkred;
+  border-radius: 0.5rem;
+  background-color: #c9c5b1;
+}
+@media screen and (max-width: 580px) {
+  .monitor-outer {
+    height: 480px;
+  }
+}
+
+.monitor-inner {
+  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
+}
+
+.main {
+  grid-area: main;
+}
+
+.screen {
+  background: #222;
+  border-radius: 0.5rem;
+  position: relative;
+}
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  position: absolute;
+  color: rgb(65, 203, 44);
+  background: radial-gradient(ellipse closest-side at center, transparent 75%, rgba(34, 34, 34, 0.65) 150%);
+  pointer-events: none;
+  box-shadow: inset 0 0 12px 15px rgba(0, 0, 0, 0.75), inset 0 0 4px 4px rgb(0, 0, 0), 0 0 1px 1px rgb(0, 0, 0);
+}
+.screen.loading::after {
+  content: "LOADING IMAGE...";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse closest-side at center, #222 100%, #222222 150%);
 }
 
 .main-screen {
@@ -173,43 +313,14 @@
   height: 100%;
   padding: 1rem;
   min-height: 360px;
-  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
-  border-radius: 1rem;
   display: grid;
   grid-template-rows: 6% 94%;
 }
-.main-screen::before {
-  content: "";
-  position: absolute;
-  display: block;
-  inset: 0;
-  background: #222;
-  pointer-events: none;
-  border-radius: 1rem;
+@media screen and (max-height: 580px) {
+  .main-screen {
+    height: 40dvh;
+  }
 }
-.main-screen::after {
-  content: "";
-  position: absolute;
-  display: block;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6), inset 0 0 6px 3px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(0, 0, 0, 0.6), 0 0 2px 1px rgba(65, 203, 44, 0.9);
-  border-radius: 1rem;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(34, 34, 34, 0) 100%);
-}
-.main-screen.loading::after {
-  content: "LOADING DATA...";
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: #222;
-  color: rgb(65, 203, 44);
-  background: radial-gradient(ellipse at center, #222222 30%, #222222 90%);
-}
-
 .tabs {
   z-index: 0;
   display: grid;
@@ -226,12 +337,10 @@
 .tabs span {
   padding-inline: 0.75rem;
   border: 2px solid rgb(65, 203, 44);
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: rgb(65, 203, 44);
 }
 .tabs span.active {
   background-color: rgb(65, 203, 44);
-  box-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: black;
 }
 
@@ -241,7 +350,6 @@
   grid-template-rows: 2rem;
 }
 
-/* #c0d2d3; #4a5488; */
 .poster-screen {
   display: block;
   padding: 2rem;
@@ -251,26 +359,6 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background-color: darkred;
-  box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6), 0 0 2px 2px black;
-  border-radius: 1rem;
-}
-.poster-screen::before {
-  content: "";
-  display: block;
-  position: absolute;
-  inset: 2rem;
-  background: #222;
-  border-radius: 1rem;
-}
-.poster-screen::after {
-  content: "";
-  display: block;
-  position: absolute;
-  inset: 2rem;
-  pointer-events: none;
-  box-shadow: inset 0 0 6px 3px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(0, 0, 0, 0.6), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6), 0 0 2px 1px rgba(65, 203, 44, 0.9);
-  border-radius: 1rem;
 }
 .poster-screen .container {
   display: block;
@@ -283,34 +371,15 @@
   display: flex;
   padding-block: 1rem;
   padding-inline: 1rem;
-  border-radius: 1rem;
-}
-.poster-screen .container::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  inset: 4px;
-  border-radius: 1rem;
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(34, 34, 34, 0.4) 50%, rgba(34, 34, 34, 0.9) 100%);
-  transition: 250ms ease-in;
-}
-.poster-screen .container.loading::after {
-  content: "LOADING IMAGE...";
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  z-index: 2;
-  background: radial-gradient(ellipse at center, #222 30%, #222222 50%, #222222 90%);
-  color: rgb(65, 203, 44);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
 }
 .poster-screen #poster {
   max-height: 100%;
   max-width: 100%;
   -o-object-fit: contain;
      object-fit: contain;
-  mix-blend-mode: color-dodge;
+  mix-blend-mode: lighten;
+  filter: brightness(0.75);
 }
 @media screen and (max-width: 580px) {
   .poster-screen #poster {
@@ -318,7 +387,6 @@
   }
 }
 
-/* #c0d2d3; #4a5488; */
 .info {
   display: none;
   padding-block: 0.5rem;
@@ -349,7 +417,6 @@
 .info .row .content .button-span.link:hover {
   cursor: inherit;
   background-color: rgb(65, 203, 44);
-  text-shadow: none;
   color: black;
 }
 .info .row.title .content .button-span {
@@ -377,7 +444,6 @@
   overflow: visible;
   overflow-x: scroll;
   border: 2px solid;
-  box-shadow: var(--screen-shadow);
 }
 .info .row.subtitle .content .button-span {
   padding-block: 0;
@@ -410,6 +476,8 @@
   align-items: start;
   padding: 0.25rem 0.5rem;
   max-height: 200px;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 .info .row > span {
   display: flex;
@@ -421,7 +489,6 @@
   justify-content: center;
 }
 
-/* #c0d2d3; #4a5488; */
 .filters {
   display: none;
   padding-block: 0.5rem;
@@ -455,7 +522,6 @@
 .filters .row .content .button-span.link:hover {
   cursor: inherit;
   background-color: rgb(65, 203, 44);
-  text-shadow: none;
   color: black;
 }
 .filters .row.genres, .filters .row.countries {
@@ -470,7 +536,6 @@
 .filters .row.genres .value:hover, .filters .row.countries .value:hover {
   background-color: rgb(65, 203, 44);
   color: black;
-  text-shadow: none;
 }
 .filters .row.genres .content, .filters .row.countries .content {
   display: flex;
@@ -489,7 +554,6 @@
 .filters .row.genres .option.selected, .filters .row.countries .option.selected {
   background-color: rgb(65, 203, 44);
   color: black;
-  text-shadow: none;
 }
 .filters .row.genres .option.selected:hover, .filters .row.countries .option.selected:hover {
   color: white;
@@ -507,26 +571,33 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.filters .row.release-year .content {
+  padding: 0;
+  height: 100%;
+}
 .filters .row.release-year input[type=text] {
-  border: 2px solid rgb(65, 203, 44);
+  border: none;
   max-width: 8ch;
+  height: 100%;
   background: none;
   color: rgb(65, 203, 44);
+  padding: 0.25rem 0.5rem;
   font: inherit;
-  text-align: center;
+}
+.filters .row.release-year input[type=text]:focus-visible {
+  background-color: rgb(65, 203, 44);
+  color: black;
+  outline: none;
 }
 .filters .row > span {
   display: flex;
   align-items: center;
   position: relative;
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
-  text-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
 }
 .filters .row > span:first-child {
   justify-content: center;
 }
 
-/* #c0d2d3; #4a5488; */
 .search {
   position: relative;
   grid-area: search;
@@ -534,10 +605,15 @@
   display: grid;
   place-items: center;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background: linear-gradient(-65deg, darkorange 10%, black 10% 25%, darkorange 25% 35%, black 35% 50%, darkorange 50% 60%, black 60% 75%, darkorange 75% 85%, black 85% 100%);
   /* display: grid;
         place-items: center; */
+}
+@media screen and (max-width: 580px) {
+  .search {
+    padding: 1rem;
+  }
 }
 .search #submit {
   background-color: red;
@@ -550,48 +626,109 @@
   box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
   transition-duration: 250ms;
   transition-property: box-shadow, background-color;
-  /* border: 20px solid;
-        border-image: linear-gradient(to left, black, white);
-        border-image-slice: 10; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .search #submit:disabled {
   background-color: grey;
 }
-.search #submit:active {
+.search #submit:active:not(:disabled) {
   box-shadow: inset 0 0 5px 7px rgb(0, 0, 0), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
   /* background-color: darkred; */
 }
-.rating {
+.search #submit::before {
+  content: "asdd";
+  content: "";
+  border: 30px solid transparent;
+  border-top-width: 50px;
+  /* border-color: blue; */
+  border-top-color: beige;
+  border-bottom: 0;
+  translate: 0 20%;
+}
+
+.extra-info {
   grid-area: rating;
-  background-color: darkred;
+  background-color: #c9c5b1;
   display: grid;
   grid-template-rows: fit-content 1fr;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: relative;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-areas: "rating rating response" "tooltip tooltip tooltip";
+  padding: 1rem;
+  gap: 1rem;
 }
-.rating .container {
+.extra-info [data-rating] {
   background-color: gold;
   height: 150px;
+  grid-area: rating;
+  opacity: 0;
   width: 80%;
-  border-radius: 150px;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
+  grid-area: rating;
   box-shadow: inset 0 0 15px 6px black, inset 5px 3px 30px 4px black, inset 0 0 6px 2px black, 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
-.rating:after {
-  content: "";
+.extra-info:after {
   background-color: #222;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;
 }
-.rating-extra {
+.extra-info-extra {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-.rating [data-rating] {
+.extra-info .response {
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1fr;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  grid-area: response;
+}
+.extra-info .response .error {
+  aspect-ratio: 1/1;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  background: rgb(139, 0, 0);
+}
+.extra-info .response .error.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 #ff5858;
+  background: radial-gradient(circle at center, #ff5858 15%, rgb(139, 0, 0));
+}
+.extra-info .response .success {
+  aspect-ratio: 1/1;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  background: green;
+}
+.extra-info .response .success.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 #4dff4d;
+  background: radial-gradient(circle at center, #4dff4d 15%, green);
+}
+.extra-info .response .pending {
+  aspect-ratio: 1/1;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+  transition: none;
+  background: rgb(175, 135, 5);
+}
+.extra-info .response .pending.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 #fce085;
+  background: radial-gradient(circle at center, #fce085 15%, rgb(175, 135, 5));
+}
+.extra-info [data-rating] {
   height: 100%;
   width: 100%;
   position: relative;
@@ -602,10 +739,29 @@
   justify-content: center;
   align-items: center;
 }
-.rating #arrow {
+.extra-info [data-rating]::before {
+  content: "Rate-O-Meter";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  translate: -50% -50%;
+  font-size: 0.75rem;
+}
+.extra-info [data-rating]::after {
+  content: "";
+  position: absolute;
+  inset-block: 20%;
+  inset-inline: 20px;
+  border-radius: 50%;
+  border: 2px dashed black;
+  border-bottom: none;
+  border-right-width: 0;
+  border-left-width: 0;
+}
+.extra-info #arrow {
   --rotation: 0deg;
   position: absolute;
-  bottom: 30%;
+  bottom: 35%;
   right: 50%;
   transition: rotate 1s ease-in;
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -617,30 +773,50 @@
   border-right-width: 4rem;
   border: none;
   width: 0.1rem;
-  height: 5rem;
+  height: 40%;
   z-index: 2;
   box-shadow: 2px 2px black;
-  display: none;
 }
-.rating [data-runtime] {
+.extra-info .tooltip {
+  grid-area: tooltip;
+}
+.extra-info .tooltip .screen {
+  height: 100%;
+  min-height: 6rem;
+  display: flex;
+}
+.extra-info [data-tooltip-display] {
+  color: rgb(65, 203, 44);
+  padding: 0.25rem 1.25rem;
+  text-align: center;
+  align-content: center;
+  font-size: 0.8rem;
+  width: 100%;
+  text-wrap: balance;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.extra-info [data-runtime] {
   background-color: darkcyan;
   display: grid;
   place-items: center;
 }
-.rating [data-revenue] {
+.extra-info [data-revenue] {
   background-color: maroon;
   background-color: chartreuse;
   display: grid;
   place-items: center;
 }
 
+.extra-3,
 .extra-1,
 .extra-2 {
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   display: none;
   overflow: hidden;
 }
 @media screen and (max-width: 768px) {
+  .extra-3,
   .extra-1,
   .extra-2 {
     display: none;
@@ -674,14 +850,14 @@
 .extra-3 {
   background-color: chartreuse;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   position: relative;
   grid-area: extra-3;
 }
 .extra-3:after {
   content: "";
   background-color: #222;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;

@@ -12,6 +12,11 @@
   /* display: grid;
         place-items: center; */
 }
+@media screen and (max-width: 580px) {
+  .search {
+    padding: 1rem;
+  }
+}
 .search #submit {
   background-color: red;
   /* width: 30%; */
@@ -34,37 +39,82 @@
   box-shadow: inset 0 0 5px 7px rgb(0, 0, 0), 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
   /* background-color: darkred; */
 }
-.rating {
+.extra-info {
   grid-area: rating;
-  background-color: darkred;
+  background-color: #927460;
   display: grid;
   grid-template-rows: fit-content 1fr;
   border-radius: 1rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: relative;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-areas: "rating rating response" "tooltip tooltip tooltip";
+  padding: 1rem;
+  gap: 1rem;
 }
-.rating .container {
+.extra-info [data-rating] {
   background-color: gold;
   height: 150px;
+  grid-area: rating;
+  opacity: 0;
   width: 80%;
-  border-radius: 150px;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
+  grid-area: rating;
   box-shadow: inset 0 0 15px 6px black, inset 5px 3px 30px 4px black, inset 0 0 6px 2px black, 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
 }
-.rating:after {
-  content: "";
-  background-color: red;
+.extra-info:after {
+  background-color: #222;
   border-radius: 1rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;
 }
-.rating-extra {
+.extra-info-extra {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-.rating [data-rating] {
+.extra-info .response {
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1fr;
+  border: 1px solid pink;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  grid-area: response;
+}
+.extra-info .response .error,
+.extra-info .response .success,
+.extra-info .response .pending {
+  aspect-ratio: 1/1;
+  height: 1rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px 2px black;
+}
+.extra-info .response .error {
+  background: red;
+}
+.extra-info .response .error.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 rgba(228, 81, 81, 0.658), 0 0 50px 20px red;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.733) 15%, red);
+}
+.extra-info .response .success {
+  background: green;
+}
+.extra-info .response .success.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 rgba(105, 228, 81, 0.658), 0 0 50px 20px limegreen;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.733) 15%, green);
+}
+.extra-info .response .pending {
+  background: yellow;
+}
+.extra-info .response .pending.active {
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 0 1px 0 rgba(226, 228, 81, 0.658), 0 0 50px 20px yellow;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.733) 15%, yellow);
+}
+.extra-info [data-rating] {
   height: 100%;
   width: 100%;
   position: relative;
@@ -75,10 +125,29 @@
   justify-content: center;
   align-items: center;
 }
-.rating #arrow {
+.extra-info [data-rating]::before {
+  content: "Rate-O-Meter";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  translate: -50% -50%;
+  font-size: 0.75rem;
+}
+.extra-info [data-rating]::after {
+  content: "";
+  position: absolute;
+  inset-block: 20%;
+  inset-inline: 20px;
+  border-radius: 50%;
+  border: 2px dashed black;
+  border-bottom: none;
+  border-right-width: 0;
+  border-left-width: 0;
+}
+.extra-info #arrow {
   --rotation: 0deg;
   position: absolute;
-  bottom: 30%;
+  bottom: 35%;
   right: 50%;
   transition: rotate 1s ease-in;
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -90,17 +159,32 @@
   border-right-width: 4rem;
   border: none;
   width: 0.1rem;
-  height: 5rem;
+  height: 40%;
   z-index: 2;
   box-shadow: 2px 2px black;
-  display: none;
 }
-.rating [data-runtime] {
+.extra-info .tooltip {
+  grid-area: tooltip;
+}
+.extra-info .tooltip .screen {
+  height: 100%;
+  display: flex;
+}
+.extra-info [data-tooltip-display] {
+  color: rgb(65, 203, 44);
+  padding: 0.25rem 1.25rem;
+  text-align: center;
+  align-content: center;
+  font-size: 0.8rem;
+  width: 100%;
+  text-wrap: balance;
+}
+.extra-info [data-runtime] {
   background-color: darkcyan;
   display: grid;
   place-items: center;
 }
-.rating [data-revenue] {
+.extra-info [data-revenue] {
   background-color: maroon;
   background-color: chartreuse;
   display: grid;
@@ -153,23 +237,56 @@
 }
 .extra-3:after {
   content: "";
-  background-color: red;
+  background-color: #222;
   border-radius: 1rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;
 }
-@media screen and (max-width: 580px) {
-  .extra-3 {
-    display: none;
-  }
-}
-.monitor {
-  grid-area: main;
+.monitor-outer {
   padding: 2rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6), 0 0 2px 2px black;
   border-radius: 1rem;
-  background-color: darkred;
+  background-color: #927460;
+}
+@media screen and (max-width: 580px) {
+  .monitor-outer {
+    height: 480px;
+  }
+}
+
+.monitor-inner {
+  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
+}
+
+.main {
+  grid-area: main;
+}
+
+.screen {
+  background: #222;
+  border-radius: 1rem;
+  position: relative;
+}
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  position: absolute;
+  color: rgb(65, 203, 44);
+  background: radial-gradient(ellipse closest-side at center, transparent 75%, rgba(34, 34, 34, 0.65) 150%);
+  pointer-events: none;
+  box-shadow: inset 0 0 12px 15px rgba(0, 0, 0, 0.75), inset 0 0 4px 4px rgb(0, 0, 0), 0 0 1px 1px rgb(0, 0, 0);
+}
+.screen.loading::after {
+  content: "LOADING IMAGE...";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse closest-side at center, #222 100%, #222222 150%);
 }
 
 .main-screen {
@@ -177,43 +294,14 @@
   height: 100%;
   padding: 1rem;
   min-height: 360px;
-  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
-  border-radius: 1rem;
   display: grid;
   grid-template-rows: 6% 94%;
 }
-.main-screen::before {
-  content: "";
-  position: absolute;
-  display: block;
-  inset: 0;
-  background: #222;
-  pointer-events: none;
-  border-radius: 1rem;
+@media screen and (max-height: 580px) {
+  .main-screen {
+    height: 40dvh;
+  }
 }
-.main-screen::after {
-  content: "";
-  position: absolute;
-  display: block;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: 2px 2px 1px 0 rgba(255, 255, 255, 0.15), -2px -2px 1px 2px rgba(0, 0, 0, 0.6), inset 0 0 6px 3px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(0, 0, 0, 0.6), 0 0 2px 1px rgba(65, 203, 44, 0.9);
-  border-radius: 1rem;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(34, 34, 34, 0) 100%);
-}
-.main-screen.loading::after {
-  content: "LOADING DATA...";
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: #222;
-  color: rgb(65, 203, 44);
-  background: radial-gradient(ellipse at center, #222222 30%, #222222 90%);
-}
-
 .tabs {
   z-index: 0;
   display: grid;
@@ -230,12 +318,10 @@
 .tabs span {
   padding-inline: 0.75rem;
   border: 2px solid rgb(65, 203, 44);
-  box-shadow: inset 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3), 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: rgb(65, 203, 44);
 }
 .tabs span.active {
   background-color: rgb(65, 203, 44);
-  box-shadow: 0.1rem 0.1rem 0px rgba(0, 0, 0, 0.3);
   color: black;
 }
 

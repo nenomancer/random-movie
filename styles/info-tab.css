@@ -29,7 +29,6 @@
 .info .row .content .button-span.link:hover {
   cursor: inherit;
   background-color: rgb(65, 203, 44);
-  text-shadow: none;
   color: black;
 }
 .info .row.title .content .button-span {
@@ -57,7 +56,6 @@
   overflow: visible;
   overflow-x: scroll;
   border: 2px solid;
-  box-shadow: var(--screen-shadow);
 }
 .info .row.subtitle .content .button-span {
   padding-block: 0;
@@ -90,6 +88,8 @@
   align-items: start;
   padding: 0.25rem 0.5rem;
   max-height: 200px;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 .info .row > span {
   display: flex;

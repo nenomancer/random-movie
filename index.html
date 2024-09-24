@@ -16,59 +16,16 @@
 
   <body>
     <div id="main-container">
-      <div class="extra-1">
-        <div class="container">
-          <!-- <div class="tooltip" data-tooltip-display>TOOLTIP:</div> -->
-          <div>Tagline</div>
-        </div>
-      </div>
-      <div class="extra-2">
-        <div>Full Release Date</div>
-      </div>
-      <div class="poster-screen">
-        <span class="container" data-movie-id="">
-          <img src="" alt="" id="poster" />
-        </span>
-      </div>
-      <div class="extra-3">
-        <div data-votes>votes</div>
-        <div data-popularity>popularity</div>
-        <div data-location>other shiet</div>
-        <div data-runtime>runtime</div>
-        <div class="tooltip" data-tooltip-display>TOOLTIP:</div>
-        <div class="protif">
-          <div data-revenue data-tooltip="Revenue of the movie">revenue</div>
-          <div data-budget data-tooltip="Budget of the movie">budget</div>
-          <div data-profit data-tooltip="Profit of the movie">profit</div>
-        </div>
-      </div>
-      <div class="rating">
-        <div data-rating>
-          <div class="container"></div>
-          <div id="arrow" data-rotation></div>
-        </div>
-        <div data-response>resposnse</div>
-        <div class="rating-extra">
-          <div>somethin else?</div>
-          <div class="themes">
-            <div class="theme-blue">blue</div>
-            <div class="theme-green">green</div>
-            <div class="theme-red">red</div>
-            <div class="theme-orange">orange</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="monitor">
+      <div class="monitor main monitor-outer">
         <div
-          class="main-screen"
+          class="main-screen screen monitor-inner"
           data-tooltip="Now hovering over the Main screen.."
         >
           <span class="tabs">
-            <span class="first active" data-tooltip="View movie details"
+            <span class="first active" data-tooltip="View movie details."
               >INFO</span
             >
-            <span class="second" data-tooltip="Click to see the filter tab"
+            <span class="second" data-tooltip="View search filters."
               >FILTERS</span
             >
           </span>
@@ -98,13 +55,17 @@
               </div>
               <div class="row plot">
                 <span>PLT</span>
-                <span class="content"> </span>
+                <span
+                  class="content"
+                  lang="en"
+                  data-tooltip="Plot summary for the movie."
+                ></span>
               </div>
             </div>
             <form name="filters" class="filters" data-tab="second">
               <span
                 class="row countries"
-                data-tooltip="Choose a country of origin for the movie"
+                data-tooltip="Filter based on the country of origin to find a movie."
               >
                 <span class="header">
                   <span>Country</span>
@@ -115,7 +76,7 @@
 
               <div
                 class="row genres"
-                data-tooltip="Pick one or multiple genres to find a movie"
+                data-tooltip="Pick one or multiple genres to find a movie."
                 tabindex="1"
               >
                 <span class="header">
@@ -127,7 +88,7 @@
 
               <div
                 class="row release-year"
-                data-tooltip="Filter based on release date [from - to]"
+                data-tooltip="Filter based on a range of release years."
                 tabindex="1"
               >
                 <span class="header">
@@ -138,14 +99,16 @@
                       type="text"
                       min="1878"
                       max="2024"
-                      placeholder=""
+                      placeholder="From"
+                      data-tooltip="Earliest release year. Minimum is 1878."
                     />
                     <input
                       id="release-to"
                       type="text"
                       min="1878"
                       max="2024"
-                      placeholder=""
+                      placeholder="To"
+                      data-tooltip="Latest release year. Maximum is the current year."
                     />
                   </span>
                 </span>
@@ -154,14 +117,66 @@
           </div>
         </div>
       </div>
+      <div class="poster-screen monitor-outer">
+        <div class="container monitor-inner screen" data-movie-id="">
+          <img src="" alt="" id="poster" />
+        </div>
+      </div>
+      <div class="extra-info" section-extra-info>
+        <div data-rating>
+          <!-- <div class="container"></div> -->
+          <div id="arrow" data-rotation></div>
+        </div>
+        <div class="response" data-tooltip="A display of the search response.">
+          <div class="error"></div>
+          <div class="pending"></div>
+          <div class="success"></div>
+        </div>
+
+        <div class="tooltip">
+          <div class="screen monitor-inner">
+            <div data-tooltip-display>
+              Hover on the controls to see further info.
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="search">
         <!-- <span class="">SEARCH SHIE</span> -->
         <button id="submit"></button>
       </div>
-
-      <div id="container">
-        <div id="results"></div>
+      <div class="extra-1">
+        <div class="container">
+          <!-- <div class="tooltip" data-tooltip-display>TOOLTIP:</div> -->
+          <div>Tagline</div>
+        </div>
       </div>
+      <div class="extra-2">
+        <div>Full Release Date</div>
+      </div>
+
+      <div class="extra-3">
+        <div data-votes>votes</div>
+        <div data-popularity>popularity</div>
+        <div data-location>other shiet</div>
+        <div data-runtime>runtime</div>
+        <div class="protif">
+          <div data-revenue data-tooltip="Revenue of the movie">revenue</div>
+          <div data-budget data-tooltip="Budget of the movie">budget</div>
+          <div data-profit data-tooltip="Profit of the movie">profit</div>
+        </div>
+        <div data-themes>
+          <div class="theme-blue">blue</div>
+          <div class="theme-green">green</div>
+          <div class="theme-red">red</div>
+          <div class="theme-orange">orange</div>
+        </div>
+      </div>
+      <!-- <div class="rating"> -->
+
+      <!-- <div id="container">
+        <div id="results"></div>
+      </div> -->
     </div>
   </body>
 </html>
