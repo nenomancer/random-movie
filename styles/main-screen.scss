@@ -29,14 +29,9 @@
   grid-area: main;
 }
 
-// .monitorr {
-//   background-color: red;
-// }
-
 .screen {
-  background: $screen-bg;
+  background: $screen-color;
   border-radius: $monitor-border-radius;
-  // background: palegoldenrod;
   position: relative;
   &::after {
     content: "";
@@ -48,21 +43,20 @@
     background: radial-gradient(
       ellipse closest-side at center,
       transparent 75%,
-      rgba($screen-bg, 0.65) 150%
+      rgba($screen-color, 0.65) 150%
     );
     pointer-events: none;
     box-shadow: $monitor-shadow-inner;
   }
   &.loading::after {
-    content: "LOADING IMAGE...";
+    content: "LOADING DATA...";
     display: flex;
     justify-content: center;
     align-items: center;
-    // z-index: 2;
     background: radial-gradient(
       ellipse closest-side at center,
-      $screen-bg 100%,
-      rgba($screen-bg, 1) 150%
+      $screen-color 100%,
+      rgba($screen-color, 1) 150%
     );
   }
 }
@@ -71,59 +65,12 @@
   height: 100%;
   padding: 1rem;
   min-height: 360px;
-  // display: flex;
-  // flex-direction: column;
-  // box-shadow: $monitor-bevel-inner;
-  // border-radius: $monitor-border-radius;
-
   display: grid;
   grid-template-rows: 6% 94%;
 
   @media screen and (max-height: $breakpoint-sm) {
     height: 40dvh;
   }
-
-  &::before {
-    // content: "";
-    // position: absolute;
-    // display: block;
-    // inset: 0;
-    // // background: $screen-bg;
-    // pointer-events: none;
-    // border-radius: $monitor-border-radius;
-  }
-  &::after {
-    // content: "";
-    // position: absolute;
-    // display: block;
-    // inset: 0;
-    // pointer-events: none;
-    // box-shadow: $monitor-bevel-inner, $monitor-shadow-inner, $monitor-glow;
-    // border-radius: $monitor-border-radius;
-    // background: radial-gradient(
-    //   ellipse at center,
-    //   transparent 55%,
-    //   rgba($screen-bg, 0) 100%
-    // );
-  }
-
-  // &.loading::after {
-  //   content: "LOADING DATA...";
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   position: absolute;
-  //   // inset: $monitor-padding;
-  //   inset: 0;
-  //   z-index: 2;
-  //   background: $screen-bg;
-  //   color: $color-highlight;
-  //   background: radial-gradient(
-  //     ellipse at center,
-  //     rgba($screen-bg, 1) 30%,
-  //     rgba($screen-bg, 1) 90%
-  //   );
-  // }
 }
 
 .tabs {
@@ -143,10 +90,12 @@
 
     color: $color-highlight;
     &:hover {
+      background-color: $color-highlight;
+      color: black;
     }
     &.active {
       background-color: $color-highlight;
-      color: black;
+      color: white;
     }
   }
 }

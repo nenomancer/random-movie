@@ -11,13 +11,7 @@
   gap: 0.25rem;
 
   &.active {
-    // border: 2px solid $color-highlight;
-    // box-shadow: inset $shadow-offset $shadow-offset $shadow-blur $shadow-color,
-    // $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-    // display: flex;
     display: grid;
-
-    // flex-direction: column;
     align-content: start;
   }
   .row {
@@ -27,7 +21,6 @@
       display: flex;
       overflow-x: scroll;
       .button-span {
-        // padding: 0.25rem 0.5rem;
         padding-inline: 0.5rem;
         white-space: nowrap;
         height: 100%;
@@ -62,8 +55,6 @@
     &.subtitle {
       grid-template-columns: 1fr;
       font-size: 0.75rem;
-      // font-weight: 900;
-      // text-transform: uppercase;
       font-style: normal;
 
       grid-template-rows: 1.25rem;
@@ -74,7 +65,6 @@
         overflow: visible;
         overflow-x: scroll;
         border: 2px solid;
-        // box-shadow: var(--screen-shadow);
 
         .button-span {
           padding-block: 0;
@@ -85,16 +75,11 @@
           &:last-child {
             border: none;
           }
-          &:not(&:last-child) {
-            // border-right: none;
-          }
         }
       }
       > span.content:first-child {
         justify-content: flex-start;
         justify-content: stretch;
-        /* gap: 0; */
-        // border: none;
       }
     }
     &.plot {

@@ -9,30 +9,8 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  // background-color: $monitor-color;
-  // box-shadow: $monitor-bevel-outer, $monitor-shadow-outer;
-  // border-radius: $monitor-border-radius;
 
-  &::before {
-    // content: "";
-    // display: block;
-    // position: absolute;
-    // inset: $monitor-padding;
-    // background: $screen-bg;
-    // border-radius: $monitor-border-radius;
-  }
-  &::after {
-    // content: "";
-    // display: block;
-    // position: absolute;
-    // inset: $monitor-padding;
-
-    // pointer-events: none;
-    // box-shadow: $monitor-shadow-inner, $monitor-bevel-inner, $monitor-glow;
-    // border-radius: $monitor-border-radius;
-  }
-
-  .container {
+  .screen {
     display: block;
     height: 100%;
     width: 100%;
@@ -44,6 +22,9 @@
     padding-block: 1rem;
     padding-inline: 1rem;
     border-radius: $monitor-border-radius;
+    &.loading::after {
+      content: "LOADING IMAGE...";
+    }
   }
 
   #poster {

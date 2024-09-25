@@ -8,9 +8,6 @@
   padding: 2rem;
   display: grid;
   place-items: center;
-  // aspect-ratio: 1/1;
-  // grid-row: span 1;
-  // grid-column: span 1;
 
   @media screen and (max-width: $breakpoint-sm) {
     padding: 1rem;
@@ -29,18 +26,11 @@
     $color-dark 85% 100%
   );
 
-  /* display: grid;
-        place-items: center; */
   #submit {
-    background-color: red;
-    /* width: 30%; */
+    background-color: darkred;
     aspect-ratio: 1/1;
-    // height: 50%;
     height: 100%;
     max-height: 150px;
-    &:disabled {
-      background-color: grey;
-    }
 
     border-radius: 50%;
     border: none;
@@ -50,25 +40,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    &:disabled {
+      background-color: grey;
+    }
+
     &:active:not(:disabled) {
       box-shadow: inset 0 0 5px 7px rgba(0, 0, 0, 1), $monitor-bevel-inner;
-      /* background-color: darkred; */
+      &::before {
+        scale: 0.95;
+      }
     }
 
     &::before {
-      content: "asdd";
       content: "";
       border: 30px solid transparent;
       border-top-width: 50px;
-      /* border-color: blue; */
-      border-top-color: beige;
+      border-top-color: $color-beige;
       border-bottom: 0;
-      translate: 0 20%;
+      translate: 0 18%;
     }
   }
 }
 
-// .rating {
 .extra-info {
   grid-area: rating;
   background-color: $monitor-color;
@@ -84,18 +77,12 @@
     "tooltip tooltip tooltip";
   padding: 1rem;
   gap: 1rem;
-  // padding: $monitor-padding;
   [data-rating] {
     background-color: gold;
     height: 150px;
     grid-area: rating;
     opacity: 0;
-    // aspect-ratio: 1/1;
     width: 80%;
-    // border-radius: 150px;
-    // border-bottom-left-radius: 2rem;
-    // border-bottom-right-radius: 2rem;
-    // margin: auto;
     grid-area: rating;
 
     box-shadow: inset 0 0 15px 6px black, inset 5px 3px 30px 4px black,
@@ -126,71 +113,18 @@
     gap: 0.5rem;
     padding: 0.5rem;
     grid-area: response;
-    .error,
-    .success,
-    .pending {
-      // height: 20%;
-      // aspect-ratio: 1 /1;
-      // height: 1rem;
-      // border-radius: 50%;
-      // box-shadow: inset 0 0 4px 2px black;
-      // transition: none;
-      // $light-color: none;
-      // // transition: box-shadow 250ms ease-out;
-      // background: $light-color;
-      // &.active {
-      //   box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2),
-      //     0 0 1px 0 lighten($light-color, 40%);
-      //   background: radial-gradient(
-      //     circle at center,
-      //     lighten($light-color, 40%) 15%,
-      //     $light-color
-      //   );
-      // }
-    }
+
     .error {
       $light-color: rgb(139, 0, 0);
       @include lightbulb-color($light-color);
-
-      // background: rgb(139, 0, 0);
-      // &.active {
-      //   box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2),
-      //     0 0 1px 0 rgba(228, 81, 81, 0.658), 0 0 50px 20px red;
-      //   background: radial-gradient(
-      //     circle at center,
-      //     rgba(255, 255, 255, 0.733) 15%,
-      //     red
-      //   );
-      // }
     }
     .success {
       $light-color: green;
       @include lightbulb-color($light-color);
-      // background: green;
-      // &.active {
-      // box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2),
-      //   0 0 1px 0 rgba(105, 228, 81, 0.658), 0 0 50px 20px limegreen;
-      // background: radial-gradient(
-      //   circle at center,
-      //   rgba(255, 255, 255, 0.733) 15%,
-      //   green
-      // );
-      // }
     }
     .pending {
       $light-color: rgb(175, 135, 5);
       @include lightbulb-color($light-color);
-
-      // background: $light-color;
-      // &.active {
-      //   box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.2),
-      //     0 0 1px 0 lighten($light-color, 40%);
-      //   background: radial-gradient(
-      //     circle at center,
-      //     lighten($light-color, 40%) 15%,
-      //     $light-color
-      //   );
-      // }
     }
   }
 
@@ -246,15 +180,9 @@
     z-index: 2;
 
     box-shadow: 2px 2px black;
-    // display: none; // temp
   }
 
-  .monitorrr-inside {
-    // border-radius: $monitor-border-radius;
-    // background-color: $screen-bg;
-  }
   .tooltip {
-    // grid-column: span 2;
     grid-area: tooltip;
 
     .screen {
@@ -264,7 +192,6 @@
     }
   }
   [data-tooltip-display] {
-    // background-color: $screen-bg;
     color: $color-highlight;
     padding: 0.25rem 1.25rem;
     text-align: center;
@@ -290,7 +217,6 @@
 .extra-3,
 .extra-1,
 .extra-2 {
-  // font-family: "Orbitron", sans-serif;
   border-radius: $monitor-border-radius;
   display: none;
   overflow: hidden;
@@ -299,17 +225,12 @@
   }
 }
 
-// .extra-3 {
-//   @media screen and (max-width: $breakpoint-md) {
-//     display: none;
-//   }
-// }
 .extra-1 {
   background-color: orange;
   grid-area: extra-1;
   padding: $monitor-padding;
   .container {
-    background: $screen-bg;
+    background: $screen-color;
     padding: 0.25rem 0.5rem;
   }
 }
@@ -325,7 +246,6 @@
   grid-template-rows: repeat(2, 1fr);
   [class^="theme-"] {
     border: 1px solid black;
-    // padding: 2rem;
   }
 }
 
@@ -343,20 +263,5 @@
     box-shadow: $monitor-bevel-outer;
     position: absolute;
     inset: 0;
-  }
-
-  @media screen and (max-width: $breakpoint-sm) {
-    // display: none;
-  }
-
-  [data-popularity] {
-    // background-color: peru;
-  }
-  [data-votes] {
-    // background-color: cadetblue;
-  }
-
-  [data-location] {
-    // background-color: darkolivegreen;
   }
 }
