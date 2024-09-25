@@ -260,11 +260,74 @@
   inset: 0;
 }
 
+.stickynote {
+  perspective: 150px;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  translate: 35% 90%;
+}
+
+.history {
+  perspective: 150px;
+  background: palegoldenrod;
+  width: 6rem;
+  aspect-ratio: 1/1;
+  transform: rotateX(10deg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 3px 16px 2px -4px rgba(0, 0, 0, 0.4);
+  transform-origin: top;
+  background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 9%, #d5c62b 10%);
+}
+.history:hover {
+  transform: rotateX(7deg);
+  box-shadow: 2px 10px 1px -2px rgba(0, 0, 0, 0.4);
+}
+.history:hover:before {
+  transform: rotateX(-11deg) translateY(1px) scale(1.01);
+}
+.history:before {
+  content: "";
+  background: palegoldenrod;
+  position: absolute;
+  top: -8px;
+  inset-inline: 0;
+  height: 1rem;
+  translate: 0 -50%;
+  transform: rotateX(-15deg) translateY(0.5px) scale(1.01);
+  transition: 250ms ease-out;
+}
+.history::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.note {
+  padding-inline: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  word-break: auto;
+  white-space: pre-line;
+}
+.note:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 0.1rem;
+}
+
 .monitor-outer {
   padding: 2rem;
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6), 0 0 2px 2px black;
   border-radius: 0.5rem;
   background-color: #c9c5b1;
+  position: relative;
 }
 @media screen and (max-width: 580px) {
   .monitor-outer {
@@ -863,4 +926,66 @@
   box-shadow: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   position: absolute;
   inset: 0;
+}
+
+.stickynote {
+  perspective: 150px;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  translate: 35% 90%;
+}
+
+.history {
+  perspective: 150px;
+  background: palegoldenrod;
+  width: 6rem;
+  aspect-ratio: 1/1;
+  transform: rotateX(10deg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 3px 16px 2px -4px rgba(0, 0, 0, 0.4);
+  transform-origin: top;
+  background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 9%, #d5c62b 10%);
+}
+.history:hover {
+  transform: rotateX(7deg);
+  box-shadow: 2px 10px 1px -2px rgba(0, 0, 0, 0.4);
+}
+.history:hover:before {
+  transform: rotateX(-11deg) translateY(1px) scale(1.01);
+}
+.history:before {
+  content: "";
+  background: palegoldenrod;
+  position: absolute;
+  top: -8px;
+  inset-inline: 0;
+  height: 1rem;
+  translate: 0 -50%;
+  transform: rotateX(-15deg) translateY(0.5px) scale(1.01);
+  transition: 250ms ease-out;
+}
+.history::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.note {
+  padding-inline: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  word-break: auto;
+  white-space: pre-line;
+}
+.note:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 0.1rem;
 }/*# sourceMappingURL=main.css.map */
