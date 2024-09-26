@@ -1,28 +1,9 @@
-$max-width: 960px;
-
-$color-dark: rgb(33, 39, 48);
-$color-grey: #3e3f31;
-$color-teal: #76abae;
-$color-white: #eeeeee;
 $color-highlight: rgb(65, 203, 44);
+$color-beige: #c9c5b1;
 
-$screen-color: #c0d2d3;
-$color-screen-dark: #1e2a1e;
-$color-screen-light: #334a38;
-$shadow-offset: 0.1rem;
-$shadow-blur: 0px;
-$shadow-color: rgba(0, 0, 0, 0.3);
-// $screen-shadow: inset$shadow-offset $shadow-offset $shadow-blur $shadow-color,
-// $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-$screen-shadow-outside: $shadow-offset $shadow-offset $shadow-blur $shadow-color;
-$screen-shadow-inside: inset $shadow-offset $shadow-offset $shadow-blur
-  $shadow-color;
-$screen-shadow: $screen-shadow-inside, $screen-shadow-outside;
-$screen-bg: radial-gradient(circle at 50% 35%, #334a38, #1e2a1e);
-$screen-bg: rgb(12, 26, 11);
-$screen-bg: #222;
-$screen-width: 480px;
-$poster-width: 360px;
+$screen-color: #222;
+
+// Breakpoints
 
 $breakpoint-xs: 320px;
 $breakpoint-sm: 580px;
@@ -30,21 +11,24 @@ $breakpoint-md: 640px;
 $breakpoint-lg: 768px;
 $breakpoint-xl: 1024px;
 
+// Monitor variables
 $monitor-padding: 2rem;
+$monitor-border-radius: 0.5rem;
+$monitor-color: $color-beige;
 
-$monitor-bevel-outer: inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3),
-  inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
+// Bevels
+$monitor-bevel-light-color: rgba(255, 255, 255, 0.3);
+$monitor-bevel-shadow-color: rgba(0, 0, 0, 0.6);
+$monitor-bevel-outer: inset 4px 4px 1px 0 $monitor-bevel-light-color,
+  inset -4px -4px 1px 0 $monitor-bevel-shadow-color;
 
-$monitor-bevel-inner: 2px 2px 1px 0 rgba(255, 255, 255, 0.15),
-  -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
+$monitor-bevel-inner: 2px 2px 1px 2px $monitor-bevel-light-color,
+  -2px -2px 1px 2px $monitor-bevel-shadow-color;
 
+// Shadows
 $monitor-shadow-inner: inset 0 0 12px 15px rgba(0, 0, 0, 0.75),
   inset 0 0 4px 4px rgba(0, 0, 0, 1), 0 0 1px 1px rgba(0, 0, 0, 1);
 $monitor-shadow-outer: 0 0 2px 2px black;
-$monitor-glow:
-//  0 0 10px 6px rgba($color-highlight, 0.2),
-  // 0 0 20px 10px rgba($color-highlight, 0.2),
-  0 0 2px 1px rgba($color-highlight, 0.9);
 
-$monitor-border-radius: .5rem;
-$monitor-color: #c9c5b1;
+// Glows
+$monitor-glow: 0 0 2px 1px rgba($color-highlight, 0.9);

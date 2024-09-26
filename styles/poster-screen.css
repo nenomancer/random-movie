@@ -8,7 +8,7 @@
   justify-content: center;
   align-items: flex-end;
 }
-.poster-screen .container {
+.poster-screen .screen {
   display: block;
   height: 100%;
   width: 100%;
@@ -20,6 +20,9 @@
   padding-block: 1rem;
   padding-inline: 1rem;
   border-radius: 0.5rem;
+}
+.poster-screen .screen.loading::after {
+  content: "LOADING IMAGE...";
 }
 .poster-screen #poster {
   max-height: 100%;

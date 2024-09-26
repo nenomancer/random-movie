@@ -15,7 +15,6 @@
   }
 
   .row {
-    // column-gap: 0.5rem;
     grid-template-columns: 1fr;
     .header {
       border: 2px solid $color-highlight;
@@ -28,8 +27,6 @@
     }
 
     .content {
-      // display: flex;
-      // overflow-x: scroll;
       .button-span {
         padding: 0.25rem 0.5rem;
         white-space: nowrap;
@@ -61,7 +58,6 @@
       .content {
         display: flex;
         flex-direction: column;
-        // height: 400px;
         max-height: 1.66rem * 7;
         overflow-y: scroll;
         grid-column: span 2;
@@ -71,7 +67,6 @@
         scroll-snap-type: y mandatory;
       }
       .option {
-        // border: 2px solid $color-highlight;
         scroll-snap-align: start;
         &.selected {
           background-color: $color-highlight;
@@ -92,11 +87,6 @@
       .content {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         grid-template-columns: repeat(3, minmax(30%, 1fr));
-        // gap: 0.25rem;
-        // span {
-        //   display: grid;
-        //   place-items: center;
-        // }
         .option {
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -106,16 +96,9 @@
     }
 
     &.release-year {
-      span {
-        // display: flex;
-      }
-
       .content {
         padding: 0;
         height: 100%;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
       }
       input[type="text"] {
         border: none;
@@ -125,7 +108,6 @@
         color: $color-highlight;
         padding: 0.25rem 0.5rem;
         font: inherit;
-        // text-align: center;
 
         &:focus-visible {
           background-color: $color-highlight;
@@ -133,15 +115,6 @@
           outline: none;
         }
       }
-      // input[type="number"] {
-      //   // appearance: none;
-      //   // -webkit-appearance: none;
-      //   // -moz-appearance: textfield;
-      //   border: 2px solid $color-highlight;
-      //   background: none;
-      //   color: $color-highlight;
-      //   font: inherit;
-      // }
     }
 
     > span {
@@ -150,7 +123,6 @@
       }
       display: flex;
       align-items: center;
-      // border: 2px solid $color-highlight;
       position: relative;
     }
   }
