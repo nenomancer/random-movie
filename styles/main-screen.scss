@@ -90,13 +90,14 @@
     height: 100%;
     color: $color-highlight;
     align-content: center;
+    cursor: pointer;
     &:hover {
       background-color: $color-highlight;
-      color: black;
+      color: $screen-color;
     }
     &.active {
       background-color: $color-highlight;
-      color: white;
+      color: $screen-color;
     }
   }
 }

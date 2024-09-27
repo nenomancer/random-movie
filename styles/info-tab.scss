@@ -17,6 +17,7 @@
   .row {
     gap: 0.25rem;
 
+    // border-bottom: 2px dashed;
     .content {
       display: flex;
       overflow-x: scroll;
@@ -28,9 +29,10 @@
         align-items: center;
 
         &.link:hover {
-          cursor: inherit;
+          cursor: pointer;
           background-color: $color-highlight;
-          color: black;
+          // color: black;
+          color: $screen-color;
         }
       }
     }
@@ -41,7 +43,8 @@
         }
         span:hover {
           a {
-            color: black;
+            // color: black;
+            color: $screen-color;
           }
         }
         a {

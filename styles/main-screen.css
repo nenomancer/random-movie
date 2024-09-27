@@ -269,7 +269,7 @@
   bottom: 0;
   right: 0;
   z-index: 1;
-  translate: -20% 100%;
+  translate: -20% 93%;
   pointer-events: none;
 }
 @media screen and (max-width: 580px) {
@@ -280,14 +280,14 @@
 
 .history {
   perspective: 150px;
-  background: palegoldenrod;
   width: 6rem;
   aspect-ratio: 1/1;
   transform: rotateX(10deg);
   display: flex;
   flex-direction: column;
-  box-shadow: 3px 16px 2px -4px rgba(0, 0, 0, 0.4);
+  box-shadow: 3px 16px 3px -4px rgba(0, 0, 0, 0.15), inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
   transform-origin: top;
+  rotate: -2deg;
   background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 9%, #d5c62b 10%);
   pointer-events: none;
   -webkit-font-smoothing: antialiased; /* For WebKit browsers */
@@ -295,42 +295,34 @@
 }
 .history:hover {
   transform: rotateX(7deg);
-  -moz-transform: rotateX(7deg);
-  -webkit-transform: rotateX(7deg);
-  box-shadow: 2px 10px 1px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 10px 1px -2px rgba(0, 0, 0, 0.2), inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
 }
 .history:hover:before {
-  transform: rotateX(-11deg) translateY(1px);
-  -moz-transform: rotateX(-11deg) translateY(1px);
-  -webkit-transform: rotateX(-11deg) translateY(1px);
+  transform: rotateX(-11deg) translateY(1px) scale(1.01);
 }
 .history:before {
   content: "";
-  background: palegoldenrod;
+  background: #cbc481;
   position: absolute;
   top: -8px;
   inset-inline: 0;
   height: 1rem;
   translate: 0 -50%;
-  transform: rotateX(-15deg) translateY(0.5px) scale(1.01);
+  transform: rotateX(-15deg) translateY(0.5px) scale(1.015);
   transition: 250ms ease-out;
-}
-.history::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+  box-shadow: 1.1px 0.3px 0.3px -0.6px rgba(0, 0, 0, 0.4), inset -0.1px 0.1px 0.5px -0.4px #fbf9ea, inset 0.1px -0.1px 0.5px -0.4px #e1d76a;
 }
 
 .note {
-  padding-inline: 0.5rem;
+  padding-inline: 0.25rem;
   font-size: 0.5rem;
   line-height: 1.25;
-  hyphens: auto;
-  pointer-events: all;
   -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  word-break: auto;
-  white-space: pre-line;
+          hyphens: auto;
+  pointer-events: all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: #222;
   font-family: "Permanent Marker", cursive;
   font-weight: 400;
@@ -421,14 +413,15 @@
   height: 100%;
   color: rgb(65, 203, 44);
   align-content: center;
+  cursor: pointer;
 }
 .tabs span:hover {
   background-color: rgb(65, 203, 44);
-  color: black;
+  color: #222;
 }
 .tabs span.active {
   background-color: rgb(65, 203, 44);
-  color: white;
+  color: #222;
 }
 
 .row {

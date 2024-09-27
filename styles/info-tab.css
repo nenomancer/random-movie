@@ -26,15 +26,15 @@
   align-items: center;
 }
 .info .row .content .button-span.link:hover {
-  cursor: inherit;
+  cursor: pointer;
   background-color: rgb(65, 203, 44);
-  color: black;
+  color: #222;
 }
 .info .row.title .content .button-span {
   flex: 1;
 }
 .info .row.title .content span:hover a {
-  color: black;
+  color: #222;
 }
 .info .row.title .content a {
   flex: 1;
