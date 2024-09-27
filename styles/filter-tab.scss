@@ -32,9 +32,10 @@
         white-space: nowrap;
         height: 100%;
         &.link:hover {
-          cursor: inherit;
+          cursor: pointer;
           background-color: $color-highlight;
-          color: black;
+          // color: black;
+          color: $screen-color;
         }
       }
     }
@@ -53,6 +54,7 @@
         &:hover {
           background-color: $color-highlight;
           color: black;
+          cursor: pointer;
         }
       }
       .content {
@@ -70,11 +72,11 @@
         scroll-snap-align: start;
         &.selected {
           background-color: $color-highlight;
-          color: black;
+          color: $screen-color;
 
-          &:hover {
-            color: white;
-          }
+          // &:hover {
+          //   color: white;
+          // }
         }
       }
     }
@@ -108,10 +110,12 @@
         color: $color-highlight;
         padding: 0.25rem 0.5rem;
         font: inherit;
+        cursor: pointer;
+        text-transform: uppercase;
 
         &:focus-visible {
           background-color: $color-highlight;
-          color: black;
+          color: $screen-color;
           outline: none;
         }
       }

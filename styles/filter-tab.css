@@ -29,9 +29,9 @@
   height: 100%;
 }
 .filters .row .content .button-span.link:hover {
-  cursor: inherit;
+  cursor: pointer;
   background-color: rgb(65, 203, 44);
-  color: black;
+  color: #222;
 }
 .filters .row.genres, .filters .row.countries {
   grid-template-rows: 1fr 0;
@@ -45,6 +45,7 @@
 .filters .row.genres .value:hover, .filters .row.countries .value:hover {
   background-color: rgb(65, 203, 44);
   color: black;
+  cursor: pointer;
 }
 .filters .row.genres .content, .filters .row.countries .content {
   display: flex;
@@ -62,10 +63,7 @@
 }
 .filters .row.genres .option.selected, .filters .row.countries .option.selected {
   background-color: rgb(65, 203, 44);
-  color: black;
-}
-.filters .row.genres .option.selected:hover, .filters .row.countries .option.selected:hover {
-  color: white;
+  color: #222;
 }
 .filters .row.genres .value {
   white-space: nowrap;
@@ -92,10 +90,12 @@
   color: rgb(65, 203, 44);
   padding: 0.25rem 0.5rem;
   font: inherit;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 .filters .row.release-year input[type=text]:focus-visible {
   background-color: rgb(65, 203, 44);
-  color: black;
+  color: #222;
   outline: none;
 }
 .filters .row > span {
