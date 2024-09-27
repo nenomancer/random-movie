@@ -67,7 +67,7 @@
   padding: 1rem;
   min-height: 360px;
   display: grid;
-  grid-template-rows: 6% 94%;
+  grid-template-rows: 8% 92%;
 
   @media screen and (max-height: $breakpoint-sm) {
     height: 40dvh;
@@ -79,17 +79,17 @@
   z-index: 0;
   display: grid;
   grid-template-columns: repeat(2, min-content);
-  grid-template-rows: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
   align-items: flex-start;
   @media screen and (max-width: $breakpoint-md) {
-    grid-template-columns: repeat(2, 1fr);
     text-align: center;
   }
   span {
     padding-inline: 0.75rem;
     border: 2px solid $color-highlight;
-
+    height: 100%;
     color: $color-highlight;
+    align-content: center;
     &:hover {
       background-color: $color-highlight;
       color: black;
