@@ -90,7 +90,6 @@ function handleNumberInput(input) {
       return;
     }
     const value = Number(e.target.value);
-    console.log("VALUE: ", value);
     if (value < earliestYear) {
       e.target.value = earliestYear;
     } else if (value > currentYear) {
@@ -172,10 +171,9 @@ function generateGenres() {
         });
         options.appendChild(temp);
       });
-      console.log(options.children);
     })
     .catch((err) => {
-      console.log("error code: ", err.status_code);
+      console.error(err);
     });
 }
 
@@ -187,7 +185,6 @@ function generateCountries() {
       value.addEventListener("click", (e) => {
         countriesFilterList.parentElement.classList.toggle("open");
         genreFilterContainer.classList.remove("open");
-        console.log("clcick");
       });
 
       function toggleSelection(temp) {
@@ -230,7 +227,7 @@ function generateCountries() {
       });
     })
     .catch((err) => {
-      console.log("error code: ", err.status_code);
+      console.error(err);
     });
 }
 
@@ -277,11 +274,8 @@ function fetchMovies(totalPages = 500) {
       filteredGenres.push(genre);
     }
   });
-  console.log("FILTERED GENRES: ", filteredGenres);
-  console.log("CHOSEN GENRES: ", genres);
 
   if (countryOfOrigin) {
-    console.log(countryOfOrigin);
     _queries = "&with_origin_country=" + countryOfOrigin;
   }
 
@@ -302,15 +296,12 @@ function fetchMovies(totalPages = 500) {
       toDate;
   }
 
-  console.log("CURRENT QUERY: ", _queries);
-
   fetch(
     "https://api.themoviedb.org/3/discover/movie?page=" + pageNumber + _queries,
     options
   )
     .then((response) => response.json())
     .then((response) => {
-      console.log(response);
       if (response.results?.length === 0) {
         fetchMovies(Math.min(500, response.total_pages));
       } else {
@@ -322,10 +313,8 @@ function fetchMovies(totalPages = 500) {
       pendingResponse.classList.remove("active");
       errorResponse.classList.add("active");
       console.error(err);
-      console.log("error code: ", err.status_code);
-      console.log("WE COULDNT FIND A MOVIE WITH THOSE PARAMETERS...");
       hideLoadingScreens();
-      alert("NO MOVIES WITH THEMS PARAMTETERS, PLEASE ADJUST YA FILTERS!");
+      alert("NO MOVIES WITH THOSE PARAMETERS, PLEASE ADJUST YOUR FILTERS.");
     });
 }
 
@@ -344,7 +333,7 @@ function getDirectorMovies(id) {
       return displayResult(temp, temp.length);
     })
     .catch((err) => {
-      console.log("error code: ", err.status_code);
+      console.error(err);
     });
 }
 
@@ -361,7 +350,7 @@ function getActorMovies(id) {
       return displayResult(temp, temp.length);
     })
     .catch((err) => {
-      console.log("error code: ", err.status_code);
+      console.error(err);
     });
 }
 
@@ -379,7 +368,6 @@ async function getMovie(movieId) {
   fetch("https://api.themoviedb.org/3/movie/" + movieId, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log("DATA: ", data);
       getImdbUrl(data);
       getMovieGenres(data);
       const originalTitle = data.original_title;
@@ -455,8 +443,6 @@ async function getMovie(movieId) {
       if (data.runtime === 0) {
         subtitle.removeChild(runtime);
       }
-      console.log("HERE?");
-      console.log(history, data.id, data.title);
 
       const maxHistory = 8;
       history.push({
@@ -466,8 +452,6 @@ async function getMovie(movieId) {
       if (history.length > maxHistory) {
         history.shift();
       }
-      // console.log(history, data.id, data.title);
-      // logHistory();
     })
     .catch((err) => {
       pendingResponse.classList.remove("active");
@@ -487,7 +471,6 @@ function logHistory() {
     new Map(history.map((item) => [item.id, item])).values()
   );
 
-  console.log("unique: ", uniqueHistory);
   historyEl.innerHTML = "";
   uniqueHistory.forEach((entry) => {
     const temp = document.createElement("span");
