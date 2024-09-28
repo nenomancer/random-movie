@@ -21,7 +21,7 @@
   max-height: 150px;
   border-radius: 50%;
   border: none;
-  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 1px 2px rgba(255, 255, 255, 0.3), -2px -2px 1px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 1px 2px rgba(255, 255, 255, 0.3), -2px -2px 1px 2px rgba(0, 0, 0, 0.6), inset 4px 4px 1px 0 rgba(255, 255, 255, 0.3), inset -4px -4px 1px 0 rgba(0, 0, 0, 0.6);
   transition-duration: 250ms;
   transition-property: box-shadow, background-color;
   display: flex;
@@ -281,21 +281,22 @@
 .history {
   perspective: 150px;
   width: 6rem;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1/0.9;
   transform: rotateX(10deg);
   display: flex;
   flex-direction: column;
   box-shadow: 3px 16px 3px -4px rgba(0, 0, 0, 0.15), inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
   transform-origin: top;
   rotate: -2deg;
-  background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 9%, #d5c62b 10%);
+  background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 10.5%, #d5c62b 11.5%);
   pointer-events: none;
+  counter-reset: history-counter;
   -webkit-font-smoothing: antialiased; /* For WebKit browsers */
   -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
 }
 .history:hover {
   transform: rotateX(7deg);
-  box-shadow: 2px 10px 1px -2px rgba(0, 0, 0, 0.2), inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 10px 2px -2px rgba(0, 0, 0, 0.2), inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
 }
 .history:hover:before {
   transform: rotateX(-11deg) translateY(1px) scale(1.01);
@@ -327,6 +328,11 @@
   font-family: "Permanent Marker", cursive;
   font-weight: 400;
   font-style: normal;
+  counter-increment: history-counter;
+}
+.note::before {
+  content: counter(history-counter) ".";
+  margin-right: 0.1rem;
 }
 .note:hover {
   text-decoration: underline;

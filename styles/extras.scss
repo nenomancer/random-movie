@@ -27,39 +27,136 @@
     $color-light 75% 85%,
     $color-dark 85% 100%
   );
+  background: $monitor-color;
 
-  #submit {
-    background-color: darkred;
+  .container {
     aspect-ratio: 1/1;
     height: 100%;
     max-height: 150px;
+    display: flex;
+    justify-content: center;
+    // align-items: center;
+    border-radius: 50%;
+    padding: 0.5rem;
+    position: relative;
+    background: linear-gradient(
+      to bottom right,
+      desaturate(darken($color-beige, 40%), 15%) 30%,
+      $color-beige 120%
+    );
+    background: linear-gradient(
+      to bottom right,
+      desaturate(darken($color-beige, 80%), 40%) 35%
+        desaturate(darken($color-beige, 30%), 16%) 120%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.404);
+    position: relative;
+  }
+  .symbol {
+    position: absolute;
+    inset: 30%;
+    z-index: 1;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      left: 50%;
 
+      top: 50%;
+      translate: -50% -50%;
+      rotate: 90deg;
+      width: 100%;
+      aspect-ratio: 1/ 1;
+      background-color: darken($color-highlight, 70%);
+      clip-path: polygon(
+        0 33%,
+        48% 33%,
+        48% 0,
+        100% 50%,
+        46% 100%,
+        46% 69%,
+        0 70%
+      );
+    }
+
+    &::after {
+      // inset: 0.1rem;
+      width: 99%;
+      background-color: red;
+      background-color: $color-highlight;
+      background: linear-gradient(
+        to right,
+        lighten($color-highlight, 10%),
+        $color-highlight 250%
+      );
+    }
+  }
+  #submit {
+    background-color: darkred;
+    flex: 1;
     border-radius: 50%;
     border: none;
-    box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), $monitor-bevel-inner, $monitor-bevel-outer;
+
     transition-duration: 250ms;
+    background: linear-gradient(
+      to bottom right,
+      lighten($color-highlight, 10%),
+      $color-highlight
+    );
+
+    // background: radial-gradient(circle at bottom, darkred 70%, red 71%);
     transition-property: box-shadow, background-color;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.39), 0 0 10px 1px $color-highlight;
     &:disabled {
       background-color: grey;
     }
 
     &:active:not(:disabled) {
-      box-shadow: inset 0 0 5px 7px rgba(0, 0, 0, 1), $monitor-bevel-inner;
-      &::before {
-        scale: 0.95;
+      &::before,
+      &::after {
+        scale: 0.99;
       }
+      // box-shadow: inset 0 0 5px 7px rgba(0, 0, 0, 1), $monitor-bevel-inner;
+      // &::after {
+      //   scale: 0.95;
+      // }
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      // inset: 0.75rem;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      aspect-ratio: 1/ 1;
+      border-radius: 50%;
+    }
+
+    &::after {
+      width: 80%;
+      background: linear-gradient(
+        to bottom right,
+        desaturate(darken($color-beige, 35%), 10%) 15%,
+        desaturate(darken($color-beige, 5%), 2.5%) 120%
+      );
+      box-shadow: -0.5px -0.5px 0 0.5px $color-beige,
+        0.5px 0.5px 0 0.5px $color-beige;
     }
 
     &::before {
-      content: "";
-      border: 30px solid transparent;
-      border-top-width: 50px;
-      border-top-color: $color-beige;
-      border-bottom: 0;
-      translate: 0 18%;
+      width: 97%;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(
+        to bottom right,
+        desaturate(darken($color-beige, 15%), 6%) 35%,
+        desaturate(darken($color-beige, 70%), 40%) 120%
+      );
     }
   }
 }
@@ -73,9 +170,10 @@
   box-shadow: $monitor-bevel-outer;
   position: relative;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(3, min-content);
   grid-template-areas:
-    "rating rating response"
+    "logo logo response"
+    "buttons buttons buttons"
     "tooltip tooltip tooltip";
   padding: 1rem;
   gap: 1rem;
@@ -105,6 +203,21 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .buttons {
+    grid-area: buttons;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+
+    button {
+      grid-row-start: -1;
+    }
+    .credits {
+      grid-row: 1 / 5;
+      grid-column-start: 7;
+    }
+  }
+
   .response {
     // display: grid;
     grid-template-rows: repeat(3, 1fr);
@@ -115,7 +228,7 @@
     gap: 0.5rem;
     padding: 0.5rem;
     grid-area: response;
-
+    box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
     .error {
       $light-color: rgb(139, 0, 0);
       @include lightbulb-color($light-color);
@@ -279,7 +392,7 @@
   pointer-events: none;
 
   @media screen and (max-width: $breakpoint-sm) {
-    right: 65%;
+    left: 10%;
   }
 }
 
@@ -291,7 +404,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: 3px 16px 3px -4px rgba(0, 0, 0, 0.15),
-  inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
+    inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
   transform-origin: top;
   rotate: -2deg;
   background: repeating-linear-gradient(
@@ -309,7 +422,7 @@
   &:hover {
     transform: rotateX(7deg);
     box-shadow: 2px 10px 2px -2px rgba(0, 0, 0, 0.2),
-    inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
+      inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
     // background: desaturate(darken($note-color, 2%), 10%);
     &:before {
       transform: rotateX(-11deg) translateY(1px) scale(1.01);
@@ -350,7 +463,7 @@
   counter-increment: history-counter;
   &::before {
     content: counter(history-counter) ".";
-    margin-right: .1rem;
+    margin-right: 0.1rem;
   }
   &:hover {
     text-decoration: underline;

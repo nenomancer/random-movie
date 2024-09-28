@@ -73,7 +73,6 @@ body {
     "main main main poster poster poster"
     "extra-3 extra-3 rating rating search search";
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(3, 1fr);
   grid-template-rows: repeat(3, 240px);
   /* @media screen and (min-width: 640px) and (max-width: 768px) {
     grid-template-areas:
@@ -90,7 +89,7 @@ body {
       "main main main poster poster poster"
       "extra-3 extra-3 rating rating search search";
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(3, min-content);
   }
 
   @media screen and (max-width: 580px) {

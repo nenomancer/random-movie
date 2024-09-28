@@ -22,7 +22,7 @@ const votesEl = document.querySelector("[data-votes]");
 const revenueEl = document.querySelector("[data-revenue]");
 const budgetEl = document.querySelector("[data-budget]");
 const profitEl = document.querySelector("[data-profit]");
-const ratingEl = document.querySelector("[data-rating] #arrow");
+// const ratingEl = document.querySelector("[data-rating] #arrow");
 const runtimeEl = document.querySelector("[data-runtime]");
 const locationEl = document.querySelector("[data-location]");
 const subtitle = document.querySelector(".subtitle .content");
@@ -237,7 +237,7 @@ movieIdDisplay.classList.add("loading");
 function fetchMovies(totalPages = 500) {
   mainScreen.classList.add("loading");
   movieIdDisplay.classList.add("loading");
-  ratingEl.style.setProperty("--rotation", `0deg`);
+  // ratingEl.style.setProperty("--rotation", `0deg`);
   successResponse.classList.remove("active");
   errorResponse.classList.remove("active");
   pendingResponse.classList.add("active");
@@ -412,7 +412,7 @@ async function getMovie(movieId) {
       // ratingEl.setAttribute("data-rotation", data.vote_average + "deg");
       const normalized = data.vote_average / 10;
       const deg = normalized * 180;
-      ratingEl.style.setProperty("--rotation", `${deg}deg`);
+      // ratingEl.style.setProperty("--rotation", `${deg}deg`);
       if (data.revenue === 0) {
         revenueEl.innerText = padNumber("0");
       } else {
