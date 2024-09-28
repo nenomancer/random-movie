@@ -237,7 +237,7 @@ function generateCountries() {
 mainScreen.classList.add("loading");
 movieIdDisplay.classList.add("loading");
 // Add generated movies to cookie to avoid regenerating them
-function fetchMovies(queries = "", totalPages = 500) {
+function fetchMovies(totalPages = 500) {
   mainScreen.classList.add("loading");
   movieIdDisplay.classList.add("loading");
   ratingEl.style.setProperty("--rotation", `0deg`);
@@ -269,7 +269,7 @@ function fetchMovies(queries = "", totalPages = 500) {
     latest = releasedTo.value;
   }
 
-  let _queries = queries;
+  let _queries = "";
 
   // get selected genres
   Array.from(genres).forEach((genre) => {
@@ -312,7 +312,7 @@ function fetchMovies(queries = "", totalPages = 500) {
     .then((response) => {
       console.log(response);
       if (response.results?.length === 0) {
-        fetchMovies("", Math.min(500, response.total_pages));
+        fetchMovies(Math.min(500, response.total_pages));
       } else {
         displayResult(response.results);
       }
@@ -370,9 +370,6 @@ function displayResult(data, maxIndex = 20) {
 
   data.forEach((movie, index) => {
     if (index === randomIndex) {
-      getImdbUrl(movie);
-      getMovieGenres(movie);
-
       getMovie(movie.id);
     }
   });
@@ -383,6 +380,8 @@ async function getMovie(movieId) {
     .then((response) => response.json())
     .then((data) => {
       console.log("DATA: ", data);
+      getImdbUrl(data);
+      getMovieGenres(data);
       const originalTitle = data.original_title;
       const englishTitle = data.title;
       const id = data.id;
@@ -402,12 +401,6 @@ async function getMovie(movieId) {
 
       movieIdDisplay.setAttribute("data-movie-id", id);
       movieIdDisplay.classList.add("loading");
-      // date.className = "button-span";
-      // runtime.className = "button-span";
-      // rating.className = "button-span"; // shouidl be COUTNRY..
-      // countries.className = "button-span"; // shouidl be COUTNRY..
-      // votes.className = "button-span";
-      // popularity.className = "button-span";
 
       subtitle.innerHTML = "";
       subtitle.appendChild(date);
@@ -524,21 +517,17 @@ function delay(ms) {
 function getMovieGenres(movie) {
   genres.innerHTML = "";
 
-  movie.genre_ids.forEach((genreId) => {
-    const genre = allGenres.find((genre) => genre.id == genreId);
-    if (genre) {
-      const temp = document.createElement("span");
-      temp.className = "button-span link";
-      // temp.classList.add("link");
-      temp.setAttribute(
-        "data-tooltip",
-        `Genres of this movie. Click to find another ${genre.name} movie`
-      );
-      temp.innerText = genre.name;
-      temp.addEventListener("click", (e) => getGenreMovies(genre.id));
-      bindHoverTooltip(temp);
-      genres.appendChild(temp);
-    }
+  movie.genres.forEach((genre) => {
+    const temp = document.createElement("span");
+    temp.className = "button-span link";
+    temp.setAttribute(
+      "data-tooltip",
+      `Genres of this movie. Click to find another ${genre.name} movie`
+    );
+    temp.innerText = genre.name;
+    temp.addEventListener("click", (e) => getGenreMovies(genre.id));
+    bindHoverTooltip(temp);
+    genres.appendChild(temp);
   });
 }
 
