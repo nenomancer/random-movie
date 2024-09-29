@@ -73,6 +73,20 @@
     height: 40dvh;
   }
 }
+.about-us {
+  grid-row: span 2;
+  display: none;
+  color: $color-highlight;
+  &.visible {
+    display: block;
+  }
+}
+
+.content {
+  &.hidden {
+    display: none;
+  }
+}
 
 .tabs {
   // display: flex;
@@ -83,6 +97,9 @@
   align-items: flex-start;
   @media screen and (max-width: $breakpoint-md) {
     text-align: center;
+  }
+  &.hidden {
+    display: none;
   }
   span {
     padding-inline: 0.75rem;

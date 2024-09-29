@@ -7,7 +7,7 @@
   $color-light: darkorange;
   position: relative;
   grid-area: search;
-  padding: 2rem;
+  padding: 1rem;
   display: grid;
   place-items: center;
 
@@ -27,138 +27,103 @@
     $color-light 75% 85%,
     $color-dark 85% 100%
   );
-  background: $monitor-color;
+  // background: $monitor-color;
 
+  $button-bevel: inset -2px -2px 2px 0 rgba(0, 0, 0, 0.5),
+    inset 2px 2px 2px 0 rgba(255, 255, 255, 0.6),
+    inset -2px -2px 1px 1px rgba($color-beige, 0.3);
+  $button-shadow: 0 0 1px 1px black, 0 0 1px 2px darken($monitor-color, 25%),
+    5px 5px 2px 0 rgba(0, 0, 0, 0.5);
+
+  $button-bevel-pressed: inset -2px -2px 2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 2px 0 rgba(255, 255, 255, 0.1),
+    inset -2px -2px 1px 1px rgba($color-beige, 0.3);
+  $button-shadow-pressed: 0 0 1px 1px black,
+    0 0 1px 2px darken($monitor-color, 25%), 2px 2px 2px 0 rgba(0, 0, 0, 0.5);
   .container {
     aspect-ratio: 1/1;
     height: 100%;
-    max-height: 150px;
-    display: flex;
-    justify-content: center;
-    // align-items: center;
-    border-radius: 50%;
-    padding: 0.5rem;
+    max-width: 100%;
+    // max-height: 150px;
     position: relative;
-    background: linear-gradient(
-      to bottom right,
-      desaturate(darken($color-beige, 40%), 15%) 30%,
-      $color-beige 120%
-    );
-    background: linear-gradient(
-      to bottom right,
-      desaturate(darken($color-beige, 80%), 40%) 35%
-        desaturate(darken($color-beige, 30%), 16%) 120%
-    );
-    border: 1px solid rgba(255, 255, 255, 0.404);
-    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 0.5rem;
+    grid-template-areas:
+      "submit submit submit submit"
+      "submit submit submit submit"
+      "other other other other"
+      "other other other other";
   }
-  .symbol {
-    position: absolute;
-    inset: 30%;
-    z-index: 1;
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-
-      top: 50%;
-      translate: -50% -50%;
-      rotate: 90deg;
-      width: 100%;
-      aspect-ratio: 1/ 1;
-      background-color: darken($color-highlight, 70%);
-      clip-path: polygon(
-        0 33%,
-        48% 33%,
-        48% 0,
-        100% 50%,
-        46% 100%,
-        46% 69%,
-        0 70%
-      );
-    }
-
-    &::after {
-      // inset: 0.1rem;
-      width: 99%;
-      background-color: red;
-      background-color: $color-highlight;
-      background: linear-gradient(
-        to right,
-        lighten($color-highlight, 10%),
-        $color-highlight 250%
-      );
-    }
-  }
+  #info,
   #submit {
     background-color: darkred;
-    flex: 1;
+    aspect-ratio: 1/1;
+    height: 100%;
+    max-height: 150px;
+
     border-radius: 50%;
     border: none;
-
+    box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 1),
+      5px 5px 3px 0 hsla(0, 0%, 0%, 0.6), inset 4px 4px 1px 0 rgb(255, 112, 112),
+      inset -4px -4px 1px 0 rgb(255, 112, 112), 0 0 1px 1px rgba(white, 0.4),
+      -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
     transition-duration: 250ms;
-    background: linear-gradient(
-      to bottom right,
-      lighten($color-highlight, 10%),
-      $color-highlight
-    );
-
-    // background: radial-gradient(circle at bottom, darkred 70%, red 71%);
     transition-property: box-shadow, background-color;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.39), 0 0 10px 1px $color-highlight;
     &:disabled {
       background-color: grey;
+      box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9),
+        5px 5px 3px 0 hsla(0, 0%, 0%, 0.6),
+        inset 4px 4px 1px 0 rgb(206, 206, 206),
+        inset -4px -4px 1px 0 rgb(206, 206, 206), 0 0 1px 1px rgba(white, 0.4),
+        -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
     }
 
     &:active:not(:disabled) {
-      &::before,
-      &::after {
-        scale: 0.99;
+      box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9),
+        2px 2px 3px 0 hsla(0, 0%, 0%, 0.6),
+        inset 4px 4px 1px 0 hsla(0, 0%, 0%, 0.4),
+        inset -4px -4px 1px 0 hsla(0, 0%, 0%, 0.4), 0 0 1px 1px rgba(white, 0.4),
+        -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
+      background-color: darken(darkred, 10%);
+      &::before {
+        scale: 0.95;
       }
-      // box-shadow: inset 0 0 5px 7px rgba(0, 0, 0, 1), $monitor-bevel-inner;
-      // &::after {
-      //   scale: 0.95;
-      // }
-    }
-
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      // inset: 0.75rem;
-      top: 50%;
-      left: 50%;
-      translate: -50% -50%;
-      aspect-ratio: 1/ 1;
-      border-radius: 50%;
-    }
-
-    &::after {
-      width: 80%;
-      background: linear-gradient(
-        to bottom right,
-        desaturate(darken($color-beige, 35%), 10%) 15%,
-        desaturate(darken($color-beige, 5%), 2.5%) 120%
-      );
-      box-shadow: -0.5px -0.5px 0 0.5px $color-beige,
-        0.5px 0.5px 0 0.5px $color-beige;
     }
 
     &::before {
-      width: 97%;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-      background: linear-gradient(
-        to bottom right,
-        desaturate(darken($color-beige, 15%), 6%) 35%,
-        desaturate(darken($color-beige, 70%), 40%) 120%
-      );
+      content: "";
+      border: 30px solid transparent;
+      border-top-width: 50px;
+      border-top-color: $color-beige;
+      border-bottom: 0;
+      translate: 0 18%;
     }
   }
+  // #submit {
+  //   grid-column: 1/5;
+  //   grid-area: submit;
+
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   &:disabled {
+  //     background-color: grey;
+  //   }
+
+  //   &::before {
+  //     content: "";
+  //     border: 30px solid transparent;
+  //     border-top-width: 50px;
+  //     border-top-color: white;
+  //     border-bottom: 0;
+  //     translate: 0 18%;
+  //   }
+  // }
 }
 
 .extra-info {
@@ -170,13 +135,14 @@
   box-shadow: $monitor-bevel-outer;
   position: relative;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, min-content);
+  // grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(2, min-content) 1fr;
   grid-template-areas:
     "logo logo response"
     "buttons buttons buttons"
     "tooltip tooltip tooltip";
   padding: 1rem;
-  gap: 1rem;
+  gap: 0.5rem;
   [data-rating] {
     background-color: gold;
     height: 150px;
@@ -203,15 +169,50 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .buttons {
+  .indents {
     grid-area: buttons;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(4, 1fr);
 
-    button {
-      grid-row-start: -1;
+    background-color: red;
+    $color-dark: rgba(0, 0, 0, 0);
+    $color-light: $color-beige;
+    $color-lightest: lighten($color-beige, 10%);
+    background: linear-gradient(to right, $color-light, black, $color-light);
+    position: relative;
+    display: flex;
+    gap: 0.4rem;
+    flex-direction: column;
+
+    .indent {
+      height: 0.4rem;
+      background-color: $color-beige;
+      // border: 1px solid black;
+      box-shadow: 0 1px 0 black, 0 -1px 0 0 white;
+      &:first-child {
+        box-shadow: 0 1px 0 black;
+      }
+
+      &:last-child {
+        box-shadow: 0 -1px 0 0 white;
+      }
     }
+    &::after {
+      position: absolute;
+      // content: "";
+      inset: 0;
+      background: red;
+      background: linear-gradient(
+        to bottom,
+        $color-light 2%,
+        $color-dark 3% 12%,
+        $color-lightest 13%,
+        $color-light 15% 22%,
+        $color-dark 23% 32%,
+        $color-lightest 33%,
+        $color-light 35% 42%
+      );
+    }
+    // box-shadow: inset 1px 0 0 0 white;
+
     .credits {
       grid-row: 1 / 5;
       grid-column-start: 7;
@@ -225,21 +226,51 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
+    flex-direction: column;
     gap: 0.5rem;
     padding: 0.5rem;
+    // height: min-content;
     grid-area: response;
+    display: grid;
+    grid-template-rows: min-content 1fr;
     box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
-    .error {
-      $light-color: rgb(139, 0, 0);
-      @include lightbulb-color($light-color);
+    #about {
+      background-color: lighten($monitor-color, 5%);
+      flex: 1;
+      height: 100%;
+      min-height: 2rem;
+      width: 100%;
+      border: none;
+      box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.5),
+        0 0 0.5px 2px lighten($monitor-color, 5%),
+        inset -1px -1px 1px 0 rgba(0, 0, 0, 0.4),
+        inset 1px 1px 1px 0 lighten($monitor-color, 20%);
+
+      &:active {
+        background-color: darken($monitor-color, 5%);
+        box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.5),
+          0 0 0.5px 2px lighten($monitor-color, 5%),
+          inset -1px -1px 1px 0 rgba(0, 0, 0, 0.5),
+          inset 1px 1px 1px 0 rgba(0, 0, 0, 0.5);
+      }
     }
-    .success {
-      $light-color: green;
-      @include lightbulb-color($light-color);
-    }
-    .pending {
-      $light-color: rgb(175, 135, 5);
-      @include lightbulb-color($light-color);
+    .lights {
+      display: flex;
+      justify-content: space-evenly;
+      // flex-direction: column;
+      gap: 0.25rem;
+      .error {
+        $light-color: rgb(139, 0, 0);
+        @include lightbulb-color($light-color);
+      }
+      .success {
+        $light-color: green;
+        @include lightbulb-color($light-color);
+      }
+      .pending {
+        $light-color: rgb(175, 135, 5);
+        @include lightbulb-color($light-color);
+      }
     }
   }
 

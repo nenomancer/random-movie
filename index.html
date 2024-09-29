@@ -25,6 +25,30 @@
           class="main-screen screen monitor-inner"
           data-tooltip="Now hovering over the Main screen.."
         >
+          <div class="about-us">
+            <h2>About</h2>
+            <p>Just hit the big red button and find your next hidden gem.</p>
+            <p>
+              Click on actors/directors names to find another movie with the
+              same castmember.
+            </p>
+            <p>
+              Filter by country (may not work for some countries), genre, or a
+              range of release years.
+            </p>
+            <p>Keep track of the last 8 results.</p>
+            <p>
+              If you have any feedback, reach out to me on my
+              <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
+              <a href="https://www.instagram.com/loopmaster.n/">Instagram</a>.
+            </p>
+            <p>
+              "This product uses the
+              <a href="https://developer.themoviedb.org/reference/">TMDB API</a>
+              but is not endorsed or certified by
+              <a href="https://www.themoviedb.org/">The Movie Database</a>."
+            </p>
+          </div>
           <span class="tabs">
             <span class="first active" data-tooltip="View movie details."
               >INFO</span
@@ -33,13 +57,14 @@
               >FILTERS</span
             >
           </span>
-          <div>
+          <div class="content">
             <div class="info active" data-tab="first">
               <div class="row title">
                 <span>TTL</span>
                 <span
                   class="content"
                   data-tooltip="Title of the movie. Click to view on IMDB."
+                  tabindex="0"
                 ></span>
               </div>
               <div class="row subtitle">
@@ -56,7 +81,7 @@
               </div>
               <div class="row actors">
                 <span>ACT</span>
-                <span class="content"> </span>
+                <span class="content" tabindex="1"> </span>
               </div>
               <div class="row plot">
                 <span>PLT</span>
@@ -132,17 +157,28 @@
         <!-- <div class="container"></div> -->
         <!-- <div id="arrow" data-rotation></div> -->
         <!-- </div> -->
-        <div class="buttons">
-          <button class="credits">Sys Info</button>
+        <div class="indents">
+          <span class="indent"></span>
+          <span class="indent"></span>
+          <span class="indent"></span>
+          <span class="indent"></span>
+          <span class="indent"></span>
+          <!-- <button class="credits">Sys Info</button>
+           spa
           <button>Green</button>
           <button>Red</button>
           <button>Blue</button>
-          <button>Yellow</button>
+          <button>Yellow</button> -->
         </div>
-        <div class="response" data-tooltip="A display of the search response.">
-          <div class="error"></div>
-          <div class="pending"></div>
-          <div class="success"></div>
+        <div class="response">
+          <div class="lights" data-tooltip="A display of the search response.">
+            <div class="error"></div>
+            <div class="pending"></div>
+            <div class="success"></div>
+          </div>
+          <button id="about" data-tooltip="View System Information [About Us]">
+            Sys Info
+          </button>
         </div>
 
         <div class="tooltip">
@@ -155,13 +191,14 @@
       </div>
       <div class="search">
         <!-- <span class="">SEARCH SHIE</span> -->
-        <div class="container">
-          <span class="symbol"></span>
-          <button
-            id="submit"
-            data-tooltip="Click to get a random movie."
-          ></button>
-        </div>
+        <!-- <div class="container"> -->
+        <!-- <span class="symbol"></span> -->
+        <!-- <button id="info"></button> -->
+        <button
+          id="submit"
+          data-tooltip="Click to get a random movie."
+        ></button>
+        <!-- </div> -->
       </div>
       <div class="extra-1">
         <div class="container">

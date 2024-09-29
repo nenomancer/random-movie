@@ -47,9 +47,19 @@ const countriesFilterList = document.querySelector(".countries .content");
 const releasedFrom = document.querySelector("#release-from");
 const releasedTo = document.querySelector("#release-to");
 
-const responseStatus = document.querySelector(".response");
-bindHoverTooltip(responseStatus);
+const responseStatus = document.querySelector(".response .lights");
 
+// query select all that have data-tooltip, loop through and bind
+bindHoverTooltip(responseStatus);
+bindHoverTooltip(about);
+about.addEventListener("click", (e) => toggleAboutUs());
+
+function toggleAboutUs() {
+  mainScreen.querySelector(".about-us").classList.toggle("visible");
+  mainScreen.querySelector(".tabs").classList.toggle("hidden");
+  mainScreen.querySelector(".content").classList.toggle("hidden");
+  submit.disabled = !submit.disabled;
+}
 const successResponse = document.querySelector(".success");
 const pendingResponse = document.querySelector(".pending");
 const errorResponse = document.querySelector(".error");
@@ -547,6 +557,7 @@ function getMovieCredits(id, directorsEl, actorsEl) {
       directors.forEach((director) => {
         const temp = document.createElement("span");
         temp.className = "button-span link";
+        temp.tabIndex = "0";
         temp.setAttribute(
           "data-tooltip",
           `Directors of this movie. Click to find another movie directed by ${director.name}.`
@@ -563,6 +574,7 @@ function getMovieCredits(id, directorsEl, actorsEl) {
         const temp = document.createElement("span");
         temp.className = "button-span link";
         // temp.classList.add("link");
+        temp.tabIndex = 0;
         temp.setAttribute(
           "data-tooltip",
           `Actors of this movie. Click to find another movie with ${actor.name}.`
