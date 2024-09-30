@@ -48,12 +48,13 @@
     );
     pointer-events: none;
     box-shadow: $monitor-shadow-inner;
-  }
-  &.loading::after {
-    content: "LOADING DATA...";
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  &.loading::after {
+    content: "Loading data...";
+
     background: radial-gradient(
       ellipse closest-side at center,
       $screen-color 100%,
@@ -73,6 +74,31 @@
     height: 40dvh;
   }
 }
+.secondary {
+  grid-row: span 2;
+  display: none;
+  color: $color-highlight;
+  gap: 1rem;
+  overflow: hidden;
+  overflow-y: scroll;
+  a {
+    color: $color-highlight;
+  }
+  &.visible {
+    align-items: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+}
+
+.content {
+  &.hidden {
+    display: none;
+  }
+}
 
 .tabs {
   // display: flex;
@@ -83,6 +109,9 @@
   align-items: flex-start;
   @media screen and (max-width: $breakpoint-md) {
     text-align: center;
+  }
+  &.hidden {
+    display: none;
   }
   span {
     padding-inline: 0.75rem;

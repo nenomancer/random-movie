@@ -25,10 +25,11 @@
   display: flex;
   align-items: center;
 }
-.info .row .content .button-span.link:hover {
+.info .row .content .button-span.link:hover, .info .row .content .button-span.link:focus-visible {
   cursor: pointer;
   background-color: rgb(65, 203, 44);
   color: #222;
+  outline: none;
 }
 .info .row.title .content .button-span {
   flex: 1;

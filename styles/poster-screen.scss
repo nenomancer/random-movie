@@ -9,6 +9,9 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  @media screen and (max-width: $breakpoint-sm) {
+    height: 480px;
+  }
 
   .screen {
     display: block;
@@ -16,14 +19,36 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     position: relative;
     display: flex;
     padding-block: 1rem;
     padding-inline: 1rem;
     border-radius: $monitor-border-radius;
     &.loading::after {
-      content: "LOADING IMAGE...";
+      content: "Loading image...";
+    }
+    &:has(.no-image)::after {
+      content: "Image data corrupted.";
+    }
+  }
+
+  .secondary {
+    grid-row: span 2;
+    display: none;
+    color: $color-highlight;
+    overflow: hidden;
+    overflow-y: scroll;
+    ul {
+      padding-inline: 1rem;
+    }
+    li {
+      // list-style: none;
+      text-align: left;
+    }
+    &.visible {
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -37,5 +62,9 @@
     object-fit: contain;
     mix-blend-mode: lighten;
     filter: brightness(0.75);
+
+    &.no-image {
+      opacity: 0;
+    }
   }
 }

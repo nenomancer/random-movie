@@ -8,13 +8,18 @@
   justify-content: center;
   align-items: flex-end;
 }
+@media screen and (max-width: 580px) {
+  .poster-screen {
+    height: 480px;
+  }
+}
 .poster-screen .screen {
   display: block;
   height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   position: relative;
   display: flex;
   padding-block: 1rem;
@@ -22,7 +27,27 @@
   border-radius: 0.5rem;
 }
 .poster-screen .screen.loading::after {
-  content: "LOADING IMAGE...";
+  content: "Loading image...";
+}
+.poster-screen .screen:has(.no-image)::after {
+  content: "Image data corrupted.";
+}
+.poster-screen .secondary {
+  grid-row: span 2;
+  display: none;
+  color: rgb(65, 203, 44);
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.poster-screen .secondary ul {
+  padding-inline: 1rem;
+}
+.poster-screen .secondary li {
+  text-align: left;
+}
+.poster-screen .secondary.visible {
+  display: flex;
+  align-items: center;
 }
 .poster-screen #poster {
   max-height: 100%;
@@ -36,4 +61,7 @@
   .poster-screen #poster {
     max-height: 360px;
   }
+}
+.poster-screen #poster.no-image {
+  opacity: 0;
 }/*# sourceMappingURL=poster-screen.css.map */

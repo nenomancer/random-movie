@@ -28,11 +28,13 @@
         display: flex;
         align-items: center;
 
-        &.link:hover {
+        &.link:hover,
+        &.link:focus-visible {
           cursor: pointer;
           background-color: $color-highlight;
           // color: black;
           color: $screen-color;
+          outline: none;
         }
       }
     }
