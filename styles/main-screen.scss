@@ -78,8 +78,19 @@
   grid-row: span 2;
   display: none;
   color: $color-highlight;
+  gap: 1rem;
+  overflow: hidden;
+  overflow-y: scroll;
+  a {
+    color: $color-highlight;
+  }
   &.visible {
-    display: block;
+    align-items: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
   }
 }
 

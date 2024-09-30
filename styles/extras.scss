@@ -1,7 +1,7 @@
 @import "./variables.scss";
 @import "./mixins.scss";
 @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100..800;1,100..800&display=swap");
 .search {
   $color-dark: black;
   $color-light: darkorange;
@@ -75,7 +75,7 @@
     justify-content: center;
     align-items: center;
     &:disabled {
-      background-color: grey;
+      background-color: rgb(58, 53, 53);
       box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9),
         2px 2px 3px 0 hsla(0, 0%, 0%, 0.6),
         inset 4px 4px 1px 0 hsla(0, 0%, 0%, 0.4),
@@ -104,26 +104,6 @@
       translate: 0 18%;
     }
   }
-  // #submit {
-  //   grid-column: 1/5;
-  //   grid-area: submit;
-
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   &:disabled {
-  //     background-color: grey;
-  //   }
-
-  //   &::before {
-  //     content: "";
-  //     border: 30px solid transparent;
-  //     border-top-width: 50px;
-  //     border-top-color: white;
-  //     border-bottom: 0;
-  //     translate: 0 18%;
-  //   }
-  // }
 }
 
 .extra-info {
@@ -155,15 +135,6 @@
       inset 0 0 6px 2px black, $monitor-bevel-inner;
   }
 
-  &:after {
-    // temp
-    // content: "";
-    background-color: #222;
-    border-radius: $monitor-border-radius;
-    box-shadow: $monitor-bevel-outer;
-    position: absolute;
-    inset: 0;
-  }
   &-extra {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -239,67 +210,97 @@
     display: grid;
     grid-template-rows: min-content 1fr;
     box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
+    width: min-content;
+    justify-self: end;
+
     #about {
-      background-color: lighten($monitor-color, 5%);
-      background: darkorange;
       flex: 1;
       height: 100%;
       min-height: 2rem;
       width: 100%;
       border: none;
       white-space: nowrap;
-      padding-inline: 0.5rem;
+      padding: 0.25rem 0.5rem;
       // border: 4px solid darkred;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
-      // box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.5),
-      //   0 0 0.5px 2px lighten($monitor-color, 5%);
-      // inset -1px -1px 1px 0 rgba(0, 0, 0, 0.4),
-      // inset 1px 1px 1px 0 lighten($monitor-color, 20%);
-
+      box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
+        0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.7),
+        inset -1px -1px 0.5px rgba(0, 0, 0, 0.4),
+        inset 1px 1px 0.5px lighten($monitor-color, 5%);
+      border-radius: 0.15rem;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-direction: column;
       background-color: darken($monitor-color, 5%);
       background: linear-gradient(
         to bottom right,
-        darken($monitor-color, 0%),
-        darken($monitor-color, 10%)
+        desaturate(darken($monitor-color, 0%), 10%),
+        desaturate(darken($monitor-color, 10%), 10%)
       );
 
+      width: min-content;
+      font-family: "Glory", sans-serif;
+      font-optical-sizing: auto;
+      // font-weight: bold;
+      font-weight: 600;
+
+      color: $screen-color;
+
+      &::before,
+      &::after {
+        display: block;
+        will-change: scale;
+      }
       &::after {
         content: "";
         display: block;
-        width: 80px;
+        width: 40%;
         height: 4px;
         background-color: green;
+        margin-inline: auto;
+        border-radius: 0.25rem;
+        box-shadow: inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+          inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
       }
 
       &::before {
-        content: "SysInfo";
+        content: "System";
+        font-size: 0.75rem;
         display: block;
+
+        // margin-bottom: 0.5rem;
+        // line-height: 1.25rem;
       }
       &:active,
       &.active {
-        background-color: darken($monitor-color, 10%);
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6),
-          // 0 0 0.5px 2px lighten($monitor-color, 5%),
-          inset 0 0 1px 1px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(
+          to bottom right,
+          desaturate(darken($monitor-color, 10%), 10%),
+          desaturate(darken($monitor-color, 20%), 10%)
+        );
+        box-shadow: -0.25px -0.25px 0.5px 0.5px lighten($monitor-color, 5%),
+          0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
+          inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
         &::after {
-          box-shadow: 0 0 10px 3px $color-highlight;
+          box-shadow: 0 0 5px 1px lighten($color-highlight, 10%),
+            inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+            inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
           background: linear-gradient(
             to bottom,
             $color-highlight,
-            lighten($color-highlight, 30%),
+            lighten($color-highlight, 20%),
             $color-highlight
           );
         }
         &::before,
         &::after {
-          scale: 0.99;
+          scale: 0.95;
         }
       }
     }
     .lights {
       display: flex;
       justify-content: space-evenly;
-      // flex-direction: column;
       gap: 0.25rem;
       .error {
         $light-color: rgb(139, 0, 0);

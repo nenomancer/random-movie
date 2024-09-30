@@ -9,6 +9,9 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  @media screen and (max-width: $breakpoint-sm) {
+    height: 480px;
+  }
 
   .screen {
     display: block;
@@ -16,7 +19,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     position: relative;
     display: flex;
     padding-block: 1rem;
@@ -34,8 +37,18 @@
     grid-row: span 2;
     display: none;
     color: $color-highlight;
+    overflow: hidden;
+    overflow-y: scroll;
+    ul {
+      padding-inline: 1rem;
+    }
+    li {
+      // list-style: none;
+      text-align: left;
+    }
     &.visible {
-      display: block;
+      display: flex;
+      align-items: center;
     }
   }
 
