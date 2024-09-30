@@ -7,6 +7,9 @@ const options = {
   },
 };
 
+const secondaryScreens = document.querySelectorAll(".secondary");
+const primaryScreens = document.querySelectorAll(".content");
+const tabs = document.querySelector(".tabs");
 const firstTabButton = document.querySelector(".tabs .first");
 const secondTabButton = document.querySelector(".tabs .second");
 const firstTab = document.querySelector('[data-tab="first"]');
@@ -52,14 +55,27 @@ const responseStatus = document.querySelector(".response .lights");
 // query select all that have data-tooltip, loop through and bind
 bindHoverTooltip(responseStatus);
 bindHoverTooltip(about);
-about.addEventListener("click", (e) => toggleAboutUs());
+about.addEventListener("click", (e) => {
+  if (about.classList.contains("active")) {
+    hideAbout();
+  } else {
+    showAbout();
+  }
+});
 
-function toggleAboutUs() {
-  mainScreen.querySelector(".about-us").classList.toggle("visible");
-  mainScreen.querySelector(".tabs").classList.toggle("hidden");
-  mainScreen.querySelector(".content").classList.toggle("hidden");
-  submit.disabled = !submit.disabled;
+function showAbout() {
+  secondaryScreens.forEach((screen) => screen.classList.add("visible"));
+  tabs.classList.add("hidden");
+  primaryScreens.forEach((screen) => screen.classList.add("hidden"));
+  about.classList.add("active");
 }
+function hideAbout() {
+  secondaryScreens.forEach((screen) => screen.classList.remove("visible"));
+  tabs.classList.remove("hidden");
+  primaryScreens.forEach((screen) => screen.classList.remove("hidden"));
+  about.classList.remove("active");
+}
+
 const successResponse = document.querySelector(".success");
 const pendingResponse = document.querySelector(".pending");
 const errorResponse = document.querySelector(".error");
@@ -244,13 +260,16 @@ function generateCountries() {
 mainScreen.classList.add("loading");
 movieIdDisplay.classList.add("loading");
 // Add generated movies to cookie to avoid regenerating them
-function fetchMovies(totalPages = 500) {
+function fetchMovies(queries = "", totalPages = 500) {
   mainScreen.classList.add("loading");
   movieIdDisplay.classList.add("loading");
   // ratingEl.style.setProperty("--rotation", `0deg`);
   successResponse.classList.remove("active");
   errorResponse.classList.remove("active");
   pendingResponse.classList.add("active");
+  poster.classList.remove("no-image");
+
+  hideAbout();
   submit.disabled = true;
 
   const countryOfOrigin = document
@@ -276,7 +295,7 @@ function fetchMovies(totalPages = 500) {
     latest = releasedTo.value;
   }
 
-  let _queries = "";
+  let _queries = queries;
 
   // get selected genres
   Array.from(genres).forEach((genre) => {
@@ -313,7 +332,7 @@ function fetchMovies(totalPages = 500) {
     .then((response) => response.json())
     .then((response) => {
       if (response.results?.length === 0) {
-        fetchMovies(Math.min(500, response.total_pages));
+        fetchMovies("", Math.min(500, response.total_pages));
       } else {
         displayResult(response.results);
       }
@@ -408,6 +427,8 @@ async function getMovie(movieId) {
       ///
       if (data.poster_path) {
         poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
+      } else {
+        poster.classList.add("no-image");
       }
       getMovieCredits(movieId, directorsElement, actorsElement);
 
@@ -454,13 +475,16 @@ async function getMovie(movieId) {
         subtitle.removeChild(runtime);
       }
 
-      const maxHistory = 8;
-      history.push({
-        id: data.id,
-        title: data.title,
-      });
+      const maxHistory = 7;
+      const exisiting = history.find((element) => element.id == data.id);
       if (history.length > maxHistory) {
         history.shift();
+      }
+      if (!exisiting) {
+        history.push({
+          id: data.id,
+          title: data.title,
+        });
       }
     })
     .catch((err) => {
