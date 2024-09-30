@@ -44,7 +44,7 @@
 .search #info:disabled,
 .search #submit:disabled {
   background-color: grey;
-  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 5px 5px 3px 0 hsla(0, 0%, 0%, 0.6), inset 4px 4px 1px 0 rgb(206, 206, 206), inset -4px -4px 1px 0 rgb(206, 206, 206), 0 0 1px 1px rgba(255, 255, 255, 0.4), -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
+  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 3px 0 hsla(0, 0%, 0%, 0.6), inset 4px 4px 1px 0 hsla(0, 0%, 0%, 0.4), inset -4px -4px 1px 0 hsla(0, 0%, 0%, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.4), -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
 }
 .search #info:active:not(:disabled),
 .search #submit:active:not(:disabled) {
@@ -100,9 +100,9 @@
   grid-template-columns: repeat(2, 1fr);
 }
 .extra-info .indents {
-  grid-area: buttons;
+  grid-area: logo;
   background-color: red;
-  background: linear-gradient(to right, #c9c5b1, black, #c9c5b1);
+  background: linear-gradient(to right, #c9c5b1 10%, black 40% 60%, #c9c5b1 90%);
   position: relative;
   display: flex;
   gap: 0.4rem;
@@ -145,16 +145,39 @@
 }
 .extra-info .response #about {
   background-color: #d3d0c0;
+  background: darkorange;
   flex: 1;
   height: 100%;
   min-height: 2rem;
   width: 100%;
   border: none;
-  box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.6), 0 0 0.5px 2px #d3d0c0, inset -1px -1px 1px 0 rgba(0, 0, 0, 0.4), inset 1px 1px 1px 0 #f3f2ed;
-}
-.extra-info .response #about:active {
+  white-space: nowrap;
+  padding-inline: 0.5rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
   background-color: #bfbaa2;
-  box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.6), 0 0 0.5px 2px #d3d0c0, inset -1px -1px 1px 0 rgba(0, 0, 0, 0.5), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to bottom right, #c9c5b1, #b4af93);
+}
+.extra-info .response #about::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: green;
+}
+.extra-info .response #about::before {
+  content: "SysInfo";
+  display: block;
+}
+.extra-info .response #about:active, .extra-info .response #about.active {
+  background-color: #b4af93;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), inset 0 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+.extra-info .response #about:active::after, .extra-info .response #about.active::after {
+  box-shadow: 0 0 10px 3px rgb(65, 203, 44);
+  background: linear-gradient(to bottom, rgb(65, 203, 44), #aeeba5, rgb(65, 203, 44));
+}
+.extra-info .response #about:active::before, .extra-info .response #about:active::after, .extra-info .response #about.active::before, .extra-info .response #about.active::after {
+  scale: 0.99;
 }
 .extra-info .response .lights {
   display: flex;
@@ -361,7 +384,6 @@
   rotate: -2deg;
   background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 10.5%, #d5c62b 11.5%);
   pointer-events: none;
-  counter-reset: history-counter;
   -webkit-font-smoothing: antialiased; /* For WebKit browsers */
   -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
 }
@@ -399,10 +421,9 @@
   font-family: "Permanent Marker", cursive;
   font-weight: 400;
   font-style: normal;
-  counter-increment: history-counter;
 }
 .note::before {
-  content: counter(history-counter) ".";
+  content: "-";
   margin-right: 0.1rem;
 }
 .note:hover {
@@ -449,12 +470,12 @@
   background: radial-gradient(ellipse closest-side at center, transparent 75%, rgba(34, 34, 34, 0.65) 150%);
   pointer-events: none;
   box-shadow: inset 0 0 12px 15px rgba(0, 0, 0, 0.75), inset 0 0 4px 4px rgb(0, 0, 0), 0 0 1px 1px rgb(0, 0, 0);
-}
-.screen.loading::after {
-  content: "LOADING DATA...";
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.screen.loading::after {
+  content: "Loading data...";
   background: radial-gradient(ellipse closest-side at center, #222 100%, #222222 150%);
 }
 
@@ -472,12 +493,12 @@
   }
 }
 
-.about-us {
+.secondary {
   grid-row: span 2;
   display: none;
   color: rgb(65, 203, 44);
 }
-.about-us.visible {
+.secondary.visible {
   display: block;
 }
 
@@ -547,7 +568,18 @@
   border-radius: 0.5rem;
 }
 .poster-screen .screen.loading::after {
-  content: "LOADING IMAGE...";
+  content: "Loading image...";
+}
+.poster-screen .screen:has(.no-image)::after {
+  content: "Image data corrupted.";
+}
+.poster-screen .secondary {
+  grid-row: span 2;
+  display: none;
+  color: rgb(65, 203, 44);
+}
+.poster-screen .secondary.visible {
+  display: block;
 }
 .poster-screen #poster {
   max-height: 100%;
@@ -561,6 +593,9 @@
   .poster-screen #poster {
     max-height: 360px;
   }
+}
+.poster-screen #poster.no-image {
+  opacity: 0;
 }
 
 .info {
@@ -818,7 +853,7 @@
 .search #info:disabled,
 .search #submit:disabled {
   background-color: grey;
-  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 5px 5px 3px 0 hsla(0, 0%, 0%, 0.6), inset 4px 4px 1px 0 rgb(206, 206, 206), inset -4px -4px 1px 0 rgb(206, 206, 206), 0 0 1px 1px rgba(255, 255, 255, 0.4), -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
+  box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9), 2px 2px 3px 0 hsla(0, 0%, 0%, 0.6), inset 4px 4px 1px 0 hsla(0, 0%, 0%, 0.4), inset -4px -4px 1px 0 hsla(0, 0%, 0%, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.4), -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
 }
 .search #info:active:not(:disabled),
 .search #submit:active:not(:disabled) {
@@ -874,9 +909,9 @@
   grid-template-columns: repeat(2, 1fr);
 }
 .extra-info .indents {
-  grid-area: buttons;
+  grid-area: logo;
   background-color: red;
-  background: linear-gradient(to right, #c9c5b1, black, #c9c5b1);
+  background: linear-gradient(to right, #c9c5b1 10%, black 40% 60%, #c9c5b1 90%);
   position: relative;
   display: flex;
   gap: 0.4rem;
@@ -919,16 +954,39 @@
 }
 .extra-info .response #about {
   background-color: #d3d0c0;
+  background: darkorange;
   flex: 1;
   height: 100%;
   min-height: 2rem;
   width: 100%;
   border: none;
-  box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.6), 0 0 0.5px 2px #d3d0c0, inset -1px -1px 1px 0 rgba(0, 0, 0, 0.4), inset 1px 1px 1px 0 #f3f2ed;
-}
-.extra-info .response #about:active {
+  white-space: nowrap;
+  padding-inline: 0.5rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
   background-color: #bfbaa2;
-  box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.6), 0 0 0.5px 2px #d3d0c0, inset -1px -1px 1px 0 rgba(0, 0, 0, 0.5), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to bottom right, #c9c5b1, #b4af93);
+}
+.extra-info .response #about::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: green;
+}
+.extra-info .response #about::before {
+  content: "SysInfo";
+  display: block;
+}
+.extra-info .response #about:active, .extra-info .response #about.active {
+  background-color: #b4af93;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), inset 0 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+.extra-info .response #about:active::after, .extra-info .response #about.active::after {
+  box-shadow: 0 0 10px 3px rgb(65, 203, 44);
+  background: linear-gradient(to bottom, rgb(65, 203, 44), #aeeba5, rgb(65, 203, 44));
+}
+.extra-info .response #about:active::before, .extra-info .response #about:active::after, .extra-info .response #about.active::before, .extra-info .response #about.active::after {
+  scale: 0.99;
 }
 .extra-info .response .lights {
   display: flex;
@@ -1135,7 +1193,6 @@
   rotate: -2deg;
   background: repeating-linear-gradient(to bottom, palegoldenrod, palegoldenrod 10.5%, #d5c62b 11.5%);
   pointer-events: none;
-  counter-reset: history-counter;
   -webkit-font-smoothing: antialiased; /* For WebKit browsers */
   -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
 }
@@ -1173,10 +1230,9 @@
   font-family: "Permanent Marker", cursive;
   font-weight: 400;
   font-style: normal;
-  counter-increment: history-counter;
 }
 .note::before {
-  content: counter(history-counter) ".";
+  content: "-";
   margin-right: 0.1rem;
 }
 .note:hover {

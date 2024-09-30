@@ -77,9 +77,9 @@
     &:disabled {
       background-color: grey;
       box-shadow: inset 0 0 3px 4px hsla(0, 100%, 0%, 0.9),
-        5px 5px 3px 0 hsla(0, 0%, 0%, 0.6),
-        inset 4px 4px 1px 0 rgb(206, 206, 206),
-        inset -4px -4px 1px 0 rgb(206, 206, 206), 0 0 1px 1px rgba(white, 0.4),
+        2px 2px 3px 0 hsla(0, 0%, 0%, 0.6),
+        inset 4px 4px 1px 0 hsla(0, 0%, 0%, 0.4),
+        inset -4px -4px 1px 0 hsla(0, 0%, 0%, 0.4), 0 0 1px 1px rgba(white, 0.4),
         -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
     }
 
@@ -170,13 +170,18 @@
   }
 
   .indents {
-    grid-area: buttons;
+    grid-area: logo;
 
     background-color: red;
     $color-dark: rgba(0, 0, 0, 0);
     $color-light: $color-beige;
     $color-lightest: lighten($color-beige, 10%);
-    background: linear-gradient(to right, $color-light, black, $color-light);
+    background: linear-gradient(
+      to right,
+      $color-light 10%,
+      black 40% 60%,
+      $color-light 90%
+    );
     position: relative;
     display: flex;
     gap: 0.4rem;
@@ -236,22 +241,59 @@
     box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
     #about {
       background-color: lighten($monitor-color, 5%);
+      background: darkorange;
       flex: 1;
       height: 100%;
       min-height: 2rem;
       width: 100%;
       border: none;
-      box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.5),
-        0 0 0.5px 2px lighten($monitor-color, 5%),
-        inset -1px -1px 1px 0 rgba(0, 0, 0, 0.4),
-        inset 1px 1px 1px 0 lighten($monitor-color, 20%);
+      white-space: nowrap;
+      padding-inline: 0.5rem;
+      // border: 4px solid darkred;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+      // box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.5),
+      //   0 0 0.5px 2px lighten($monitor-color, 5%);
+      // inset -1px -1px 1px 0 rgba(0, 0, 0, 0.4),
+      // inset 1px 1px 1px 0 lighten($monitor-color, 20%);
 
-      &:active {
-        background-color: darken($monitor-color, 5%);
-        box-shadow: 0 0 0.5px 1px rgba(0, 0, 0, 0.5),
-          0 0 0.5px 2px lighten($monitor-color, 5%),
-          inset -1px -1px 1px 0 rgba(0, 0, 0, 0.5),
-          inset 1px 1px 1px 0 rgba(0, 0, 0, 0.5);
+      background-color: darken($monitor-color, 5%);
+      background: linear-gradient(
+        to bottom right,
+        darken($monitor-color, 0%),
+        darken($monitor-color, 10%)
+      );
+
+      &::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 4px;
+        background-color: green;
+      }
+
+      &::before {
+        content: "SysInfo";
+        display: block;
+      }
+      &:active,
+      &.active {
+        background-color: darken($monitor-color, 10%);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6),
+          // 0 0 0.5px 2px lighten($monitor-color, 5%),
+          inset 0 0 1px 1px rgba(0, 0, 0, 0.5);
+        &::after {
+          box-shadow: 0 0 10px 3px $color-highlight;
+          background: linear-gradient(
+            to bottom,
+            $color-highlight,
+            lighten($color-highlight, 30%),
+            $color-highlight
+          );
+        }
+        &::before,
+        &::after {
+          scale: 0.99;
+        }
       }
     }
     .lights {
@@ -446,7 +488,7 @@
   );
   // background: $note-color;
   pointer-events: none;
-  counter-reset: history-counter;
+  // counter-reset: history-counter;
   // will-change: transform;
   -webkit-font-smoothing: antialiased; /* For WebKit browsers */
   -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
@@ -491,9 +533,9 @@
   font-family: "Permanent Marker", cursive;
   font-weight: 400;
   font-style: normal;
-  counter-increment: history-counter;
+  // counter-increment: history-counter;
   &::before {
-    content: counter(history-counter) ".";
+    content: "-";
     margin-right: 0.1rem;
   }
   &:hover {

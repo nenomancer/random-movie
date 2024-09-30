@@ -23,7 +23,19 @@
     padding-inline: 1rem;
     border-radius: $monitor-border-radius;
     &.loading::after {
-      content: "LOADING IMAGE...";
+      content: "Loading image...";
+    }
+    &:has(.no-image)::after {
+      content: "Image data corrupted.";
+    }
+  }
+
+  .secondary {
+    grid-row: span 2;
+    display: none;
+    color: $color-highlight;
+    &.visible {
+      display: block;
     }
   }
 
@@ -37,5 +49,9 @@
     object-fit: contain;
     mix-blend-mode: lighten;
     filter: brightness(0.75);
+
+    &.no-image {
+      opacity: 0;
+    }
   }
 }

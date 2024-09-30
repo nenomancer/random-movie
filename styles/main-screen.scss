@@ -48,12 +48,13 @@
     );
     pointer-events: none;
     box-shadow: $monitor-shadow-inner;
-  }
-  &.loading::after {
-    content: "LOADING DATA...";
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  &.loading::after {
+    content: "Loading data...";
+
     background: radial-gradient(
       ellipse closest-side at center,
       $screen-color 100%,
@@ -73,7 +74,7 @@
     height: 40dvh;
   }
 }
-.about-us {
+.secondary {
   grid-row: span 2;
   display: none;
   color: $color-highlight;

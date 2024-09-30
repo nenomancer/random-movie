@@ -22,7 +22,18 @@
   border-radius: 0.5rem;
 }
 .poster-screen .screen.loading::after {
-  content: "LOADING IMAGE...";
+  content: "Loading image...";
+}
+.poster-screen .screen:has(.no-image)::after {
+  content: "Image data corrupted.";
+}
+.poster-screen .secondary {
+  grid-row: span 2;
+  display: none;
+  color: rgb(65, 203, 44);
+}
+.poster-screen .secondary.visible {
+  display: block;
 }
 .poster-screen #poster {
   max-height: 100%;
@@ -36,4 +47,7 @@
   .poster-screen #poster {
     max-height: 360px;
   }
+}
+.poster-screen #poster.no-image {
+  opacity: 0;
 }/*# sourceMappingURL=poster-screen.css.map */
