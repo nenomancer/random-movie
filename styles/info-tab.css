@@ -3,7 +3,7 @@
   padding-block: 0.5rem;
   height: 100%;
   position: relative;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   flex-direction: column;
   gap: 0.25rem;
 }
@@ -27,7 +27,7 @@
 }
 .info .row .content .button-span.link:hover, .info .row .content .button-span.link:focus-visible {
   cursor: pointer;
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
   outline: none;
 }
@@ -39,7 +39,7 @@
 }
 .info .row.title .content a {
   flex: 1;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   text-decoration: none;
   cursor: inherit;
 }
@@ -93,7 +93,7 @@
 .info .row > span {
   display: flex;
   align-items: center;
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   position: relative;
 }
 .info .row > span:first-child {

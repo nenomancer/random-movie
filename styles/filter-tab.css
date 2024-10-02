@@ -3,7 +3,7 @@
   padding-block: 0.5rem;
   height: 100%;
   position: relative;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   gap: 0.25rem;
   flex-direction: column;
 }
@@ -15,7 +15,7 @@
   grid-template-columns: 1fr;
 }
 .filters .row .header {
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   display: grid;
   grid-template-columns: 1fr 3fr;
 }
@@ -30,7 +30,7 @@
 }
 .filters .row .content .button-span.link:hover {
   cursor: pointer;
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
 }
 .filters .row.genres, .filters .row.countries {
@@ -43,7 +43,7 @@
   row-gap: 0.25rem;
 }
 .filters .row.genres .value:hover, .filters .row.countries .value:hover {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: black;
   cursor: pointer;
 }
@@ -55,14 +55,14 @@
   grid-column: span 2;
   display: grid;
   grid-template-columns: 1fr;
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   scroll-snap-type: y mandatory;
 }
 .filters .row.genres .option, .filters .row.countries .option {
   scroll-snap-align: start;
 }
 .filters .row.genres .option.selected, .filters .row.countries .option.selected {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
 }
 .filters .row.genres .value {
@@ -87,14 +87,14 @@
   max-width: 8ch;
   height: 100%;
   background: none;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   padding: 0.25rem 0.5rem;
   font: inherit;
   cursor: pointer;
   text-transform: uppercase;
 }
 .filters .row.release-year input[type=text]:focus-visible {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
   outline: none;
 }

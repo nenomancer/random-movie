@@ -186,8 +186,8 @@
   box-shadow: -0.25px -0.25px 0.5px 0.5px #d3d0c0, 0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5), inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
 }
 .extra-info .response #about:active::after, .extra-info .response #about.active::after {
-  box-shadow: 0 0 5px 1px #63d951, inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4), inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
-  background: linear-gradient(to bottom, rgb(65, 203, 44), #88e27b, rgb(65, 203, 44));
+  box-shadow: 0 0 5px 1px #2bfe8c, inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4), inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(to bottom, rgb(1, 245, 113), #5efea7, rgb(1, 245, 113));
 }
 .extra-info .response #about:active::before, .extra-info .response #about:active::after, .extra-info .response #about.active::before, .extra-info .response #about.active::after {
   scale: 0.95;
@@ -291,7 +291,7 @@
   display: flex;
 }
 .extra-info [data-tooltip-display] {
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   padding: 0.25rem 1.25rem;
   text-align: center;
   align-content: center;

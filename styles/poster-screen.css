@@ -35,7 +35,7 @@
 .poster-screen .secondary {
   grid-row: span 2;
   display: none;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   overflow: hidden;
   overflow-y: scroll;
 }
