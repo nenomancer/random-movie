@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100..800;1,100..800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100..800;1,100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
 .search {
   position: relative;
   grid-area: search;
@@ -188,8 +189,8 @@
   box-shadow: -0.25px -0.25px 0.5px 0.5px #d3d0c0, 0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5), inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
 }
 .extra-info .response #about:active::after, .extra-info .response #about.active::after {
-  box-shadow: 0 0 5px 1px #63d951, inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4), inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
-  background: linear-gradient(to bottom, rgb(65, 203, 44), #88e27b, rgb(65, 203, 44));
+  box-shadow: 0 0 5px 1px #2bfe8c, inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4), inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(to bottom, rgb(1, 245, 113), #5efea7, rgb(1, 245, 113));
 }
 .extra-info .response #about:active::before, .extra-info .response #about:active::after, .extra-info .response #about.active::before, .extra-info .response #about.active::after {
   scale: 0.95;
@@ -293,7 +294,7 @@
   display: flex;
 }
 .extra-info [data-tooltip-display] {
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   padding: 0.25rem 1.25rem;
   text-align: center;
   align-content: center;
@@ -481,7 +482,7 @@
   inset: 0;
   border-radius: 0.5rem;
   position: absolute;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   background: radial-gradient(ellipse closest-side at center, transparent 75%, rgba(34, 34, 34, 0.65) 150%);
   pointer-events: none;
   box-shadow: inset 0 0 12px 15px rgba(0, 0, 0, 0.75), inset 0 0 4px 4px rgb(0, 0, 0), 0 0 1px 1px rgb(0, 0, 0);
@@ -511,13 +512,13 @@
 .secondary {
   grid-row: span 2;
   display: none;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   gap: 1rem;
   overflow: hidden;
   overflow-y: scroll;
 }
 .secondary a {
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
 }
 .secondary.visible {
   align-items: center;
@@ -549,18 +550,18 @@
 }
 .tabs span {
   padding-inline: 0.75rem;
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   height: 100%;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   align-content: center;
   cursor: pointer;
 }
 .tabs span:hover {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
 }
 .tabs span.active {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
 }
 
@@ -607,7 +608,7 @@
 .poster-screen .secondary {
   grid-row: span 2;
   display: none;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   overflow: hidden;
   overflow-y: scroll;
 }
@@ -643,7 +644,7 @@
   padding-block: 0.5rem;
   height: 100%;
   position: relative;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   flex-direction: column;
   gap: 0.25rem;
 }
@@ -667,7 +668,7 @@
 }
 .info .row .content .button-span.link:hover, .info .row .content .button-span.link:focus-visible {
   cursor: pointer;
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
   outline: none;
 }
@@ -679,7 +680,7 @@
 }
 .info .row.title .content a {
   flex: 1;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   text-decoration: none;
   cursor: inherit;
 }
@@ -733,7 +734,7 @@
 .info .row > span {
   display: flex;
   align-items: center;
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   position: relative;
 }
 .info .row > span:first-child {
@@ -745,7 +746,7 @@
   padding-block: 0.5rem;
   height: 100%;
   position: relative;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   gap: 0.25rem;
   flex-direction: column;
 }
@@ -757,7 +758,7 @@
   grid-template-columns: 1fr;
 }
 .filters .row .header {
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   display: grid;
   grid-template-columns: 1fr 3fr;
 }
@@ -772,7 +773,7 @@
 }
 .filters .row .content .button-span.link:hover {
   cursor: pointer;
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
 }
 .filters .row.genres, .filters .row.countries {
@@ -785,7 +786,7 @@
   row-gap: 0.25rem;
 }
 .filters .row.genres .value:hover, .filters .row.countries .value:hover {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: black;
   cursor: pointer;
 }
@@ -797,14 +798,14 @@
   grid-column: span 2;
   display: grid;
   grid-template-columns: 1fr;
-  border: 2px solid rgb(65, 203, 44);
+  border: 2px solid rgb(1, 245, 113);
   scroll-snap-type: y mandatory;
 }
 .filters .row.genres .option, .filters .row.countries .option {
   scroll-snap-align: start;
 }
 .filters .row.genres .option.selected, .filters .row.countries .option.selected {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
 }
 .filters .row.genres .value {
@@ -829,14 +830,14 @@
   max-width: 8ch;
   height: 100%;
   background: none;
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   padding: 0.25rem 0.5rem;
   font: inherit;
   cursor: pointer;
   text-transform: uppercase;
 }
 .filters .row.release-year input[type=text]:focus-visible {
-  background-color: rgb(65, 203, 44);
+  background-color: rgb(1, 245, 113);
   color: #222;
   outline: none;
 }
@@ -1035,8 +1036,8 @@
   box-shadow: -0.25px -0.25px 0.5px 0.5px #d3d0c0, 0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5), inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
 }
 .extra-info .response #about:active::after, .extra-info .response #about.active::after {
-  box-shadow: 0 0 5px 1px #63d951, inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4), inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
-  background: linear-gradient(to bottom, rgb(65, 203, 44), #88e27b, rgb(65, 203, 44));
+  box-shadow: 0 0 5px 1px #2bfe8c, inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4), inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(to bottom, rgb(1, 245, 113), #5efea7, rgb(1, 245, 113));
 }
 .extra-info .response #about:active::before, .extra-info .response #about:active::after, .extra-info .response #about.active::before, .extra-info .response #about.active::after {
   scale: 0.95;
@@ -1140,7 +1141,7 @@
   display: flex;
 }
 .extra-info [data-tooltip-display] {
-  color: rgb(65, 203, 44);
+  color: rgb(1, 245, 113);
   padding: 0.25rem 1.25rem;
   text-align: center;
   align-content: center;
@@ -1292,4 +1293,55 @@
   text-decoration: underline;
   cursor: pointer;
   text-decoration-thickness: 0.1rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  transition-duration: 250ms;
+  scrollbar-width: none;
+}
+
+body {
+  background-color: #222;
+  font-family: "Handjet", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  height: 100dvh;
+}
+
+#main-container {
+  display: flex;
+  max-width: 960px;
+  margin-inline: auto;
+  margin-top: 5%;
+  display: grid;
+  gap: 0.15rem;
+  grid-template-areas: "main main main poster poster poster" "main main main poster poster poster" "extra-3 extra-3 rating rating search search";
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(3, 240px);
+}
+@media screen and (max-width: 580px) {
+  #main-container {
+    margin-top: 0;
+  }
+}
+@media screen and (min-width: 580px) and (max-width: 640px) {
+  #main-container {
+    grid-template-areas: "main main main poster poster poster" "main main main poster poster poster" "extra-3 extra-3 rating rating search search";
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, min-content);
+  }
+}
+@media screen and (max-width: 580px) {
+  #main-container {
+    max-height: 640px;
+    grid-template-areas: "poster poster" "main main" "rating search" "extra-3 extra-3";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
 }/*# sourceMappingURL=main.css.map */

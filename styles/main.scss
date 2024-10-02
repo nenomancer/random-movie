@@ -4,3 +4,66 @@
 @import "./info-tab.scss";
 @import "./filter-tab.scss";
 @import "./extras.scss";
+@import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  transition-duration: 250ms;
+  scrollbar-width: none;
+}
+
+body {
+  background-color: #222;
+  font-family: "Handjet", sans-serif;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  height: 100dvh;
+}
+
+#main-container {
+  display: flex;
+  max-width: 960px;
+  margin-inline: auto;
+  margin-top: 5%;
+  display: grid;
+  gap: 0.15rem;
+
+  @media screen and (max-width: 580px) {
+    margin-top: 0;
+  }
+
+  grid-template-areas:
+    "main main main poster poster poster"
+    "main main main poster poster poster"
+    "extra-3 extra-3 rating rating search search";
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(3, 240px);
+
+  @media screen and (min-width: 580px) and (max-width: 640px) {
+    grid-template-areas:
+      "main main main poster poster poster"
+      "main main main poster poster poster"
+      "extra-3 extra-3 rating rating search search";
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, min-content);
+  }
+
+  @media screen and (max-width: 580px) {
+    max-height: 640px;
+
+    grid-template-areas:
+      "poster poster"
+      "main main"
+      "rating search"
+      "extra-3 extra-3";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
+}
