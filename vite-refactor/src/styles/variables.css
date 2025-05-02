@@ -1,0 +1,5 @@
+:root {
+    --media-query-mobile: 480px;
+    --media-query-tablet: 768px;
+    --media-query-desktop: 1024px;
+}

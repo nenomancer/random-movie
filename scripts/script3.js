@@ -1,3 +1,6 @@
+import { API } from "./constants.js";
+import { primaryScreens, secondaryScreens, tabs } from "./selectors.js";
+
 const options = {
   method: "GET",
   headers: {
@@ -7,9 +10,6 @@ const options = {
   },
 };
 
-const secondaryScreens = document.querySelectorAll(".secondary");
-const primaryScreens = document.querySelectorAll(".content");
-const tabs = document.querySelector(".tabs");
 const firstTabButton = document.querySelector(".tabs .first");
 const secondTabButton = document.querySelector(".tabs .second");
 const firstTab = document.querySelector('[data-tab="first"]');
@@ -158,7 +158,7 @@ generateCountries().then(generateGenres).then(fetchMovies);
 submit.addEventListener("click", (e) => fetchMovies());
 
 function generateGenres() {
-  return fetch("https://api.themoviedb.org/3/genre/movie/list", options)
+  return fetch(API.GENRES, API.OPTIONS)
     .then((response) => response.json())
     .then((response) => {
       allGenres = response.genres;
@@ -204,7 +204,7 @@ function generateGenres() {
 }
 
 function generateCountries() {
-  return fetch("https://api.themoviedb.org/3/configuration/countries", options)
+  return fetch(API.COUNTRIES, API.OPTIONS)
     .then((response) => response.json())
     .then((response) => {
       const value = document.querySelector(".value");
@@ -326,8 +326,8 @@ function fetchMovies(queries = "", totalPages = 500) {
   }
 
   fetch(
-    "https://api.themoviedb.org/3/discover/movie?page=" + pageNumber + _queries,
-    options
+    `${API.DISCOVER_MOVIE}?page=${pageNumber}${_queries}`,
+    API.OPTIONS
   )
     .then((response) => response.json())
     .then((response) => {
@@ -349,10 +349,8 @@ function fetchMovies(queries = "", totalPages = 500) {
 
 function getDirectorMovies(id) {
   fetch(
-    "https://api.themoviedb.org/3/person/" +
-      id +
-      "?append_to_response=movie_credits",
-    options
+    `${API.PERSON}/${id}?append_to_response=movie_credits`,
+    API.OPTIONS
   )
     .then((response) => response.json())
     .then((response) => {
@@ -368,9 +366,7 @@ function getDirectorMovies(id) {
 
 function getActorMovies(id) {
   fetch(
-    "https://api.themoviedb.org/3/person/" +
-      id +
-      "?append_to_response=movie_credits",
+    `${API.PERSON}/${id}?append_to_response=movie_credits`,
     options
   )
     .then((response) => response.json())
@@ -394,7 +390,7 @@ function displayResult(data, maxIndex = 20) {
 }
 
 async function getMovie(movieId) {
-  fetch("https://api.themoviedb.org/3/movie/" + movieId, options)
+  fetch(`${API.MOVIE}/${movieId}`, options)
     .then((response) => response.json())
     .then((data) => {
       getImdbUrl(data);
@@ -463,9 +459,8 @@ async function getMovie(movieId) {
       locationEl.innerText = found?.native_name;
       countries.innerText = found?.native_name;
       rating.innerText = rate.toFixed(1);
-      runtime.innerText = `${padNumber(Math.floor(runtimeMinutes / 60), 2)}:${
-        runtimeMinutes % 60
-      }`;
+      runtime.innerText = `${padNumber(Math.floor(runtimeMinutes / 60), 2)}:${runtimeMinutes % 60
+        }`;
 
       if (data.overview === "") {
         plotContent.innerText =
@@ -553,7 +548,7 @@ function getGenreMovies(genre_id) {
 }
 
 function getImdbUrl(movie) {
-  fetch(`https://api.themoviedb.org/3/movie/${movie.id}/external_ids`, options)
+  fetch(`${API.MOVIE}/${movie.id}/external_ids`, options)
     .then((response) => response.json())
     .then((data) => {
       const imdbUrl = `https://www.imdb.com/title/${data.imdb_id}/`;
@@ -569,7 +564,7 @@ function padNumber(number, size = 10) {
 }
 
 function getMovieCredits(id, directorsEl, actorsEl) {
-  fetch("https://api.themoviedb.org/3/movie/" + id + "/credits", options)
+  fetch(`${API.MOVIE}/${id}/credits`, options)
     .then((response) => response.json())
     .then((data) => {
       const actors = data.cast.filter((person, index) => index <= 2);
