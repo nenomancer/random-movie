@@ -1,21 +1,27 @@
 <script lang="ts">
-    export let label: string | undefined = undefined;
-    export let content: Array<string>;
-    export let columnDirection: boolean = false;
+    export let label: string;
+    export let title: string;
+    export let items: { id: number; name: string }[];
+    export let link: string = '';
+    export let onClick: (id: number) => void;
+    export let getDescription: (name: string) => string;
 </script>
 
-<div role="row" class={`row ${columnDirection && "column-dir"}`}>
-    {#if label}
-        <span role="cell" class="row_header">{label}</span>
-    {/if}
-    <div class="row_data">
-        {#each content as item}
-            <span role="cell" class="row_data_cell">
-                <button>{item}</button>
-            </span>
-        {/each}
-    </div>
-</div>
+<section
+    aria-label={`${label}s`}
+    data-info={`This movies ${label.toLowerCase()}s`}
+>
+    <h2>{title}</h2>
+    {#each items as item}
+        <button
+            aria-label={`${label}: ${item.name}`}
+            data-info={getDescription(item.name)}
+            on:click={() => onClick(item.id)}
+        >
+            {item.name}
+        </button>
+    {/each}
+</section>
 
 <style>
     .row_header,

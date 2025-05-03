@@ -10,8 +10,9 @@
   import { Monitor1Tabs, Monitor2Tabs } from "./constants/tabs";
   import TabContent from "./components/TabContent.svelte";
   import { API } from "./lib/constants";
-  import { writable } from "svelte/store";
-  import type { Country, Movie, Person } from "./lib/types";
+  import { get, writable } from "svelte/store";
+  import type { Country, HistoryLog, Movie, Person } from "./lib/types";
+  import Button from "./components/Button.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -31,7 +32,32 @@
   };
 
   export const currentMovie = writable<Movie>(defaultMovie);
+
+  const storedHistoryKey = "movieHistory";
+  const storedHistory = localStorage.getItem(storedHistoryKey);
+  export const currentHistory = writable<HistoryLog[]>(
+    storedHistory ? JSON.parse(storedHistory) : [],
+  );
   let allCountries: Country[] = [];
+
+  function addHistoryLog(movieId: number, movieTitle: string) {
+    const maxHistory = 6;
+    currentHistory.update((currentHistory) => {
+      const updated = [...currentHistory, { id: movieId, name: movieTitle }];
+      const uniqueHistory = Array.from(
+        new Map(updated.map((item) => [item.id, item])).values(),
+      );
+
+      if (uniqueHistory.length > maxHistory) {
+        uniqueHistory.shift();
+      }
+      window.localStorage.setItem(
+        storedHistoryKey,
+        JSON.stringify(uniqueHistory),
+      );
+      return uniqueHistory;
+    });
+  }
 
   function fetchMovies(queries = "", totalPages = 500) {
     let _queries = queries;
@@ -53,7 +79,7 @@
       });
   }
 
-  function getRandomMovie(data: Array<Movie>, maxIndex = 20) {
+  export function getRandomMovie(data: Array<Movie>, maxIndex = 20) {
     const randomIndex = Math.floor(Math.random() * maxIndex);
 
     data.forEach((movie: Movie, index: number) => {
@@ -114,6 +140,7 @@
 
         getMovieCredits(movieId);
         getImdbUrl(movieId);
+        addHistoryLog(movieId, data.title);
 
         return;
         // getMovieGenres(data);
@@ -206,8 +233,6 @@
     // });
   }
 
-  // let activeTab = Monitor1Tabs.Tab1;
-
   function getMovieCredits(movieId: number) {
     fetch(`${API.MOVIE}/${movieId}/credits`, API.OPTIONS)
       .then((response) => response.json())
@@ -245,7 +270,6 @@
       .catch((err) => console.error(err));
   }
 
-  // let allCountries;
   function generateCountries() {
     return fetch(API.COUNTRIES, API.OPTIONS)
       .then((response) => response.json())
@@ -304,7 +328,7 @@
       });
   }
 
-  function getMoviesByActor(actorId: string) {
+  export function getMoviesByActor(actorId: number) {
     fetch(
       `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
       API.OPTIONS,
@@ -337,7 +361,7 @@
     return temp.substring(temp.length - size);
   }
 
-  function getMoviesByDirector(directorId: string) {
+  function getMoviesByDirector(directorId: number) {
     fetch(
       `${API.PERSON}/${directorId}?append_to_response=movie_credits`,
       API.OPTIONS,
@@ -377,8 +401,33 @@
     // fetch(`${API.DISCOVER_MOVIE}?with_genres=${genreId}`, API.OPTIONS).then
     fetchMovies(`&with_genres=${genreId}`);
   }
+
+  function formatRuntime(runtime: number) {
+    return `${padNumber(Math.floor(runtime / 60), 2)}:${padNumber(runtime % 60, 2)}`;
+  }
+
   generateCountries();
+
+  // initApp();
+
+  function initApp() {
+    const history = get(currentHistory);
+    if (history.length) {
+      const lastLog = history[history.length - 1];
+      getMovie(lastLog.id);
+    } else {
+    }
+  }
   fetchMovies();
+
+  // currentHistory.subscribe((history) => {
+  //   if (history.length) {
+  //     getMovie(history[history.length - 1].id);
+  //   } else {
+  //     fetchMovies();
+  //   }
+  //   unsubscribe();
+  // });
 </script>
 
 <main>
@@ -392,62 +441,102 @@
         <Tab name="Filters" />
 
         <TabContent name={"Info"}>
-          <div>
-            <a href={$currentMovie.title.imdb} data-info={``} target="_blank"
-              >{$currentMovie.title.name}</a
-            >
-          </div>
-          <div>
-            <button
-              on:click={() => getMoviesByReleaseDate($currentMovie.date.year)}
-              data-info={`This movie's release year. Click to find another movie released in ${$currentMovie.date.year}.`}
-              >{$currentMovie.date.year}</button
-            >
-            <button
-              on:click={() => getMoviesByCountry($currentMovie.country.code)}
-              data-info={`This movie's country of origin. Click to find another movie from ${$currentMovie.country}`}
-            >
-              {$currentMovie.country.name}
-            </button>
-            <button
-              on:click={() => getMoviesByRating($currentMovie.rating)}
-              data-info={`This movie's TMDB rating. Click to find another movie rated around ${$currentMovie.rating}`}
-              >{$currentMovie.rating}</button
-            >
-            <button
-              on:click={() => getMoviesByRuntime($currentMovie.runtime)}
-              data-info={`This movie's total runtime. Click to find another movie with a runtime around ${$currentMovie.runtime}`}
-              >{`${padNumber(Math.floor($currentMovie.runtime / 60), 2)}:${$currentMovie.runtime % 60}`}</button
-            >
-          </div>
-          <div>
-            {#each $currentMovie.genres as genre}
-              <button
-                on:click={() => getMoviesByGenre(genre.id)}
-                data-genre-id={genre.id}>{genre.name}</button
+          <section aria-labelledby="movie-title">
+            <h1 id="movie-title">
+              <span class="label">Title:</span>
+              <a
+                href={$currentMovie.title.imdb}
+                data-info={``}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open IMDb page for ${
+                  $currentMovie.title.name
+                } in a new tab`}
               >
-            {/each}
-          </div>
-          <div>
-            {#each $currentMovie.directors as director}
-              <button on:click={() => getMoviesByDirector(director.id)}
-                >{director.name}</button
-              >
-            {/each}
-          </div>
-          <div>
-            {#each $currentMovie.actors as actor}
-              <button on:click={() => getMoviesByActor(actor.id)}
-                >{actor.name}</button
-              >
-            {/each}
-          </div>
-          <div>
+                {$currentMovie.title.name}
+              </a>
+            </h1>
+          </section>
+
+          <section aria-label="Extra information">
+            <!-- Release date  -->
+            <Button
+              label={$currentMovie.date.year.toString()}
+              onClick={() => getMoviesByReleaseDate($currentMovie.date.year)}
+              ariaLabel={`Release year: ${$currentMovie.date.year}`}
+              description={`This movie's release year. Click to find another movie released in ${$currentMovie.date.year}.`}
+            />
+
+            <!-- Country  -->
+            <Button
+              label={$currentMovie.country.name}
+              onClick={() => getMoviesByCountry($currentMovie.country.code)}
+              ariaLabel={`Country: ${$currentMovie.country.name}.`}
+              description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`}
+            />
+
+            <!-- Rating  -->
+            <Button
+              label={$currentMovie.rating.toString()}
+              onClick={() => getMoviesByRating($currentMovie.rating)}
+              ariaLabel={`IMDB rating: ${$currentMovie.rating}.`}
+              description={`This movie is rated ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
+            />
+
+            <!-- Runtime  -->
+            <Button
+              label={formatRuntime($currentMovie.runtime)}
+              onClick={() => getMoviesByRuntime($currentMovie.runtime)}
+              ariaLabel={`Runtime: ${padNumber(Math.floor($currentMovie.runtime / 60), 2)} hours and ${padNumber($currentMovie.runtime % 60, 2)} minutes`}
+              description={`Runtime: ${formatRuntime($currentMovie.runtime)}. Click to find another movie with a similar runtime.`}
+            />
+          </section>
+
+          <InfoRow
+            label={"Genre"}
+            title={"GNR"}
+            items={$currentMovie.genres}
+            onClick={getMoviesByGenre}
+            getDescription={(name) =>
+              `Genre: ${name}. Click to find another ${name.toLowerCase()} movie.`}
+          />
+          <InfoRow
+            label={"Director"}
+            title={"DIR"}
+            items={$currentMovie.directors}
+            onClick={getMoviesByDirector}
+            getDescription={(name) =>
+              `Director: ${name}. Click to find another movie directed by ${name}`}
+          />
+
+          <InfoRow
+            label={"Actor"}
+            title={"ACT"}
+            items={$currentMovie.actors}
+            onClick={getMoviesByActor}
+            getDescription={(name) =>
+              `Actor: ${name}. Click to find another movie that features ${name}`}
+          />
+
+          <section aria-label="Plot">
+            <h2>PLT:</h2>
             <p>{$currentMovie.plot}</p>
-          </div>
+          </section>
         </TabContent>
 
-        <TabContent name={"Filters"}>FIltrinja miltrinjaaaa</TabContent>
+        <TabContent name={"Filters"}>
+          <div>
+            <div class="header">
+              <span>Country</span>
+              <span class="value">Any</span>
+            </div>
+            <div class="options">
+              {#each allCountries as country}
+                <span>{country.name}</span>
+              {/each}
+            </div>
+          </div>
+        </TabContent>
       </Tabs>
     </Screen>
     <Screen name={Monitor1Screens.Screen2} activeScreen={monitor1_active_screen}
@@ -468,6 +557,11 @@
     >
   </Monitor>
   <button on:click={() => fetchMovies()}>CLICK ME</button>
+  <div>
+    {#each $currentHistory as log}
+      <button on:click={() => getMovie(log.id)}>{log.name}</button>
+    {/each}
+  </div>
 </main>
 
 <!-- 240px -->
@@ -475,13 +569,10 @@
 
 <style global>
   @import "./styles/variables.css";
-  main {
-    max-width: 960px;
-    display: grid;
-    grid-template-rows: repeat(auto-fit, minmax(480px, 1fr));
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    @media screen and (max-width: 480px) {
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    display: none;
   }
 </style>

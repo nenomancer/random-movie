@@ -26,12 +26,17 @@ export interface Genre {
 }
 
 export interface Person {
-    id: string;
+    id: number;
     name: string;
     job: string;
 }
 
 export interface Country {
     code: string;
+    name: string;
+}
+
+export interface HistoryLog {
+    id: number;
     name: string;
 }

@@ -7,7 +7,7 @@
 </script>
 
 {#if $activeTab === name}
-    <div class="content">
+    <article class="content">
         <slot></slot>
-    </div>
+    </article>
 {/if}
