@@ -7,38 +7,38 @@
   import InfoRow from "./components/InfoRow.svelte";
 
   import { Monitor1Screens, Monitor2Screens } from "./constants/screens";
-  import { Monitor1Tabs, Monitor2Tabs } from "./constants/tabs";
   import TabContent from "./components/TabContent.svelte";
-  import { API } from "./lib/constants";
-  import { get, writable } from "svelte/store";
-  import type { Country, HistoryLog, Movie, Person } from "./lib/types";
+  import {
+    API,
+    DEFAULT_DROPDOWN_VALUE,
+    DEFAULT_MOVIE,
+    LOCAL_SESSION_HISTORY_KEY,
+    RELEASE_YEAR_MAX,
+    RELEASE_YEAR_MIN,
+  } from "./lib/constants";
+  import { writable } from "svelte/store";
+  import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
   import Button from "./components/Button.svelte";
+  import FilterCountries from "./components/FilterCountries.svelte";
+  import { buildFilterQuery, padNumber } from "./lib/helpers";
+  import FilterGenres from "./components/FilterGenres.svelte";
+  import FilterYear from "./components/FilterYear.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
+  let useFilters = false;
 
-  export const defaultMovie: Movie = {
-    id: -1,
-    title: { name: "" },
-    genres: [],
-    directors: [],
-    actors: [],
-    date: { exact: 0, year: 0 },
-    country: { code: "", name: "" },
-    rating: 0,
-    runtime: 0,
-    plot: "",
-    poster: "",
-  };
+  let filterCountryCode: string;
+  let filterGenreCodes: number[];
 
-  export const currentMovie = writable<Movie>(defaultMovie);
+  export const currentMovie = writable<Movie>(DEFAULT_MOVIE);
 
-  const storedHistoryKey = "movieHistory";
-  const storedHistory = localStorage.getItem(storedHistoryKey);
+  const storedHistory = localStorage.getItem(LOCAL_SESSION_HISTORY_KEY);
   export const currentHistory = writable<HistoryLog[]>(
     storedHistory ? JSON.parse(storedHistory) : [],
   );
   let allCountries: Country[] = [];
+  let allGenres: Genre[] = [];
 
   function addHistoryLog(movieId: number, movieTitle: string) {
     const maxHistory = 6;
@@ -52,22 +52,28 @@
         uniqueHistory.shift();
       }
       window.localStorage.setItem(
-        storedHistoryKey,
+        LOCAL_SESSION_HISTORY_KEY,
         JSON.stringify(uniqueHistory),
       );
       return uniqueHistory;
     });
   }
-
   function fetchMovies(queries = "", totalPages = 500) {
-    let _queries = queries;
+    let _queries = "";
+    if (useFilters) {
+      _queries = buildFilterQuery({ country: "FR" });
+    }
+
     const pageNumber = Math.floor(Math.random() * totalPages);
 
-    fetch(`${API.DISCOVER_MOVIE}?page=${pageNumber}${_queries}`, API.OPTIONS)
+    fetch(
+      `${API.DISCOVER_MOVIE}?page=${pageNumber}${queries}${_queries}`,
+      API.OPTIONS,
+    )
       .then((response) => response.json())
       .then((response) => {
         if (response.results?.length === 0) {
-          fetchMovies("", Math.min(500, response.total_pages));
+          fetchMovies(_queries, Math.min(500, response.total_pages));
         } else {
           getRandomMovie(response.results);
         }
@@ -82,6 +88,7 @@
   export function getRandomMovie(data: Array<Movie>, maxIndex = 20) {
     const randomIndex = Math.floor(Math.random() * maxIndex);
 
+    if (!data) return;
     data.forEach((movie: Movie, index: number) => {
       if (index === randomIndex) {
         getMovie(movie.id);
@@ -129,7 +136,7 @@
             exact: data.release_date,
             year: new Date(data.release_date).getFullYear(),
           },
-          rating: data.vote_average,
+          rating: Math.round(data.vote_average * 10) / 10,
           runtime: data.runtime,
           country: allCountries.find(
             (country) => country.code === data.origin_country[0],
@@ -163,42 +170,13 @@
         // movieIdDisplay.setAttribute("data-movie-id", id);
         // movieIdDisplay.classList.add("loading");
 
-        // if (data.poster_path) {
-        //   poster.src = "https://image.tmdb.org/t/p/w500" + data.poster_path;
-        // } else {
-        //   poster.classList.add("no-image");
-        // }
-
-        // const found = allCountries.find(
-        //   (el) => el.iso_3166_1 == data.origin_country[0],
-        // );
         const runtimeMinutes = data.runtime;
         const rate = Math.round(data.vote_average * 10) / 10;
-        // popularityEl.innerText = data.popularity;
-        // votesEl.innerText = data.vote_count;
-        // const normalized = data.vote_average / 10;
-        // const deg = normalized * 180;
-        // if (data.revenue === 0) {
-        //   revenueEl.innerText = padNumber("0");
-        // } else {
-        //   revenueEl.innerText = padNumber(data.revenue);
-        // }
-        // if (data.budget === 0) {
-        //   budgetEl.innerText = padNumber("0");
-        // } else {
-        //   budgetEl.innerText = padNumber(data.budget);
-        // }
+
         // runtimeEl.innerText = data.runtime;
         // profitEl.innerText = padNumber(data.revenue - data.budget);
 
         // bindHoverTooltip(budgetEl);
-
-        // plotContent.innerText = data.overview;
-        // locationEl.innerText = found?.native_name;
-        // countries.innerText = found?.native_name;
-        // rating.innerText = rate.toFixed(1);
-        // runtime.innerText = `${padNumber(Math.floor(runtimeMinutes / 60), 2)}:${runtimeMinutes % 60
-        //   }`;
 
         // if (data.overview === "") {
         //   plotContent.innerText =
@@ -270,6 +248,53 @@
       .catch((err) => console.error(err));
   }
 
+  function generateGenres() {
+    return fetch(API.GENRES, API.OPTIONS)
+      .then((response) => response.json())
+      .then((response) => {
+        allGenres = response.genres;
+        return;
+        // const options = genreFilterContainer.querySelector(".genres .content");
+        // const value = genreFilterContainer.querySelector(".value");
+        // value.addEventListener("click", (e) => {
+        //   genreFilterContainer.classList.toggle("open");
+        //   countriesFilterList.parentElement.classList.remove("open");
+        // });
+
+        // function displayfilterCountryCode(temp) {
+        //   temp.classList.toggle("selected");
+        //   filteredGenres.push(temp.id);
+        //   const selectedOptions = Array.from(
+        //     options.querySelectorAll(".selected"),
+        //   );
+        //   if (selectedOptions.length !== 0) {
+        //     selectedOptions.forEach((item, index) => {
+        //       if (index === 0) {
+        //         value.innerText = item.innerText;
+        //       } else {
+        //         value.innerText += ", " + item.innerText;
+        //       }
+        //     });
+        //   } else {
+        //     value.innerText = "Any";
+        //   }
+        // }
+        // allGenres.forEach((genre) => {
+        //   const temp = document.createElement("span");
+        //   temp.setAttribute("data-id", genre.id);
+        //   temp.innerText = genre.name;
+        //   temp.className = "option button-span link";
+        //   temp.addEventListener("click", (e) => {
+        //     displayfilterCountryCode(temp);
+        //   });
+        //   options.appendChild(temp);
+        // });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   function generateCountries() {
     return fetch(API.COUNTRIES, API.OPTIONS)
       .then((response) => response.json())
@@ -309,26 +334,31 @@
           name: country.english_name,
         }));
 
-        allCountries.forEach((country: Country) => {
-          // const temp = document.createElement("span");
-          // temp.className = "option button-span link";
-          // temp.addEventListener("click", (e) => {
-          //   toggleSelection(temp);
-          //   countriesFilterList.parentElement.classList.remove("open");
-          // });
-          // temp.innerText = country.english_name;
-          // temp.setAttribute("data-country-id", country.iso_3166_1);
-          // temp.value = country.iso_3166_1;
-          // countriesFilterList.appendChild(temp);
-          // console.log("country: ", country);
-        });
+        // allCountries.forEach((country: Country) => {
+        //   // const temp = document.createElement("span");
+        //   // temp.className = "option button-span link";
+        //   // temp.addEventListener("click", (e) => {
+        //   //   toggleSelection(temp);
+        //   //   countriesFilterList.parentElement.classList.remove("open");
+        //   // });
+        //   // temp.innerText = country.english_name;
+        //   // temp.setAttribute("data-country-id", country.iso_3166_1);
+        //   // temp.value = country.iso_3166_1;
+        //   // countriesFilterList.appendChild(temp);
+        //   // console.log("country: ", country);
+        // });
       })
       .catch((err) => {
         console.error(err);
       });
   }
 
+  function resetFilter() {
+    useFilters = false;
+  }
+
   export function getMoviesByActor(actorId: number) {
+    resetFilter();
     fetch(
       `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
       API.OPTIONS,
@@ -342,24 +372,16 @@
         console.error(err);
       });
   }
+
   function getMoviesByReleaseDate(year: number) {
-    const start = `${year}-01-01`;
-    const end = `${year}-12-31`;
-    fetchMovies(
-      `&primary_release_date.gte=${start}&primary_release_date.lte=${end}`,
-    );
+    fetchMovies(buildFilterQuery({ yearFrom: year, yearTo: year }));
   }
 
   function getMoviesByRuntime(runtime: number) {
-    console.log("RUNTIME: ", runtime);
-    fetchMovies(`&with_runtime.lte=${runtime}&with_runtime.gte=${runtime}`);
+    fetchMovies(buildFilterQuery({ runtimeFrom: runtime, runtimeTo: runtime }));
   }
 
   // 100% helper
-  function padNumber(number: number, size = 10) {
-    const temp = "0000000000" + number;
-    return temp.substring(temp.length - size);
-  }
 
   function getMoviesByDirector(directorId: number) {
     fetch(
@@ -378,11 +400,14 @@
       });
   }
 
+  // Fuzzy search, votes are not too reliable and the API allows only averages
   function getMoviesByRating(rating: number) {
-    const lower = Math.floor(rating);
-    const higher = Math.ceil(rating);
+    const range = 0.25;
     fetchMovies(
-      `&vote_average.gte=${lower}?vote_average.lte=${higher}?vote_counte.gte=100`,
+      buildFilterQuery({
+        ratingFrom: rating - range,
+        ratingTo: rating + range,
+      }),
     );
   }
 
@@ -407,27 +432,9 @@
   }
 
   generateCountries();
+  generateGenres();
 
-  // initApp();
-
-  function initApp() {
-    const history = get(currentHistory);
-    if (history.length) {
-      const lastLog = history[history.length - 1];
-      getMovie(lastLog.id);
-    } else {
-    }
-  }
   fetchMovies();
-
-  // currentHistory.subscribe((history) => {
-  //   if (history.length) {
-  //     getMovie(history[history.length - 1].id);
-  //   } else {
-  //     fetchMovies();
-  //   }
-  //   unsubscribe();
-  // });
 </script>
 
 <main>
@@ -469,10 +476,10 @@
 
             <!-- Country  -->
             <Button
-              label={$currentMovie.country.name}
-              onClick={() => getMoviesByCountry($currentMovie.country.code)}
-              ariaLabel={`Country: ${$currentMovie.country.name}.`}
-              description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`}
+              label={$currentMovie.country?.name}
+              onClick={() => getMoviesByCountry($currentMovie.country?.code)}
+              ariaLabel={`Country: ${$currentMovie.country?.name}.`}
+              description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country?.name}`}
             />
 
             <!-- Rating  -->
@@ -525,17 +532,21 @@
         </TabContent>
 
         <TabContent name={"Filters"}>
-          <div>
-            <div class="header">
-              <span>Country</span>
-              <span class="value">Any</span>
-            </div>
-            <div class="options">
-              {#each allCountries as country}
-                <span>{country.name}</span>
-              {/each}
-            </div>
-          </div>
+          <FilterCountries
+            label={"Country"}
+            options={allCountries}
+            onChange={(countryCode) => (filterCountryCode = countryCode.code)}
+          />
+          <FilterGenres
+            label={"Genre"}
+            options={allGenres}
+            onChange={(genreCodes) => (filterGenreCodes = genreCodes)}
+          />
+          <section>
+            <label for="year-from">Year</label>
+            <FilterYear placeholder={"From"} />
+            <FilterYear placeholder={"To"} />
+          </section>
         </TabContent>
       </Tabs>
     </Screen>
@@ -556,12 +567,17 @@
       >About Us</Screen
     >
   </Monitor>
-  <button on:click={() => fetchMovies()}>CLICK ME</button>
   <div>
-    {#each $currentHistory as log}
-      <button on:click={() => getMovie(log.id)}>{log.name}</button>
-    {/each}
+    <button on:click={() => fetchMovies()}>CLICK ME</button>
+    <label for="useFilters">use filters:</label>
+    <input type="checkbox" id="useFilters" bind:checked={useFilters} />
+    <div>
+      {#each $currentHistory as log}
+        <button on:click={() => getMovie(log.id)}>{log.name}</button>
+      {/each}
+    </div>
   </div>
+  <h4>code is: {filterCountryCode}</h4>
 </main>
 
 <!-- 240px -->
@@ -569,10 +585,4 @@
 
 <style global>
   @import "./styles/variables.css";
-
-  .options {
-    display: flex;
-    flex-direction: column;
-    display: none;
-  }
 </style>

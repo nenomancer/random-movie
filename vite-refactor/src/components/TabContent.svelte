@@ -6,8 +6,12 @@
     const activeTab: Writable<string> = getContext("activeTab");
 </script>
 
-{#if $activeTab === name}
-    <article class="content">
-        <slot></slot>
-    </article>
-{/if}
+<article class={`${$activeTab !== name ? "hidden" : ""}`}>
+    <slot></slot>
+</article>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>

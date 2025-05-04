@@ -1,5 +1,7 @@
 @import './styles/reset.css';
 @import './styles/variables.css';
+@import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
+
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -21,6 +23,8 @@
 body {
   margin: 0;
   min-height: 100vh;
+  /* font-family: "Handjet", sans-serif; */
+  font-weight: 300;
 }
 
 h1 {

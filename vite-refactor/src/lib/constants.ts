@@ -1,3 +1,6 @@
+
+import type { Filters, Movie } from "./types";
+
 export const API = {
     OPTIONS: {
         method: "GET",
@@ -14,3 +17,22 @@ export const API = {
     DISCOVER_MOVIE: "https://api.themoviedb.org/3/discover/movie",
     POSTER: "https://image.tmdb.org/t/p/w500",
 }
+
+export const DEFAULT_MOVIE: Movie = {
+    id: -1,
+    title: { name: "" },
+    genres: [],
+    directors: [],
+    actors: [],
+    date: { exact: 0, year: 0 },
+    country: { code: "", name: "" },
+    rating: 0,
+    runtime: 0,
+    plot: "",
+    poster: "",
+};
+
+export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
+export const DEFAULT_DROPDOWN_VALUE = "Any";
+export const RELEASE_YEAR_MIN = 1878;
+export const RELEASE_YEAR_MAX = new Date().getFullYear();

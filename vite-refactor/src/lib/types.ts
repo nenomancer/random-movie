@@ -40,3 +40,14 @@ export interface HistoryLog {
     id: number;
     name: string;
 }
+
+export interface Filters {
+    country?: string,
+    genres?: string[],
+    yearFrom?: number,
+    yearTo?: number,
+    ratingFrom?: number,
+    ratingTo?: number
+    runtimeFrom?: number,
+    runtimeTo?: number,
+}
