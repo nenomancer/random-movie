@@ -3,11 +3,13 @@
     import type { Writable } from "svelte/store";
 
     export let name: string;
+    export let closeDropdowns: () => void;
 
     const activeTab: Writable<string> = getContext("activeTab");
 
     function setActiveTab() {
         activeTab.set(name);
+        closeDropdowns();
     }
 </script>
 

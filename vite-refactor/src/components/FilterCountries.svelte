@@ -4,10 +4,10 @@
 
     export let label: string;
     export let options: Country[];
-    export let isMultiOption: boolean = false;
-    let selected: Country;
     export let onChange: (option: Country) => void;
-
+    export const closeDropdown = () => (open = false);
+    
+    let selected: Country;
     let open: boolean = false;
 
     const toggleDropdown = () => (open = !open);
@@ -23,7 +23,7 @@
     };
 </script>
 
-<section class={`${isMultiOption ? "multi-option" : ""}`}>
+<section>
     <div class="header">
         <span>{label}</span>
         <button class="value" on:click={toggleDropdown}

@@ -5,10 +5,10 @@ export interface Movie {
     directors: Person[];
     actors: Person[];
     country: Country;
-    date: ReleaseDate;
-    runtime: number;
-    rating: number;
-    plot: string;
+    year: number | undefined;
+    runtime?: number;
+    rating?: number;
+    plot?: string;
     poster: string;
 }
 export interface Title {

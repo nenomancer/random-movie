@@ -4,8 +4,9 @@
 
     export let label: string;
     export let options: Genre[] = [];
-    export let isMultiOption: boolean = false;
     export let onChange: (option: number[]) => void;
+    export const closeDropdown = () => (open = false);
+
     let genreIds: number[] = [];
     let genreNames: string[] = [DEFAULT_DROPDOWN_VALUE];
 
@@ -24,12 +25,11 @@
         genreIds = selected.map((genre) => genre.id);
         genreNames = selected.map((genre) => genre.name);
 
-        console.log(genreNames);
         onChange?.(genreIds);
     };
 </script>
 
-<section class={`${isMultiOption ? "multi-option" : ""}`}>
+<section>
     <div class="header">
         <span>{label}</span>
         <button class="value" on:click={toggleDropdown}

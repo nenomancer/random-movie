@@ -24,7 +24,7 @@ export const DEFAULT_MOVIE: Movie = {
     genres: [],
     directors: [],
     actors: [],
-    date: { exact: 0, year: 0 },
+    year: undefined,
     country: { code: "", name: "" },
     rating: 0,
     runtime: 0,
@@ -36,3 +36,4 @@ export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
 export const DEFAULT_DROPDOWN_VALUE = "Any";
 export const RELEASE_YEAR_MIN = 1878;
 export const RELEASE_YEAR_MAX = new Date().getFullYear();
+export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"

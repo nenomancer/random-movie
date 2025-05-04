@@ -10,11 +10,9 @@
   import TabContent from "./components/TabContent.svelte";
   import {
     API,
-    DEFAULT_DROPDOWN_VALUE,
     DEFAULT_MOVIE,
+    DOCUMENT_TITLE,
     LOCAL_SESSION_HISTORY_KEY,
-    RELEASE_YEAR_MAX,
-    RELEASE_YEAR_MIN,
   } from "./lib/constants";
   import { writable } from "svelte/store";
   import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
@@ -30,6 +28,9 @@
 
   let filterCountryCode: string;
   let filterGenreCodes: number[];
+
+  let filterCountryRef: FilterCountries;
+  let filterGenresRef: FilterGenres;
 
   export const currentMovie = writable<Movie>(DEFAULT_MOVIE);
 
@@ -132,18 +133,25 @@
             imdb: "",
             name: generateTitle(data.original_title, data.title),
           },
-          date: {
-            exact: data.release_date,
-            year: new Date(data.release_date).getFullYear(),
-          },
-          rating: Math.round(data.vote_average * 10) / 10,
-          runtime: data.runtime,
+          year: data.release_date
+            ? new Date(data.release_date).getFullYear()
+            : undefined,
+
+          rating:
+            data.vote_average > 0
+              ? Math.round(data.vote_average * 10) / 10
+              : undefined,
+          runtime: data.runtime > 0 ? data.runtime : undefined,
           country: allCountries.find(
             (country) => country.code === data.origin_country[0],
           )!,
           genres: data.genres,
           plot: data.overview,
         }));
+
+        const newUrl = `/movie/${movieId}`;
+        document.title = `${$currentMovie.title.name} | ${DOCUMENT_TITLE}`;
+        history.pushState({}, "", newUrl);
 
         getMovieCredits(movieId);
         getImdbUrl(movieId);
@@ -444,8 +452,14 @@
       activeScreen={monitor1_active_screen}
     >
       <Tabs>
-        <Tab name={"Info"} />
-        <Tab name="Filters" />
+        <Tab
+          closeDropdowns={() => {
+            filterCountryRef.closeDropdown();
+            filterGenresRef.closeDropdown();
+          }}
+          name={"Info"}
+        />
+        <Tab name="Filters" closeDropdowns={() => console.log("kyr")} />
 
         <TabContent name={"Info"}>
           <section aria-labelledby="movie-title">
@@ -467,36 +481,44 @@
 
           <section aria-label="Extra information">
             <!-- Release date  -->
-            <Button
-              label={$currentMovie.date.year.toString()}
-              onClick={() => getMoviesByReleaseDate($currentMovie.date.year)}
-              ariaLabel={`Release year: ${$currentMovie.date.year}`}
-              description={`This movie's release year. Click to find another movie released in ${$currentMovie.date.year}.`}
-            />
+            {#if $currentMovie.year}
+              <Button
+                label={$currentMovie.year.toString()}
+                onClick={() => getMoviesByReleaseDate($currentMovie.year!)}
+                ariaLabel={`Release year: ${$currentMovie.year}`}
+                description={`This movie's release year. Click to find another movie released in ${$currentMovie.year}.`}
+              />
+            {/if}
 
             <!-- Country  -->
-            <Button
-              label={$currentMovie.country?.name}
-              onClick={() => getMoviesByCountry($currentMovie.country?.code)}
-              ariaLabel={`Country: ${$currentMovie.country?.name}.`}
-              description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country?.name}`}
-            />
+            {#if $currentMovie.country}
+              <Button
+                label={$currentMovie.country.name}
+                onClick={() => getMoviesByCountry($currentMovie.country.code)}
+                ariaLabel={`Country: ${$currentMovie.country.name}.`}
+                description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`}
+              />
+            {/if}
 
             <!-- Rating  -->
-            <Button
-              label={$currentMovie.rating.toString()}
-              onClick={() => getMoviesByRating($currentMovie.rating)}
-              ariaLabel={`IMDB rating: ${$currentMovie.rating}.`}
-              description={`This movie is rated ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
-            />
+            {#if $currentMovie.rating}
+              <Button
+                label={$currentMovie.rating.toString()}
+                onClick={() => getMoviesByRating($currentMovie.rating!)}
+                ariaLabel={`IMDB rating: ${$currentMovie.rating}.`}
+                description={`This movie is rated ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
+              />
+            {/if}
 
             <!-- Runtime  -->
-            <Button
-              label={formatRuntime($currentMovie.runtime)}
-              onClick={() => getMoviesByRuntime($currentMovie.runtime)}
-              ariaLabel={`Runtime: ${padNumber(Math.floor($currentMovie.runtime / 60), 2)} hours and ${padNumber($currentMovie.runtime % 60, 2)} minutes`}
-              description={`Runtime: ${formatRuntime($currentMovie.runtime)}. Click to find another movie with a similar runtime.`}
-            />
+            {#if $currentMovie.runtime}
+              <Button
+                label={formatRuntime($currentMovie.runtime)}
+                onClick={() => getMoviesByRuntime($currentMovie.runtime!)}
+                ariaLabel={`Runtime: ${padNumber(Math.floor($currentMovie.runtime / 60), 2)} hours and ${padNumber($currentMovie.runtime % 60, 2)} minutes`}
+                description={`Runtime: ${formatRuntime($currentMovie.runtime)}. Click to find another movie with a similar runtime.`}
+              />
+            {/if}
           </section>
 
           <InfoRow
@@ -536,11 +558,13 @@
             label={"Country"}
             options={allCountries}
             onChange={(countryCode) => (filterCountryCode = countryCode.code)}
+            bind:this={filterCountryRef}
           />
           <FilterGenres
             label={"Genre"}
             options={allGenres}
             onChange={(genreCodes) => (filterGenreCodes = genreCodes)}
+            bind:this={filterGenresRef}
           />
           <section>
             <label for="year-from">Year</label>
