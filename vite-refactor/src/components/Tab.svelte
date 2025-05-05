@@ -1,16 +1,18 @@
 <script lang="ts">
     import { getContext } from "svelte";
     import type { Writable } from "svelte/store";
+    import { openDropdown } from "../stores/ui";
 
     export let name: string;
-    export let closeDropdowns: () => void;
 
     const activeTab: Writable<string> = getContext("activeTab");
 
     function setActiveTab() {
         activeTab.set(name);
-        closeDropdowns();
+        openDropdown.set("");
     }
 </script>
 
-<button on:click={setActiveTab}>Show {name}</button>
+{#if name}
+    <button on:click={setActiveTab}>Show {name}</button>
+{/if}

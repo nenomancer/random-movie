@@ -26,8 +26,8 @@ export const DEFAULT_MOVIE: Movie = {
     actors: [],
     year: undefined,
     country: { code: "", name: "" },
-    rating: 0,
-    runtime: 0,
+    rating: undefined,
+    runtime: undefined,
     plot: "",
     poster: "",
 };

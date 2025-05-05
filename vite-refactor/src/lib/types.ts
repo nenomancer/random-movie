@@ -9,7 +9,7 @@ export interface Movie {
     runtime?: number;
     rating?: number;
     plot?: string;
-    poster: string;
+    poster?: string;
 }
 export interface Title {
     imdb?: string,

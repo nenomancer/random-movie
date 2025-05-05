@@ -18,26 +18,27 @@
   import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
   import Button from "./components/Button.svelte";
   import FilterCountries from "./components/FilterCountries.svelte";
-  import { buildFilterQuery, padNumber } from "./lib/helpers";
+  import { buildFilterQuery, formatRuntime, padNumber } from "./lib/helpers";
   import FilterGenres from "./components/FilterGenres.svelte";
   import FilterYear from "./components/FilterYear.svelte";
+  import FilterRating from "./components/FilterRating.svelte";
+  import { currentMovie } from "./stores/movie";
+  import { currentHistory } from "./stores/history";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
   let useFilters = false;
 
   let filterCountryCode: string;
-  let filterGenreCodes: number[];
+  let filterGenreIds: number[];
+  let filterYearFrom: number;
+  let filterYearTo: number;
+  let filterRatingFrom: number;
+  let filterRatingTo: number;
 
   let filterCountryRef: FilterCountries;
   let filterGenresRef: FilterGenres;
 
-  export const currentMovie = writable<Movie>(DEFAULT_MOVIE);
-
-  const storedHistory = localStorage.getItem(LOCAL_SESSION_HISTORY_KEY);
-  export const currentHistory = writable<HistoryLog[]>(
-    storedHistory ? JSON.parse(storedHistory) : [],
-  );
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
 
@@ -62,8 +63,13 @@
   function fetchMovies(queries = "", totalPages = 500) {
     let _queries = "";
     if (useFilters) {
-      _queries = buildFilterQuery({ country: "FR" });
+      _queries = buildFilterQuery({
+        country: `${filterCountryCode ? filterCountryCode : ""}`,
+        genres: [`${filterGenreIds?.length ? filterGenreIds.join(",") : []}`],
+      });
     }
+
+    console.log("queries? ", _queries);
 
     const pageNumber = Math.floor(Math.random() * totalPages);
 
@@ -86,7 +92,7 @@
       });
   }
 
-  export function getRandomMovie(data: Array<Movie>, maxIndex = 20) {
+  function getRandomMovie(data: Array<Movie>, maxIndex = 20) {
     const randomIndex = Math.floor(Math.random() * maxIndex);
 
     if (!data) return;
@@ -98,19 +104,15 @@
   }
 
   async function getMovie(movieId: number) {
+    currentMovie.set(DEFAULT_MOVIE);
     fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
-        console.log("MOVIE: ");
-        console.log(data);
-
         if (data.poster_path) {
           currentMovie.update((movie) => ({
             ...movie,
             poster: `${API.POSTER}/${data.poster_path}`,
           }));
-        } else {
-          // poster.classList.add("no-image");
         }
 
         function generateTitle(
@@ -156,55 +158,6 @@
         getMovieCredits(movieId);
         getImdbUrl(movieId);
         addHistoryLog(movieId, data.title);
-
-        return;
-        // getMovieGenres(data);
-        const originalTitle = data.original_title;
-        const englishTitle = data.title;
-        const id = data.id;
-
-        // date.innerText = data.release_date.split("-")[0];
-        // temp.className = "button-span";
-        // temp.classList.add("link");
-
-        // titleUrl.innerText = originalTitle;
-        // temp.appendChild(titleUrl);
-        // titleEl.appendChild(temp);
-
-        // if (data.original_language !== "en" && originalTitle != englishTitle) {
-        //   titleUrl.innerText += " (" + englishTitle + ")";
-        // }
-
-        // movieIdDisplay.setAttribute("data-movie-id", id);
-        // movieIdDisplay.classList.add("loading");
-
-        const runtimeMinutes = data.runtime;
-        const rate = Math.round(data.vote_average * 10) / 10;
-
-        // runtimeEl.innerText = data.runtime;
-        // profitEl.innerText = padNumber(data.revenue - data.budget);
-
-        // bindHoverTooltip(budgetEl);
-
-        // if (data.overview === "") {
-        //   plotContent.innerText =
-        //     "No plot found for this movie. You're gonna have to watch it";
-        // }
-        // if (data.runtime === 0) {
-        //   subtitle.removeChild(runtime);
-        // }
-
-        // const maxHistory = 7;
-        // const exisiting = history.find((element) => element.id == data.id);
-        // if (history.length > maxHistory) {
-        //   history.shift();
-        // }
-        // if (!exisiting) {
-        //   history.push({
-        //     id: data.id,
-        //     title: data.title,
-        //   });
-        // }
       })
       .catch((err) => {
         // pendingResponse.classList.remove("active");
@@ -262,41 +215,6 @@
       .then((response) => {
         allGenres = response.genres;
         return;
-        // const options = genreFilterContainer.querySelector(".genres .content");
-        // const value = genreFilterContainer.querySelector(".value");
-        // value.addEventListener("click", (e) => {
-        //   genreFilterContainer.classList.toggle("open");
-        //   countriesFilterList.parentElement.classList.remove("open");
-        // });
-
-        // function displayfilterCountryCode(temp) {
-        //   temp.classList.toggle("selected");
-        //   filteredGenres.push(temp.id);
-        //   const selectedOptions = Array.from(
-        //     options.querySelectorAll(".selected"),
-        //   );
-        //   if (selectedOptions.length !== 0) {
-        //     selectedOptions.forEach((item, index) => {
-        //       if (index === 0) {
-        //         value.innerText = item.innerText;
-        //       } else {
-        //         value.innerText += ", " + item.innerText;
-        //       }
-        //     });
-        //   } else {
-        //     value.innerText = "Any";
-        //   }
-        // }
-        // allGenres.forEach((genre) => {
-        //   const temp = document.createElement("span");
-        //   temp.setAttribute("data-id", genre.id);
-        //   temp.innerText = genre.name;
-        //   temp.className = "option button-span link";
-        //   temp.addEventListener("click", (e) => {
-        //     displayfilterCountryCode(temp);
-        //   });
-        //   options.appendChild(temp);
-        // });
       })
       .catch((err) => {
         console.error(err);
@@ -307,54 +225,10 @@
     return fetch(API.COUNTRIES, API.OPTIONS)
       .then((response) => response.json())
       .then((response) => {
-        // const value = document.querySelector(".value");
-        // value.addEventListener("click", (e) => {
-        //   countriesFilterList.parentElement.classList.toggle("open");
-        //   genreFilterContainer.classList.remove("open");
-        // });
-
-        // function toggleSelection(temp) {
-        //   temp.classList.toggle("selected");
-        //   const selected = Array.from(
-        //     document.querySelectorAll(".countries .content .option.selected")
-        //   );
-
-        //   selected.forEach((item) => {
-        //     if (item !== temp) {
-        //       item.classList.remove("selected");
-        //     }
-        //   });
-
-        //   if (selected.length == 0) {
-        //     value.innerText = "Any";
-        //     value.setAttribute("data-filter-country", "");
-        //   } else {
-        //     value.innerText = temp.innerText;
-        //     value.setAttribute(
-        //       "data-filter-country",
-        //       temp.getAttribute("data-country-id")
-        //     );
-        //   }
-        // }
-
         allCountries = response.map((country: any) => ({
           code: country.iso_3166_1,
           name: country.english_name,
         }));
-
-        // allCountries.forEach((country: Country) => {
-        //   // const temp = document.createElement("span");
-        //   // temp.className = "option button-span link";
-        //   // temp.addEventListener("click", (e) => {
-        //   //   toggleSelection(temp);
-        //   //   countriesFilterList.parentElement.classList.remove("open");
-        //   // });
-        //   // temp.innerText = country.english_name;
-        //   // temp.setAttribute("data-country-id", country.iso_3166_1);
-        //   // temp.value = country.iso_3166_1;
-        //   // countriesFilterList.appendChild(temp);
-        //   // console.log("country: ", country);
-        // });
       })
       .catch((err) => {
         console.error(err);
@@ -365,8 +239,8 @@
     useFilters = false;
   }
 
-  export function getMoviesByActor(actorId: number) {
-    resetFilter();
+  function getMoviesByActor(actorId: number) {
+    // resetFilter();
     fetch(
       `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
       API.OPTIONS,
@@ -388,8 +262,6 @@
   function getMoviesByRuntime(runtime: number) {
     fetchMovies(buildFilterQuery({ runtimeFrom: runtime, runtimeTo: runtime }));
   }
-
-  // 100% helper
 
   function getMoviesByDirector(directorId: number) {
     fetch(
@@ -431,18 +303,25 @@
   }
 
   function getMoviesByGenre(genreId: number) {
-    // fetch(`${API.DISCOVER_MOVIE}?with_genres=${genreId}`, API.OPTIONS).then
     fetchMovies(`&with_genres=${genreId}`);
   }
 
-  function formatRuntime(runtime: number) {
-    return `${padNumber(Math.floor(runtime / 60), 2)}:${padNumber(runtime % 60, 2)}`;
-  }
+  function initApp() {
+    const path = window.location.pathname;
+    const match = path.match(/^\/movie\/(\d+)$/);
 
+    if (match) {
+      const movieId = Number(match[1]);
+      return getMovie(movieId);
+    } else {
+      fetchMovies();
+    }
+    console.log("path: ", path);
+  }
   generateCountries();
   generateGenres();
 
-  fetchMovies();
+  initApp();
 </script>
 
 <main>
@@ -452,14 +331,8 @@
       activeScreen={monitor1_active_screen}
     >
       <Tabs>
-        <Tab
-          closeDropdowns={() => {
-            filterCountryRef.closeDropdown();
-            filterGenresRef.closeDropdown();
-          }}
-          name={"Info"}
-        />
-        <Tab name="Filters" closeDropdowns={() => console.log("kyr")} />
+        <Tab name={"Info"} />
+        <Tab name="Filters" />
 
         <TabContent name={"Info"}>
           <section aria-labelledby="movie-title">
@@ -549,28 +422,35 @@
 
           <section aria-label="Plot">
             <h2>PLT:</h2>
-            <p>{$currentMovie.plot}</p>
+            <p>
+              {$currentMovie.plot ? $currentMovie.plot : "Plot data corrupted."}
+            </p>
           </section>
         </TabContent>
 
         <TabContent name={"Filters"}>
           <FilterCountries
+            id="country"
             label={"Country"}
             options={allCountries}
             onChange={(countryCode) => (filterCountryCode = countryCode.code)}
             bind:this={filterCountryRef}
           />
           <FilterGenres
+            id="genre"
             label={"Genre"}
             options={allGenres}
-            onChange={(genreCodes) => (filterGenreCodes = genreCodes)}
+            onChange={(genreCodes) => (filterGenreIds = genreCodes)}
             bind:this={filterGenresRef}
           />
           <section>
             <label for="year-from">Year</label>
-            <FilterYear placeholder={"From"} />
-            <FilterYear placeholder={"To"} />
+            <div>
+              <FilterYear placeholder={"From"} />
+              <FilterYear placeholder={"To"} />
+            </div>
           </section>
+          <FilterRating />
         </TabContent>
       </Tabs>
     </Screen>
@@ -585,7 +465,16 @@
     >
     <Screen name={Monitor2Screens.Screen1} activeScreen={monitor2_active_screen}
       >Tabs: Poster Screen / Advanced Filter
-      <img style="width: 50%" src={$currentMovie.poster} alt="" />
+      {#if $currentMovie.poster}
+        <img
+          style="width: 50%"
+          src={$currentMovie.poster}
+          alt={`Poster for the movie ${$currentMovie.title}`}
+        />
+      {/if}
+      {#if !$currentMovie.poster}
+        <p>Image data corrupted.</p>
+      {/if}
     </Screen>
     <Screen name={Monitor2Screens.Screen2} activeScreen={monitor2_active_screen}
       >About Us</Screen

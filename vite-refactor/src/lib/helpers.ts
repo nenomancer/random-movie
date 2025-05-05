@@ -47,3 +47,7 @@ export function padNumber(number: number, size = 10) {
     const temp = "0000000000" + number;
     return temp.substring(temp.length - size);
 }
+
+export function formatRuntime(runtime: number) {
+    return `${padNumber(Math.floor(runtime / 60), 2)}:${padNumber(runtime % 60, 2)}`;
+}
