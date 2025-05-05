@@ -1,9 +1,6 @@
 <script lang="ts">
-    import { getContext } from "svelte";
-    import type { Writable } from "svelte/store";
-
+    import { activeTab } from "../stores/ui";
     export let name: string;
-    const activeTab: Writable<string> = getContext("activeTab");
 </script>
 
 <article class={`${$activeTab !== name ? "hidden" : ""}`}>

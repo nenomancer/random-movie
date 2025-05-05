@@ -37,3 +37,5 @@ export const DEFAULT_DROPDOWN_VALUE = "Any";
 export const RELEASE_YEAR_MIN = 1878;
 export const RELEASE_YEAR_MAX = new Date().getFullYear();
 export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"
+export const TAB_INFO = "Info"
+export const TAB_FILTERS = "Filters"

@@ -14,7 +14,6 @@
     DOCUMENT_TITLE,
     LOCAL_SESSION_HISTORY_KEY,
   } from "./lib/constants";
-  import { writable } from "svelte/store";
   import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
   import Button from "./components/Button.svelte";
   import FilterCountries from "./components/FilterCountries.svelte";
@@ -24,6 +23,7 @@
   import FilterRating from "./components/FilterRating.svelte";
   import { currentMovie } from "./stores/movie";
   import { currentHistory } from "./stores/history";
+  import { activeTab } from "./stores/ui";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -65,7 +65,12 @@
     if (useFilters) {
       _queries = buildFilterQuery({
         country: `${filterCountryCode ? filterCountryCode : ""}`,
-        genres: [`${filterGenreIds?.length ? filterGenreIds.join(",") : []}`],
+        genres: filterGenreIds?.length
+          ? [...filterGenreIds.join(",")]
+          : undefined,
+        yearFrom: filterYearFrom ? filterYearFrom : undefined,
+        yearTo: filterYearTo ? filterYearTo : undefined,
+        // ratingFrom
       });
     }
 
@@ -73,10 +78,7 @@
 
     const pageNumber = Math.floor(Math.random() * totalPages);
 
-    fetch(
-      `${API.DISCOVER_MOVIE}?page=${pageNumber}${queries}${_queries}`,
-      API.OPTIONS,
-    )
+    fetch(`${API.DISCOVER_MOVIE}?page=${pageNumber}${_queries}`, API.OPTIONS)
       .then((response) => response.json())
       .then((response) => {
         if (response.results?.length === 0) {
@@ -105,6 +107,7 @@
 
   async function getMovie(movieId: number) {
     currentMovie.set(DEFAULT_MOVIE);
+    activeTab.set("Info");
     fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
@@ -446,8 +449,17 @@
           <section>
             <label for="year-from">Year</label>
             <div>
-              <FilterYear placeholder={"From"} />
-              <FilterYear placeholder={"To"} />
+              <FilterYear
+                placeholder={"From"}
+                onChange={(yearValue) => (filterYearFrom = yearValue)}
+              />
+              <FilterYear
+                placeholder={"To"}
+                onChange={(yearValue) => {
+                  filterYearTo = yearValue;
+                  console.log("year to?? ", filterYearTo);
+                }}
+              />
             </div>
           </section>
           <FilterRating />
@@ -465,16 +477,18 @@
     >
     <Screen name={Monitor2Screens.Screen1} activeScreen={monitor2_active_screen}
       >Tabs: Poster Screen / Advanced Filter
-      {#if $currentMovie.poster}
-        <img
-          style="width: 50%"
-          src={$currentMovie.poster}
-          alt={`Poster for the movie ${$currentMovie.title}`}
-        />
-      {/if}
-      {#if !$currentMovie.poster}
-        <p>Image data corrupted.</p>
-      {/if}
+      <TabContent name="Poster">
+        {#if $currentMovie.poster}
+          <img
+            style="width: 50%"
+            src={$currentMovie.poster}
+            alt={`Poster for the movie ${$currentMovie.title}`}
+          />
+        {/if}
+        {#if !$currentMovie.poster}
+          <p>Image data corrupted.</p>
+        {/if}
+      </TabContent>
     </Screen>
     <Screen name={Monitor2Screens.Screen2} activeScreen={monitor2_active_screen}
       >About Us</Screen

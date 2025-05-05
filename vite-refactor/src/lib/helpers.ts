@@ -22,7 +22,10 @@ export function buildFilterQuery(filters: Filters) {
     if (filters.yearTo) {
         const clamped = clampYearValue(filters.yearTo, RELEASE_YEAR_MAX);
         const to = `${clamped}-12-31`
-        queries.push(`primary_release_date.gte=${to}`)
+        console.log('release year max???? ', RELEASE_YEAR_MAX)
+        console.log('value: ', filters.yearTo);
+        console.log('clamped: ', clamped, ' to: ', to);
+        queries.push(`primary_release_date.lte=${to}`)
     }
 
     if (filters.ratingFrom) {
@@ -37,10 +40,10 @@ export function buildFilterQuery(filters: Filters) {
 }
 
 function clampYearValue(input: number, fallback: number) {
-    if (isNaN(input)) { // Mozhda ne mora
+    if (isNaN(input)) {
         return fallback;
     }
-    return Math.min(Math.max(input, RELEASE_YEAR_MAX), RELEASE_YEAR_MIN)
+    return Math.max(Math.min(input, RELEASE_YEAR_MAX), RELEASE_YEAR_MIN)
 }
 
 export function padNumber(number: number, size = 10) {

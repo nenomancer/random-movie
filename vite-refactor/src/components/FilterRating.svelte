@@ -1,6 +1,7 @@
 <script lang="ts">
     let ratingFrom: number = 0.0;
     let ratingTo: number = 10.0;
+    // export let onChange: (value: number) => void;
 
     $: {
         if (ratingFrom > ratingTo) {

@@ -1,9 +1,9 @@
 <script lang="ts">
     import { RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "../lib/constants";
-    import { padNumber } from "../lib/helpers";
     export let placeholder: string;
     export let yearValue: string | "" = "";
     let inputElement: HTMLInputElement;
+    export let onChange: (yearValue: number) => void;
 
     function moveCursorToEnd() {
         requestAnimationFrame(() => {
@@ -13,14 +13,12 @@
     }
     function handleInput(event: Event) {
         const input = event.target as HTMLInputElement;
-        console.log("input value: ", input.value);
         input.value = input.value.replace(/\D/g, "");
         yearValue = input.value;
     }
 
     function handleChange(event: Event) {
         const input = event.target as HTMLInputElement;
-        console.log("event? ", input);
         if (input.value === "") {
             return;
         }
@@ -31,6 +29,8 @@
 
         input.value = numeric.toString();
         yearValue = input.value;
+        console.log('here..?')
+        onChange(Number(yearValue));
     }
 
     function clamp(value: number) {
@@ -39,6 +39,7 @@
             Math.max(RELEASE_YEAR_MIN, value),
         ).toString();
     }
+
     function handleIncrement(event: KeyboardEvent) {
         let increment = 1;
 

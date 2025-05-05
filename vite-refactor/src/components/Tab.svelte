@@ -1,11 +1,11 @@
 <script lang="ts">
     import { getContext } from "svelte";
     import type { Writable } from "svelte/store";
-    import { openDropdown } from "../stores/ui";
+    import { activeTab, openDropdown } from "../stores/ui";
 
     export let name: string;
 
-    const activeTab: Writable<string> = getContext("activeTab");
+    // const activeTab: Writable<string> = getContext("activeTab");
 
     function setActiveTab() {
         activeTab.set(name);

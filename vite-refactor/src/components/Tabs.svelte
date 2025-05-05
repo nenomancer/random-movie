@@ -2,8 +2,8 @@
     import { setContext } from "svelte";
     import { writable } from "svelte/store";
 
-    const activeTab = writable("Info");
-    setContext("activeTab", activeTab);
+    // const activeTab = writable<string>("Info");
+    // setContext("activeTab", activeTab);
 </script>
 
 <div class="content">
