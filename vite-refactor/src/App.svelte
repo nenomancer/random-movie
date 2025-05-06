@@ -78,7 +78,8 @@
           : undefined,
         yearFrom: filterYearFrom ? filterYearFrom : undefined,
         yearTo: filterYearTo ? filterYearTo : undefined,
-        // ratingFrom
+        ratingFrom: filterRatingFrom > 0 ? filterRatingFrom : undefined,
+        ratingTo: filterRatingTo < 10 ? filterRatingTo : undefined,
       });
     }
 
@@ -90,7 +91,7 @@
         const hasResults = response.results?.length > 0;
         const hasPages = response.total_pages > 0;
         const isLastPage = response.total_pages === totalPages;
-        
+
         if (!hasResults && isLastPage) {
           return showResultError();
         }
@@ -466,13 +467,15 @@
               />
               <FilterYear
                 placeholder={"To"}
-                onChange={(yearValue) => {
-                  filterYearTo = yearValue;
-                }}
+                onChange={(yearValue) => (filterYearTo = yearValue)}
               />
             </div>
           </section>
-          <FilterRating />
+          <FilterRating
+            onChange={(fromValue, toValue) => {
+              (filterRatingFrom = fromValue), (filterRatingTo = toValue);
+            }}
+          />
         </TabContent>
         <TabContent name="Loading">Loading....</TabContent>
         <TabContent name="Error">Error!!!</TabContent>

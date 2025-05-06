@@ -29,7 +29,7 @@
 
         input.value = numeric.toString();
         yearValue = input.value;
-        console.log('here..?')
+
         onChange(Number(yearValue));
     }
 
