@@ -17,17 +17,22 @@
   import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
   import Button from "./components/Button.svelte";
   import FilterCountries from "./components/FilterCountries.svelte";
-  import { buildFilterQuery, formatRuntime, padNumber } from "./lib/helpers";
+  import {
+    buildFilterQuery,
+    formatRuntime,
+    padNumber,
+    showResultError,
+  } from "./lib/helpers";
   import FilterGenres from "./components/FilterGenres.svelte";
   import FilterYear from "./components/FilterYear.svelte";
   import FilterRating from "./components/FilterRating.svelte";
-  import { currentMovie } from "./stores/movie";
+  import { currentMovie, useFilters } from "./stores/movie";
   import { currentHistory } from "./stores/history";
   import { activeTab } from "./stores/ui";
+  import FilterEnable from "./components/FilterEnable.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
-  let useFilters = false;
 
   let filterCountryCode: string;
   let filterGenreIds: number[];
@@ -64,7 +69,8 @@
     activeTab.set("Loading");
 
     let _queries = "";
-    if (useFilters) {
+
+    if ($useFilters) {
       _queries = buildFilterQuery({
         country: `${filterCountryCode ? filterCountryCode : ""}`,
         genres: filterGenreIds?.length
@@ -76,35 +82,39 @@
       });
     }
 
-    console.log("queries? ", _queries);
-
-    const pageNumber = Math.floor(Math.random() * totalPages);
+    const pageNumber = Math.ceil(Math.random() * totalPages);
 
     fetch(`${API.DISCOVER_MOVIE}?page=${pageNumber}${_queries}`, API.OPTIONS)
       .then((response) => response.json())
       .then((response) => {
-        if (response.results?.length === 0) {
-          fetchMovies(_queries, Math.min(500, response.total_pages));
-        } else {
-          getRandomMovie(response.results);
+        const hasResults = response.results?.length > 0;
+        const hasPages = response.total_pages > 0;
+        const isLastPage = response.total_pages === totalPages;
+        
+        if (!hasResults && isLastPage) {
+          return showResultError();
         }
-        // successResponse.classList.add("active");
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("NO MOVIES WITH THOSE PARAMETERS, PLEASE ADJUST YOUR FILTERS.");
+        if (!hasResults && hasPages) {
+          fetchMovies(_queries, Math.min(500, response.total_pages));
+        }
+        if (hasResults) {
+          return getRandomMovie(response.results);
+        }
+
+        return showResultError();
       });
   }
 
-  function getRandomMovie(data: Array<Movie>, maxIndex = 20) {
-    const randomIndex = Math.floor(Math.random() * maxIndex);
+  function getRandomMovie(data: Array<Movie>) {
+    const randomIndex = Math.floor(Math.random() * data.length);
 
     if (!data) return;
-    data.forEach((movie: Movie, index: number) => {
+    for (const [index, movie] of data.entries()) {
       if (index === randomIndex) {
         getMovie(movie.id);
+        break;
       }
-    });
+    }
   }
 
   async function getMovie(movieId: number) {
@@ -166,6 +176,7 @@
       .catch((err) => {
         // pendingResponse.classList.remove("active");
         // errorResponse.classList.add("active");
+        activeTab.set("Error");
       })
       .finally(() => {
         activeTab.set("Info");
@@ -241,10 +252,6 @@
       });
   }
 
-  function resetFilter() {
-    useFilters = false;
-  }
-
   function getMoviesByActor(actorId: number) {
     // resetFilter();
     fetch(
@@ -254,7 +261,7 @@
       .then((response) => response.json())
       .then((response) => {
         const temp = response.movie_credits.cast;
-        return getRandomMovie(temp, temp.length);
+        return getRandomMovie(temp);
       })
       .catch((err) => {
         console.error(err);
@@ -279,7 +286,7 @@
         const temp = response.movie_credits.crew.filter(
           (credit: any) => credit.job === "Director",
         );
-        return getRandomMovie(temp, temp.length);
+        return getRandomMovie(temp);
       })
       .catch((err) => {
         console.error(err);
@@ -322,7 +329,6 @@
     } else {
       fetchMovies();
     }
-    console.log("path: ", path);
   }
   generateCountries();
   generateGenres();
@@ -429,7 +435,9 @@
           <section aria-label="Plot">
             <h2>PLT:</h2>
             <p>
-              {$currentMovie.plot ? $currentMovie.plot : "Plot data corrupted."}
+              {$currentMovie.plot
+                ? $currentMovie.plot
+                : "[Plot data encrypted]"}
             </p>
           </section>
         </TabContent>
@@ -460,7 +468,6 @@
                 placeholder={"To"}
                 onChange={(yearValue) => {
                   filterYearTo = yearValue;
-                  console.log("year to?? ", filterYearTo);
                 }}
               />
             </div>
@@ -468,6 +475,7 @@
           <FilterRating />
         </TabContent>
         <TabContent name="Loading">Loading....</TabContent>
+        <TabContent name="Error">Error!!!</TabContent>
       </Tabs>
     </Screen>
     <Screen name={Monitor1Screens.Screen2} activeScreen={monitor1_active_screen}
@@ -494,6 +502,7 @@
         {/if}
       </TabContent>
       <TabContent name="Loading">Loading...</TabContent>
+      <TabContent name="Error">Error!!!</TabContent>
     </Screen>
     <Screen name={Monitor2Screens.Screen2} activeScreen={monitor2_active_screen}
       >About Us</Screen
@@ -501,8 +510,8 @@
   </Monitor>
   <div>
     <button on:click={() => fetchMovies()}>CLICK ME</button>
-    <label for="useFilters">use filters:</label>
-    <input type="checkbox" id="useFilters" bind:checked={useFilters} />
+
+    <FilterEnable />
     <div>
       {#each $currentHistory as log}
         <button on:click={() => getMovie(log.id)}>{log.name}</button>
