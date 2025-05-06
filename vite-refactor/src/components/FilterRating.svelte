@@ -1,7 +1,11 @@
 <script lang="ts">
     let ratingFrom: number = 0.0;
     let ratingTo: number = 10.0;
-    // export let onChange: (value: number) => void;
+    export let onChange: (from: number, to: number) => void;
+
+    function handleOnChange() {
+        onChange(ratingFrom, ratingTo);
+    }
 
     $: {
         if (ratingFrom > ratingTo) {
@@ -24,6 +28,7 @@
             max="10"
             step="0.1"
             bind:value={ratingFrom}
+            on:change={handleOnChange}
         />
         <input
             id="ratingTo"
@@ -32,6 +37,7 @@
             max="10"
             step="0.1"
             bind:value={ratingTo}
+            on:change={handleOnChange}
         />
     </div>
     <input type="number" value={ratingFrom} />
