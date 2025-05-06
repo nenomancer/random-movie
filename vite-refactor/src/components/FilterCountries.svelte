@@ -13,8 +13,12 @@
     let selected: Country;
     let open: boolean = false;
 
-    const toggleDropdown = () => {
+    const toggleDropdown = (close: boolean = false) => {
         openDropdown.update((current) => {
+            if (close) {
+                open = false;
+                return null;
+            }
             if (current === id) {
                 open = false;
                 return null;
@@ -23,8 +27,17 @@
                 return id;
             }
         });
-        // open = !open;
-        // closeOtherDropdowns();
+    };
+
+    const selectOption = (option: Country) => {
+        if (option === selected) {
+            selected = { code: "", name: DEFAULT_DROPDOWN_VALUE };
+            onChange?.(selected);
+        } else {
+            selected = option;
+            toggleDropdown(true);
+            onChange?.(option);
+        }
     };
 
     $: openDropdown.subscribe((activeId) => {
@@ -32,22 +45,12 @@
             open = false;
         }
     });
-    const selectOption = (option: Country) => {
-        if (option === selected) {
-            selected = { code: "treto?", name: DEFAULT_DROPDOWN_VALUE };
-            onChange?.(selected);
-        } else {
-            selected = option;
-            open = false;
-            onChange?.(option);
-        }
-    };
 </script>
 
 <section aria-labelledby="header">
     <div id="header" aria-label="Filter movies from a certain country">
         <h3>{label}</h3>
-        <button class="value" on:click={toggleDropdown}
+        <button class="value" on:click={() => toggleDropdown(false)}
             >{selected ? selected.name : DEFAULT_DROPDOWN_VALUE}</button
         >
     </div>

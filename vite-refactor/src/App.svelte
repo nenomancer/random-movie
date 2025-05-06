@@ -61,6 +61,8 @@
     });
   }
   function fetchMovies(queries = "", totalPages = 500) {
+    activeTab.set("Loading");
+
     let _queries = "";
     if (useFilters) {
       _queries = buildFilterQuery({
@@ -107,7 +109,6 @@
 
   async function getMovie(movieId: number) {
     currentMovie.set(DEFAULT_MOVIE);
-    activeTab.set("Info");
     fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
@@ -165,14 +166,16 @@
       .catch((err) => {
         // pendingResponse.classList.remove("active");
         // errorResponse.classList.add("active");
-      });
-    // .finally((data) => {
-    //   // pendingResponse.classList.remove("active");
-    //   // successResponse.classList.add("active");
+      })
+      .finally(() => {
+        activeTab.set("Info");
 
-    //   // hideLoadingScreens();
-    //   // return;
-    // });
+        // pendingResponse.classList.remove("active");
+        // successResponse.classList.add("active");
+
+        // hideLoadingScreens();
+        // return;
+      });
   }
 
   function getMovieCredits(movieId: number) {
@@ -464,6 +467,7 @@
           </section>
           <FilterRating />
         </TabContent>
+        <TabContent name="Loading">Loading....</TabContent>
       </Tabs>
     </Screen>
     <Screen name={Monitor1Screens.Screen2} activeScreen={monitor1_active_screen}
@@ -477,7 +481,7 @@
     >
     <Screen name={Monitor2Screens.Screen1} activeScreen={monitor2_active_screen}
       >Tabs: Poster Screen / Advanced Filter
-      <TabContent name="Poster">
+      <TabContent name="Info">
         {#if $currentMovie.poster}
           <img
             style="width: 50%"
@@ -489,6 +493,7 @@
           <p>Image data corrupted.</p>
         {/if}
       </TabContent>
+      <TabContent name="Loading">Loading...</TabContent>
     </Screen>
     <Screen name={Monitor2Screens.Screen2} activeScreen={monitor2_active_screen}
       >About Us</Screen
