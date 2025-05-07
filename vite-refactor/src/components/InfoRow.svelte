@@ -13,17 +13,22 @@
     data-info={`This movies ${label.toLowerCase()}s`}
 >
     <h2 class="row_header">{title}</h2>
-    <div class="row_data">
-        {#each items as item}
-            <button
-                class="row_data_cell"
-                aria-label={`${label}: ${item.name}`}
-                data-info={getDescription(item.name)}
-                on:click={() => onClick(item.id)}
-            >
-                {item.name}
-            </button>
-        {/each}
+    <div class="row_data" tabindex="-1">
+        {#if items}
+            {#each items as item}
+                <button
+                    class="row_data_cell"
+                    aria-label={`${label}: ${item.name}`}
+                    data-info={getDescription(item.name)}
+                    on:click={() => onClick(item.id)}
+                >
+                    {item.name}
+                </button>
+            {/each}
+        {/if}
+        {#if !items.length}
+            <span class="row_data_cell">[{label} recognition failed]</span>
+        {/if}
     </div>
 </section>
 
@@ -34,7 +39,6 @@
         padding: 4px;
         white-space: nowrap;
     }
-
 
     .row_header {
         display: flex;
@@ -68,5 +72,9 @@
         /* appearance: default; */
         height: 100%;
         border-radius: 0;
+
+        &:focus-visible {
+            background-color: red;
+        }
     }
 </style>
