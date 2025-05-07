@@ -66,16 +66,12 @@
     });
   }
   function fetchMovies(queries = "", totalPages = 500) {
-    activeTab.set("Loading");
-
     let _queries = "";
 
     if ($useFilters) {
       _queries = buildFilterQuery({
         country: `${filterCountryCode ? filterCountryCode : ""}`,
-        genres: filterGenreIds?.length
-          ? [...filterGenreIds.join(",")]
-          : undefined,
+        genres: filterGenreIds?.length ? [filterGenreIds.join(",")] : undefined,
         yearFrom: filterYearFrom ? filterYearFrom : undefined,
         yearTo: filterYearTo ? filterYearTo : undefined,
         ratingFrom: filterRatingFrom > 0 ? filterRatingFrom : undefined,
@@ -107,6 +103,8 @@
   }
 
   function getRandomMovie(data: Array<Movie>) {
+    activeTab.set("Loading");
+
     const randomIndex = Math.floor(Math.random() * data.length);
 
     if (!data) return;
