@@ -1,3 +1,4 @@
+import { activeTab } from "../stores/ui";
 import { DEFAULT_DROPDOWN_VALUE, RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "./constants";
 import type { Filters } from "./types";
 
@@ -22,9 +23,6 @@ export function buildFilterQuery(filters: Filters) {
     if (filters.yearTo) {
         const clamped = clampYearValue(filters.yearTo, RELEASE_YEAR_MAX);
         const to = `${clamped}-12-31`
-        console.log('release year max???? ', RELEASE_YEAR_MAX)
-        console.log('value: ', filters.yearTo);
-        console.log('clamped: ', clamped, ' to: ', to);
         queries.push(`primary_release_date.lte=${to}`)
     }
 
@@ -53,4 +51,11 @@ export function padNumber(number: number, size = 10) {
 
 export function formatRuntime(runtime: number) {
     return `${padNumber(Math.floor(runtime / 60), 2)}:${padNumber(runtime % 60, 2)}`;
+}
+
+export function showResultError() {
+    console.error(
+        "A result with the filtered parameters cannot be found! Try changing some of them, if the error persists, please reach out.",
+    );
+    activeTab.set("Error");
 }
