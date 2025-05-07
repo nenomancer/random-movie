@@ -14,7 +14,7 @@
     let selected: Genre[] = [];
     let open: boolean = false;
 
-    const toggleDropdown = () => {
+    const toggleDropdown = (close: boolean = false) => {
         openDropdown.update((current) => {
             if (current === id) {
                 open = false;
@@ -48,7 +48,14 @@
 <section>
     <div class="header">
         <h3>{label}</h3>
-        <button class="value" on:click={toggleDropdown}
+        <button
+            class="value"
+            on:click={() => toggleDropdown()}
+            on:keydown={(event) => {
+                if (event.key === "Escape") {
+                    toggleDropdown(true);
+                }
+            }}
             >{genreNames.length
                 ? genreNames.join(", ")
                 : DEFAULT_DROPDOWN_VALUE}</button
@@ -57,7 +64,14 @@
     {#if open}
         <ul class="options">
             {#each options as option}
-                <button on:click={() => selectOption(option)}>
+                <button
+                    on:click={() => selectOption(option)}
+                    on:keydown={(event) => {
+                        if (event.key === "Escape") {
+                            toggleDropdown(true);
+                        }
+                    }}
+                >
                     {option.name}
                 </button>
             {/each}
