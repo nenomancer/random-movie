@@ -4,6 +4,14 @@
         const target = event.target as HTMLInputElement;
         useFilters.set(target.checked);
     }
+
+    function handleEnter(event: KeyboardEvent) {
+        if (event.key === "Enter") {
+            const target = event.target as HTMLInputElement;
+            target.checked = !target.checked;
+            handleCheck(event);
+        }
+    }
 </script>
 
 <label for="useFilters">use filters:</label>
@@ -11,5 +19,6 @@
     type="checkbox"
     id="useFilters"
     on:change={(event) => handleCheck(event)}
+    on:keydown={(event) => handleEnter(event)}
     bind:checked={$useFilters}
 />
