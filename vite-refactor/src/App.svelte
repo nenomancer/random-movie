@@ -30,6 +30,7 @@
   import { currentHistory } from "./stores/history";
   import { activeTab } from "./stores/ui";
   import FilterEnable from "./components/FilterEnable.svelte";
+  import { onDestroy, onMount } from "svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -47,6 +48,30 @@
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
 
+  function handleGlobalKeyboard(event: KeyboardEvent) {
+    if (event.key === "Enter" && document.activeElement === document.body) {
+      fetchMovies();
+    }
+    if (event.key === "Escape" && document.activeElement !== document.body) {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }
+  }
+
+  onMount(() => {
+    document.addEventListener("keydown", handleGlobalKeyboard);
+  });
+
+  onDestroy(() => {
+    document.removeEventListener("keydown", handleGlobalKeyboard);
+  });
+
+  /**
+   * Logs movie to history without duplicates (local storage)
+   * @param movieId used to write and retrieve movie from history
+   * @param movieTitle used for display
+   */
   function addHistoryLog(movieId: number, movieTitle: string) {
     const maxHistory = 6;
     currentHistory.update((currentHistory) => {
@@ -65,11 +90,14 @@
       return uniqueHistory;
     });
   }
-  function fetchMovies(queries = "", totalPages = 500) {
-    let _queries = "";
+
+  function fetchMovies(uiQueries = "", totalPages = 500) {
+    activeTab.set("Loading");
+
+    let filterQueries = "";
 
     if ($useFilters) {
-      _queries = buildFilterQuery({
+      filterQueries = buildFilterQuery({
         country: `${filterCountryCode ? filterCountryCode : ""}`,
         genres: filterGenreIds?.length ? [filterGenreIds.join(",")] : undefined,
         yearFrom: filterYearFrom ? filterYearFrom : undefined,
@@ -81,7 +109,10 @@
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
-    fetch(`${API.DISCOVER_MOVIE}?page=${pageNumber}${_queries}`, API.OPTIONS)
+    fetch(
+      `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`,
+      API.OPTIONS,
+    )
       .then((response) => response.json())
       .then((response) => {
         const hasResults = response.results?.length > 0;
@@ -92,7 +123,7 @@
           return showResultError();
         }
         if (!hasResults && hasPages) {
-          fetchMovies(_queries, Math.min(500, response.total_pages));
+          fetchMovies(uiQueries, Math.min(500, response.total_pages));
         }
         if (hasResults) {
           return getRandomMovie(response.results);
