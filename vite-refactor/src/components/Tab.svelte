@@ -14,5 +14,11 @@
 </script>
 
 {#if name}
-    <button on:click={setActiveTab}>Show {name}</button>
+    <button class="tab" on:click={setActiveTab}>Show {name}</button>
 {/if}
+
+<style>
+    .tab {
+        flex: 1;
+    }
+</style>

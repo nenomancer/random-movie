@@ -6,7 +6,14 @@
     // setContext("activeTab", activeTab);
 </script>
 
-<div class="content">
+<div class="tabs">
     <slot></slot>
     <!-- Content goes here -->
 </div>
+
+<style>
+    .tabs {
+        background-color: red;
+        display: flex;
+    }
+</style>

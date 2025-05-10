@@ -26,11 +26,12 @@
   import FilterGenres from "./components/FilterGenres.svelte";
   import FilterYear from "./components/FilterYear.svelte";
   import FilterRating from "./components/FilterRating.svelte";
-  import { currentMovie, useFilters } from "./stores/movie";
+  import { currentFilters, currentMovie, useFilters } from "./stores/movie";
   import { currentHistory } from "./stores/history";
   import { activeTab } from "./stores/ui";
   import FilterEnable from "./components/FilterEnable.svelte";
   import { onDestroy, onMount } from "svelte";
+  import InfoTitle from "./components/InfoTitle.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -98,8 +99,10 @@
 
     if ($useFilters) {
       filterQueries = buildFilterQuery({
-        country: `${filterCountryCode ? filterCountryCode : ""}`,
-        genres: filterGenreIds?.length ? [filterGenreIds.join(",")] : undefined,
+        country: `${$currentFilters.country ? $currentFilters.country : ""}`,
+        genres: $currentFilters.genres?.length
+          ? [$currentFilters.genres.join(",")]
+          : undefined,
         yearFrom: filterYearFrom ? filterYearFrom : undefined,
         yearTo: filterYearTo ? filterYearTo : undefined,
         ratingFrom: filterRatingFrom > 0 ? filterRatingFrom : undefined,
@@ -123,7 +126,7 @@
           return showResultError();
         }
         if (!hasResults && hasPages) {
-          fetchMovies(uiQueries, Math.min(500, response.total_pages));
+          return fetchMovies(uiQueries, Math.min(500, response.total_pages));
         }
         if (hasResults) {
           return getRandomMovie(response.results);
@@ -206,7 +209,8 @@
       .catch((err) => {
         // pendingResponse.classList.remove("active");
         // errorResponse.classList.add("active");
-        activeTab.set("Error");
+        // activeTab.set("Error");
+        showResultError();
       })
       .finally(() => {
         activeTab.set("Info");
@@ -298,14 +302,6 @@
       });
   }
 
-  function getMoviesByReleaseDate(year: number) {
-    fetchMovies(buildFilterQuery({ yearFrom: year, yearTo: year }));
-  }
-
-  function getMoviesByRuntime(runtime: number) {
-    fetchMovies(buildFilterQuery({ runtimeFrom: runtime, runtimeTo: runtime }));
-  }
-
   function getMoviesByDirector(directorId: number) {
     fetch(
       `${API.PERSON}/${directorId}?append_to_response=movie_credits`,
@@ -323,8 +319,16 @@
       });
   }
 
+  export function getMoviesByReleaseDate(year: number) {
+    fetchMovies(buildFilterQuery({ yearFrom: year, yearTo: year }));
+  }
+
+  export function getMoviesByRuntime(runtime: number) {
+    fetchMovies(buildFilterQuery({ runtimeFrom: runtime, runtimeTo: runtime }));
+  }
+
   // Fuzzy search, votes are not too reliable and the API allows only averages
-  function getMoviesByRating(rating: number) {
+  export function getMoviesByRating(rating: number) {
     const range = 0.25;
     fetchMovies(
       buildFilterQuery({
@@ -334,7 +338,7 @@
     );
   }
 
-  function getMoviesByCountry(countryCode: string) {
+  export function getMoviesByCountry(countryCode: string) {
     fetch(
       `${API.DISCOVER_MOVIE}?with_origin_country=${countryCode}`,
       API.OPTIONS,
@@ -375,140 +379,131 @@
       <Tabs>
         <Tab name={"Info"} />
         <Tab name="Filters" />
-
-        <TabContent name={"Info"}>
-          <section aria-labelledby="movie-title">
-            <h1 id="movie-title">
-              <span class="label">Title:</span>
-              <a
-                href={$currentMovie.title.imdb}
-                data-info={``}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open IMDb page for ${
-                  $currentMovie.title.name
-                } in a new tab`}
-              >
-                {$currentMovie.title.name}
-              </a>
-            </h1>
-          </section>
-
-          <section aria-label="Extra information">
-            <!-- Release date  -->
-            {#if $currentMovie.year}
-              <Button
-                label={$currentMovie.year.toString()}
-                onClick={() => getMoviesByReleaseDate($currentMovie.year!)}
-                ariaLabel={`Release year: ${$currentMovie.year}`}
-                description={`This movie's release year. Click to find another movie released in ${$currentMovie.year}.`}
-              />
-            {/if}
-
-            <!-- Country  -->
-            {#if $currentMovie.country}
-              <Button
-                label={$currentMovie.country.name}
-                onClick={() => getMoviesByCountry($currentMovie.country.code)}
-                ariaLabel={`Country: ${$currentMovie.country.name}.`}
-                description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`}
-              />
-            {/if}
-
-            <!-- Rating  -->
-            {#if $currentMovie.rating}
-              <Button
-                label={$currentMovie.rating.toString()}
-                onClick={() => getMoviesByRating($currentMovie.rating!)}
-                ariaLabel={`IMDB rating: ${$currentMovie.rating}.`}
-                description={`This movie is rated ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
-              />
-            {/if}
-
-            <!-- Runtime  -->
-            {#if $currentMovie.runtime}
-              <Button
-                label={formatRuntime($currentMovie.runtime)}
-                onClick={() => getMoviesByRuntime($currentMovie.runtime!)}
-                ariaLabel={`Runtime: ${padNumber(Math.floor($currentMovie.runtime / 60), 2)} hours and ${padNumber($currentMovie.runtime % 60, 2)} minutes`}
-                description={`Runtime: ${formatRuntime($currentMovie.runtime)}. Click to find another movie with a similar runtime.`}
-              />
-            {/if}
-          </section>
-
-          <InfoRow
-            label={"Genre"}
-            title={"GNR"}
-            items={$currentMovie.genres}
-            onClick={getMoviesByGenre}
-            getDescription={(name) =>
-              `Genre: ${name}. Click to find another ${name.toLowerCase()} movie.`}
-          />
-          <InfoRow
-            label={"Director"}
-            title={"DIR"}
-            items={$currentMovie.directors}
-            onClick={getMoviesByDirector}
-            getDescription={(name) =>
-              `Director: ${name}. Click to find another movie directed by ${name}`}
-          />
-
-          <InfoRow
-            label={"Actor"}
-            title={"ACT"}
-            items={$currentMovie.actors}
-            onClick={getMoviesByActor}
-            getDescription={(name) =>
-              `Actor: ${name}. Click to find another movie that features ${name}`}
-          />
-
-          <section aria-label="Plot">
-            <h2>PLT:</h2>
-            <p>
-              {$currentMovie.plot
-                ? $currentMovie.plot
-                : "[Plot data encrypted]"}
-            </p>
-          </section>
-        </TabContent>
-
-        <TabContent name={"Filters"}>
-          <FilterCountries
-            id="country"
-            label={"Country"}
-            options={allCountries}
-            onChange={(countryCode) => (filterCountryCode = countryCode.code)}
-            bind:this={filterCountryRef}
-          />
-          <FilterGenres
-            id="genre"
-            label={"Genre"}
-            options={allGenres}
-            onChange={(genreCodes) => (filterGenreIds = genreCodes)}
-            bind:this={filterGenresRef}
-          />
-          <section>
-            <label for="year-from">Year</label>
-            <div>
-              <FilterYear
-                placeholder={"From"}
-                onChange={(yearValue) => (filterYearFrom = yearValue)}
-              />
-              <FilterYear
-                placeholder={"To"}
-                onChange={(yearValue) => (filterYearTo = yearValue)}
-              />
-            </div>
-          </section>
-          <FilterRating
-            onChange={(fromValue, toValue) => {
-              (filterRatingFrom = fromValue), (filterRatingTo = toValue);
-            }}
-          />
-        </TabContent>
-        <TabContent name="Loading">Loading....</TabContent>
-        <TabContent name="Error">Error!!!</TabContent>
       </Tabs>
+
+      <TabContent name={"Info"}>
+        <InfoTitle />
+
+        <section aria-label="Extra information">
+          <!-- Release date  -->
+          {#if $currentMovie.year}
+            <Button
+              label={$currentMovie.year.toString()}
+              onClick={() => getMoviesByReleaseDate($currentMovie.year!)}
+              ariaLabel={`Release year: ${$currentMovie.year}`}
+              description={`This movie's release year. Click to find another movie released in ${$currentMovie.year}.`}
+            />
+          {/if}
+
+          <!-- Country  -->
+          {#if $currentMovie.country}
+            <Button
+              label={$currentMovie.country.name}
+              onClick={() => getMoviesByCountry($currentMovie.country.code)}
+              ariaLabel={`Country: ${$currentMovie.country.name}.`}
+              description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`}
+            />
+          {/if}
+
+          <!-- Rating  -->
+          {#if $currentMovie.rating}
+            <Button
+              label={$currentMovie.rating.toString()}
+              onClick={() => getMoviesByRating($currentMovie.rating!)}
+              ariaLabel={`IMDB rating: ${$currentMovie.rating}.`}
+              description={`This movie is rated ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
+            />
+          {/if}
+
+          <!-- Runtime  -->
+          {#if $currentMovie.runtime}
+            <Button
+              label={formatRuntime($currentMovie.runtime)}
+              onClick={() => getMoviesByRuntime($currentMovie.runtime!)}
+              ariaLabel={`Runtime: ${padNumber(Math.floor($currentMovie.runtime / 60), 2)} hours and ${padNumber($currentMovie.runtime % 60, 2)} minutes`}
+              description={`Runtime: ${formatRuntime($currentMovie.runtime)}. Click to find another movie with a similar runtime.`}
+            />
+          {/if}
+        </section>
+
+        <InfoRow
+          label={"Genre"}
+          title={"GNR"}
+          items={$currentMovie.genres}
+          onClick={getMoviesByGenre}
+          getDescription={(name) =>
+            `Genre: ${name}. Click to find another ${name.toLowerCase()} movie.`}
+        />
+        <InfoRow
+          label={"Director"}
+          title={"DIR"}
+          items={$currentMovie.directors}
+          onClick={getMoviesByDirector}
+          getDescription={(name) =>
+            `Director: ${name}. Click to find another movie directed by ${name}`}
+        />
+
+        <InfoRow
+          label={"Actor"}
+          title={"ACT"}
+          items={$currentMovie.actors}
+          onClick={getMoviesByActor}
+          getDescription={(name) =>
+            `Actor: ${name}. Click to find another movie that features ${name}`}
+        />
+
+        <section aria-label="Plot">
+          <h2>PLT:</h2>
+          <p>
+            {$currentMovie.plot ? $currentMovie.plot : "[Plot data encrypted]"}
+          </p>
+        </section>
+      </TabContent>
+
+      <TabContent name={"Filters"}>
+        <FilterCountries
+          id="country"
+          label={"Country"}
+          options={allCountries}
+          onChange={(countryCode) =>
+            currentFilters.update((filters) => ({
+              ...filters,
+              country: countryCode.code,
+            }))}
+          bind:this={filterCountryRef}
+        />
+        <FilterGenres
+          id="genre"
+          label={"Genre"}
+          options={allGenres}
+          onChange={(genreCodes) =>
+            currentFilters.update((filters) => ({
+              ...filters,
+              genres: genreCodes,
+            }))}
+          bind:this={filterGenresRef}
+        />
+        <section>
+          <label for="year-from">Year</label>
+          <div>
+            <FilterYear
+              placeholder={"From"}
+              onChange={(yearValue) => (filterYearFrom = yearValue)}
+            />
+            <FilterYear
+              placeholder={"To"}
+              onChange={(yearValue) => (filterYearTo = yearValue)}
+            />
+          </div>
+        </section>
+        <FilterRating
+          onChange={(fromValue, toValue) => {
+            (filterRatingFrom = fromValue), (filterRatingTo = toValue);
+          }}
+        />
+      </TabContent>
+      <TabContent name="Loading">Loading....</TabContent>
+      <TabContent name="Error">Error!!!</TabContent>
     </Screen>
     <Screen name={Monitor1Screens.Screen2} activeScreen={monitor1_active_screen}
       >About Us Screen</Screen
@@ -550,7 +545,10 @@
       {/each}
     </div>
   </div>
-  <h4>code is: {filterCountryCode}</h4>
+  <div>
+    <h4>country: {$currentFilters?.country}</h4>
+    <h4>genres: {$currentFilters?.genres}</h4>
+  </div>
 </main>
 
 <!-- 240px -->

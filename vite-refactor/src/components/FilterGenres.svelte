@@ -5,10 +5,10 @@
 
     export let label: string;
     export let options: Genre[] = [];
-    export let onChange: (option: number[]) => void;
+    export let onChange: (option: string[]) => void;
     export const closeDropdown = () => (open = false);
     export let id: string;
-    let genreIds: number[] = [];
+    let genreIds: string[] = [];
     let genreNames: string[] = [DEFAULT_DROPDOWN_VALUE];
 
     let selected: Genre[] = [];
@@ -38,7 +38,7 @@
             selected = [...selected, option];
         }
 
-        genreIds = selected.map((genre) => genre.id);
+        genreIds = selected.map((genre) => genre.id.toString());
         genreNames = selected.map((genre) => genre.name);
 
         onChange?.(genreIds);
