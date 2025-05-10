@@ -1,6 +1,14 @@
 
 import type { Filters, Movie } from "./types";
 
+export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
+export const DEFAULT_DROPDOWN_VALUE = "Any";
+export const RELEASE_YEAR_MIN = 1878;
+export const RELEASE_YEAR_MAX = new Date().getFullYear();
+export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"
+export const TAB_INFO = "Info"
+export const TAB_FILTERS = "Filters"
+
 export const API = {
     OPTIONS: {
         method: "GET",
@@ -32,10 +40,13 @@ export const DEFAULT_MOVIE: Movie = {
     poster: "",
 };
 
-export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
-export const DEFAULT_DROPDOWN_VALUE = "Any";
-export const RELEASE_YEAR_MIN = 1878;
-export const RELEASE_YEAR_MAX = new Date().getFullYear();
-export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"
-export const TAB_INFO = "Info"
-export const TAB_FILTERS = "Filters"
+export const DEFAULT_FILTER: Filters = {
+    country: "",
+    genres: [],
+    yearFrom: RELEASE_YEAR_MIN,
+    yearTo: RELEASE_YEAR_MAX,
+    ratingFrom: 0,
+    ratingTo: 10,
+    runtimeFrom: 0,
+    runtimeTo: 500,
+}
