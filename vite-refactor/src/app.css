@@ -25,16 +25,9 @@ body {
   min-height: 100vh;
   /* font-family: "Handjet", sans-serif; */
   font-weight: 300;
+  font-size: 1rem;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-/* .card {
-  padding: 2em;
-} */
 
 #app {
   max-width: 1280px;
@@ -51,9 +44,52 @@ main {
   grid-template-rows: repeat(auto-fit, minmax(480px, 1fr));
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 240px);
+  grid-template-areas:
+    "info info info poster poster poster"
+    "info info info poster poster poster"
+    "disk extra extra extra controls controls";
+    /* grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr); */
+
   @media screen and (max-width: 480px) {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr); */
+
+
   }
+
+  * {
+    font: inherit;
+  }
+  div {
+    border: 1px solid grey;
+  }
+  /* 
+  @media screen and (max-width: 600px) {
+    max-height: 960px;
+  }
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(3, 240px);
+
+  grid-template-areas: "main main main poster poster poster"
+  "main main main poster poster poster"
+  "main main main controls controls controls";
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+
+    grid-template-areas: 
+    "main main main"
+    "main main main"
+    "poster poster controls"
+    "poster poster controls";
+  } */
 }
 
 

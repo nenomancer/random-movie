@@ -102,6 +102,10 @@
 </section>
 
 <style>
+    #header {
+        display: grid;
+        grid-template-columns: 4rem 6fr;
+    }
     .options {
         display: flex;
         flex-direction: column;

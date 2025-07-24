@@ -4,8 +4,8 @@
 </script>
 
 <section>
-    <label for="year-from">Year</label>
-    <div>
+    <h3>Year</h3>
+    <div class="filters">
         <FilterYear
             placeholder={"From"}
             onChange={(yearValue) =>
@@ -24,3 +24,21 @@
         />
     </div>
 </section>
+
+<style>
+    section {
+        display: grid;
+        grid-template-columns: 1fr 6fr;
+        border: var(--border-default);
+    }
+
+    h3 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .filters {
+        /* display: flex; */
+    }
+</style>

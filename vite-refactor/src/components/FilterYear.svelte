@@ -69,3 +69,25 @@
     on:input={handleInput}
     on:keydown={handleIncrement}
 />
+
+<style>
+    input {
+        width: 3rem;
+        padding-inline: 0.25rem;
+        appearance: none;
+        border: none;
+        background-color: var(--color-dark);
+        color: var(--color-highlight);
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover,
+        &:focus-visible {
+            background-color: var(--color-highlight);
+            color: var(--color-dark);
+            outline: none;
+        }
+    }
+</style>

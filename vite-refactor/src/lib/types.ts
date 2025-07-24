@@ -34,6 +34,7 @@ export interface Person {
 export interface Country {
     code: string;
     name: string;
+    native: string;
 }
 
 export interface HistoryLog {

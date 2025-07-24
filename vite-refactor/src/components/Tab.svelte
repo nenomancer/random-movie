@@ -14,11 +14,34 @@
 </script>
 
 {#if name}
-    <button class="tab" on:click={setActiveTab}>Show {name}</button>
+    <button
+        class={`tab ${$activeTab === name && "active"}`}
+        on:click={setActiveTab}>Show {name}</button
+    >
 {/if}
 
 <style>
     .tab {
         flex: 1;
+        border-radius: 0;
+        border: var(--border-default);
+        border-left: none;
+    }
+
+    .tab:hover,
+    .tab:focus-visible {
+        cursor: pointer;
+        background-color: var(--color-highlight);
+        color: var(--color-dark);
+        outline: none;
+    }
+
+    .tab.active {
+        background-color: var(--color-highlight);
+        color: var(--color-dark);
+    }
+
+    .tab:first-child {
+        border-left: var(--border-default);
     }
 </style>

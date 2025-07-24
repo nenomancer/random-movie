@@ -33,11 +33,19 @@
 </section>
 
 <style>
+    section {
+        border: var(--border-default);
+        font-size: 1.2rem;
+    }
     .row_header,
     .row_data_cell {
-        border: 2px solid black;
-        padding: 4px;
+        /* border: var(--border-default); */
+        padding-inline: 0.5rem;
         white-space: nowrap;
+    }
+
+    .row_data_cell {
+        border-left: none;
     }
 
     .row_header {
@@ -46,10 +54,9 @@
         align-items: center;
     }
     .row:has(.row_header) {
-        background-color: grey;
         display: grid;
         grid-template-columns: 1fr 6fr;
-        grid-template-rows: 2rem;
+        /* grid-template-rows: var(--height-row); */
     }
 
     .row_data {
@@ -69,12 +76,17 @@
     }
 
     button {
-        /* appearance: default; */
         height: 100%;
         border-radius: 0;
-
+        border: none;
+        transition: all var(--anim-default);
+        background-color: var(--color-dark);
+        &:hover,
         &:focus-visible {
-            background-color: red;
+            cursor: pointer;
+            background-color: var(--color-highlight);
+            color: var(--color-dark);
+            outline: none;
         }
     }
 </style>

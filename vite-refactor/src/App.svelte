@@ -34,6 +34,9 @@
   import InfoTitle from "./components/InfoTitle.svelte";
   import FilterYears from "./components/FilterYears.svelte";
   import ExtraInfo from "./components/ExtraInfo.svelte";
+  import InfoPlot from "./components/InfoPlot.svelte";
+  import RightSection from "./components/RightSection.svelte";
+  import InfoPoster from "./components/InfoPoster.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -51,13 +54,22 @@
       }
     }
   }
+  const handlePopState = () => {
+    const params = window.location.pathname.split("/");
+    if (params[1] === "movie" && params[2]) {
+      getMovie(Number(params[2]));
+    }
+  };
 
   onMount(() => {
     document.addEventListener("keydown", handleGlobalKeyboard);
+
+    window.addEventListener("popstate", handlePopState);
   });
 
   onDestroy(() => {
     document.removeEventListener("keydown", handleGlobalKeyboard);
+    window.removeEventListener("popstate", handlePopState);
   });
 
   /**
@@ -196,10 +208,12 @@
           plot: data.overview,
         }));
 
-        const newUrl = `/movie/${movieId}`;
         document.title = `${$currentMovie.title.name} | ${DOCUMENT_TITLE}`;
-        history.pushState({}, "", newUrl);
 
+        const newUrl = `/movie/${movieId}`;
+        if (window.location.pathname !== newUrl) {
+          history.pushState({}, "", newUrl);
+        }
         getMovieCredits(movieId);
         getImdbUrl(movieId);
         addHistoryLog(movieId, data.title);
@@ -221,6 +235,13 @@
       });
   }
 
+  function toggleTab(tabName: string) {
+    if ($activeTab != tabName) {
+      activeTab.set(tabName);
+    } else {
+      activeTab.set("Info");
+    }
+  }
   function getMovieCredits(movieId: number) {
     fetch(`${API.MOVIE}/${movieId}/credits`, API.OPTIONS)
       .then((response) => response.json())
@@ -277,6 +298,7 @@
         allCountries = response.map((country: any) => ({
           code: country.iso_3166_1,
           name: country.english_name,
+          native: country.native_name,
         }));
       })
       .catch((err) => {
@@ -364,20 +386,16 @@
   }
   generateCountries();
   generateGenres();
-
   initApp();
 </script>
 
 <main>
-  <Monitor>
-    <Screen
-      name={Monitor1Screens.Screen1}
-      activeScreen={monitor1_active_screen}
-    >
-      <Tabs>
+  <Monitor classes={["main"]}>
+    <Screen>
+      <!-- <Tabs>
         <Tab name={"Info"} />
         <Tab name="Filters" />
-      </Tabs>
+      </Tabs> -->
 
       <TabContent name={"Info"}>
         <InfoTitle />
@@ -415,12 +433,7 @@
             `Actor: ${name}. Click to find another movie that features ${name}`}
         />
 
-        <section aria-label="Plot">
-          <h2>PLT:</h2>
-          <p>
-            {$currentMovie.plot ? $currentMovie.plot : "[Plot data encrypted]"}
-          </p>
-        </section>
+        <InfoPlot />
       </TabContent>
 
       <TabContent name={"Filters"}>
@@ -456,48 +469,41 @@
       </TabContent>
       <TabContent name="Loading">Loading....</TabContent>
       <TabContent name="Error">Error!!!</TabContent>
+      <TabContent name="About">About moi</TabContent>
     </Screen>
-    <Screen name={Monitor1Screens.Screen2} activeScreen={monitor1_active_screen}
-      >About Us Screen</Screen
-    >
   </Monitor>
-  <Monitor>
-    Monitor 2:
-    <button on:click={() => (monitor2_active_screen = Monitor2Screens.Screen2)}
-      >Show screen 2</button
-    >
-    <Screen name={Monitor2Screens.Screen1} activeScreen={monitor2_active_screen}
-      >Tabs: Poster Screen / Advanced Filter
+  <Monitor classes={["poster"]}>
+    <Screen>
       <TabContent name="Info">
-        {#if $currentMovie.poster}
-          <img
-            style="width: 50%"
-            src={$currentMovie.poster}
-            alt={`Poster for the movie ${$currentMovie.title}`}
-          />
-        {/if}
+        <InfoPoster />
         {#if !$currentMovie.poster}
           <p>Image data corrupted.</p>
         {/if}
       </TabContent>
       <TabContent name="Loading">Loading...</TabContent>
       <TabContent name="Error">Error!!!</TabContent>
+      <TabContent name="About">ABOUT MEE!!!!</TabContent>
     </Screen>
-    <Screen name={Monitor2Screens.Screen2} activeScreen={monitor2_active_screen}
-      >About Us</Screen
-    >
   </Monitor>
-  <div>
-    <button on:click={() => fetchMovies()}>CLICK ME</button>
-
+  <div style="grid-area: disk">DISK SHIT</div>
+  <div style="grid-area: controls;">
+    <button on:click={() => fetchMovies()} style="display: block;"
+      >CLICK ME</button
+    >
+    <button on:click={() => toggleTab("About")} style="display: block;"
+      >SHOW ABOBUT ME</button
+    >
+    <button on:click={() => toggleTab("Filters")} style="display: block;"
+      >SHOW FILTERS!</button
+    >
     <FilterEnable />
+  </div>
+  <div style="grid-area: extra;">
     <div>
       {#each $currentHistory as log}
         <button on:click={() => getMovie(log.id)}>{log.name}</button>
       {/each}
     </div>
-  </div>
-  <div>
     <h4>country: {$currentFilters?.country}</h4>
     <h4>genres: {$currentFilters?.genres}</h4>
   </div>

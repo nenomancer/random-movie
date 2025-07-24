@@ -3,11 +3,17 @@
     export let name: string;
 </script>
 
-<article class={`${$activeTab !== name ? "hidden" : ""}`}>
+<article class={`tab-content ${$activeTab !== name ? "hidden" : ""}`}>
     <slot></slot>
 </article>
 
 <style>
+    .tab-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        height: 100%;
+    }
     .hidden {
         display: none;
     }
