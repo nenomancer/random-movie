@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts"> 
     import { RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "../../lib/constants";
     export let placeholder: string;
     export let yearValue: string | "" = "";

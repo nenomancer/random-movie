@@ -11,13 +11,17 @@
 
 <!-- {/if} -->
 
-<style>
+<style lang="scss">
+    @import "../styles/mixins";
     .screen {
+        @include edge-inset($size: 0.25rem, $blur: 0.15rem);
+        border-radius: 0.5rem;
         padding: 1rem;
         width: 100%;
         height: 100%;
         /* display: grid; */
         display: flex;
         flex-direction: column;
+        background-color: black;
     }
 </style>

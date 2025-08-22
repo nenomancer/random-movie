@@ -6,12 +6,16 @@
     <slot />
 </div>
 
-<style>
+<style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
     @import "../styles/variables.css";
+    @import "../styles/_mixins.scss";
     .monitor {
-        border: 2rem solid beige;
-        border-radius: 0.25rem;
+        @include edge-bevel($size: 0.25rem, $blur: 0.15rem);
+        // border: 2rem solid beige;
+        padding: 2.5rem;
+        background-color: #c9c5b1;
+        // border-radius: 0.25rem;
         display: flex;
         flex-direction: column;
         grid-column: span 3;
