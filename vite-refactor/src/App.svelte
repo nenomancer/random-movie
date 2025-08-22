@@ -38,6 +38,7 @@
   import RightSection from "./components/RightSection.svelte";
   import InfoPoster from "./components/Info/InfoPoster.svelte";
   import InfoRows from "./components/Info/InfoRows.svelte";
+  import NoteContainer from "./components/NoteContainer.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -410,7 +411,6 @@
           {getMoviesByRuntime}
         />
         <InfoRows>
-          
           <InfoRow
             label={"Genre"}
             title={"GNR"}
@@ -504,11 +504,8 @@
     <FilterEnable />
   </div>
   <div style="grid-area: extra;">
-    <div class="note-container history">
-      {#each $currentHistory as log}
-        <button on:click={() => getMovie(log.id)}>{log.name}</button>
-      {/each}
-    </div>
+    <NoteContainer {getMovie} />
+
     <h4>country: {$currentFilters?.country}</h4>
     <h4>genres: {$currentFilters?.genres}</h4>
   </div>

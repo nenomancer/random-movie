@@ -52,6 +52,8 @@ main {
     "disk disk extra extra extra controls controls";
 
   gap: .25rem;
+  position: relative;
+
   /* grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr); */
 
@@ -67,32 +69,6 @@ main {
     font: inherit;
   }
 
-  /* div {
-    border: 1px solid grey;
-  } */
-  /* 
-  @media screen and (max-width: 600px) {
-    max-height: 960px;
-  }
-
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(3, 240px);
-
-  grid-template-areas: "main main main poster poster poster"
-  "main main main poster poster poster"
-  "main main main controls controls controls";
-
-  @media screen and (max-width: 600px) {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-
-    grid-template-areas: 
-    "main main main"
-    "main main main"
-    "poster poster controls"
-    "poster poster controls";
-  } */
 }
 
 
