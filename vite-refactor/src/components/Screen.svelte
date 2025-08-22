@@ -14,7 +14,6 @@
 <style>
     .screen {
         padding: 1rem;
-        background-color: darkblue;
         width: 100%;
         height: 100%;
         /* display: grid; */

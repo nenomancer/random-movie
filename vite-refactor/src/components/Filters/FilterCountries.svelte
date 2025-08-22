@@ -1,9 +1,11 @@
 <script lang="ts">
-    import { DEFAULT_DROPDOWN_VALUE } from "../lib/constants";
-    import type { Country } from "../lib/types";
-    import { openDropdown } from "../stores/ui";
+    // import { DEFAULT_DROPDOWN_VALUE } from "../lib/constants";
+    import type { Country } from "../../lib/types";
+    import { useFilters } from "../../stores/movie";
+    import { openDropdown } from "../../stores/ui";
 
     export let id: string;
+    const DEFAULT_DROPDOWN_VALUE = "Choose a country";
 
     export let label: string;
     export let options: Country[];
@@ -15,6 +17,7 @@
     let searchTerm: string = "";
     let inputRef: HTMLInputElement;
 
+    // TO-DO: CLOSE DROPDOWN ON CLICK ANYWHERE ELSE
     const toggleDropdown = (close: boolean = false) => {
         openDropdown.update((current) => {
             if (close) {
@@ -26,6 +29,7 @@
                 return null;
             } else {
                 open = true;
+
                 return id;
             }
         });
@@ -33,12 +37,14 @@
 
     const selectOption = (option: Country) => {
         if (option === selected) {
-            selected = { code: "", name: DEFAULT_DROPDOWN_VALUE };
+            selected = { code: "", name: DEFAULT_DROPDOWN_VALUE, native: "" };
             onChange?.(selected);
+            useFilters.set(false); // THIS MUST BE REFACTORED
         } else {
             selected = option;
             toggleDropdown(true);
             onChange?.(option);
+            useFilters.set(true); // THIS MUST BE REFACTORED
         }
     };
 
@@ -58,17 +64,15 @@
 
 <section aria-labelledby="header">
     <div id="header" aria-label="Filter movies from a certain country">
-        <h3>{label}</h3>
+        <!-- <h3>{label}</h3> -->
 
         {#if !open}
             <button class="value" on:click={() => toggleDropdown(false)}
                 >{selected ? selected.name : DEFAULT_DROPDOWN_VALUE}</button
             >
         {/if}
-    </div>
-    {#if open}
-        <ul class="options">
-            {#if open}
+        {#if open}
+            <div class="input-container">
                 <input
                     type="text"
                     bind:value={searchTerm}
@@ -82,7 +86,12 @@
                         }
                     }}
                 />
-            {/if}
+                <span class="input-icon">X</span>
+            </div>
+        {/if}
+    </div>
+    {#if open}
+        <ul class="options">
             {#each filteredCountries as option}
                 <button
                     aria-label={`Filter ${label.toLowerCase()}: ${option.name}`}
@@ -104,11 +113,23 @@
 <style>
     #header {
         display: grid;
-        grid-template-columns: 4rem 6fr;
+        /* grid-template-columns: 4rem 6fr; */
+    }
+
+    .input-container {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        right: 16px;
+        top: 8px;
     }
     .options {
         display: flex;
         flex-direction: column;
         /* display: none; */
+        max-height: 200px;
+        overflow: scroll;
     }
 </style>

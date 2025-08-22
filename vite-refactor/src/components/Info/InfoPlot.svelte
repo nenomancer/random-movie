@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentMovie } from "../stores/movie";
+    import { currentMovie } from "../../stores/movie";
 </script>
 
 <section class="plot" aria-label="Plot">
@@ -16,12 +16,14 @@
         font: inherit;
         flex: 1;
         overflow: hidden;
-        font-size: 1.1rem;
+        font-size: 1.25rem;
+
+        border: 1px solid grey;
     }
 
     .title,
     .content {
-        border: var(--border-default);
+        /* border: var(--border-default); */
     }
 
     .title {

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { formatRuntime, padNumber } from "../lib/helpers";
-    import { currentMovie } from "../stores/movie";
-    import Button from "./Button.svelte";
+    import { formatRuntime, padNumber } from "../../lib/helpers";
+    import { currentMovie } from "../../stores/movie";
+    import Button from "../Button.svelte";
 
     export let getMoviesByReleaseDate: (currentYear: number) => void;
     export let getMoviesByCountry: (countryCode: string) => void;
@@ -74,5 +74,6 @@
     section {
         display: flex;
         justify-content: stretch;
+        font-size: 1rem;
     }
 </style>

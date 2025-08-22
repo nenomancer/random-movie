@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { DEFAULT_DROPDOWN_VALUE } from "../lib/constants";
-    import type { Genre } from "../lib/types";
-    import { openDropdown } from "../stores/ui";
+    import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
+    import type { Genre } from "../../lib/types";
+    import { useFilters } from "../../stores/movie";
+    import { openDropdown } from "../../stores/ui";
 
     export let label: string;
     export let options: Genre[] = [];
@@ -14,6 +15,9 @@
     let selected: Genre[] = [];
     let open: boolean = false;
 
+    // TO-DO: CLOSE DROPDOWN ON CLICK ELSEWHERE,
+    // ADD BUTTONS FOR EACH GENRE, INSTEAD OF JUST ONE
+    // BUTTON WITH A DYNAMIC LABEL
     const toggleDropdown = (close: boolean = false) => {
         openDropdown.update((current) => {
             if (current === id) {
@@ -21,6 +25,7 @@
                 return null;
             } else {
                 open = true;
+
                 return id;
             }
         });
@@ -40,6 +45,12 @@
 
         genreIds = selected.map((genre) => genre.id.toString());
         genreNames = selected.map((genre) => genre.name);
+
+        if (genreIds.length) {
+            useFilters.set(true); // THIS MUST BE REFACTORED
+        } else {
+            useFilters.set(false); // THIS MUST BE REFACTORED
+        }
 
         onChange?.(genreIds);
     };
@@ -88,5 +99,9 @@
         display: flex;
         flex-direction: column;
         /* display: none; */
+    }
+
+    .value {
+        display: flex;
     }
 </style>

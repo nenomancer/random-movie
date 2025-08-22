@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentMovie } from "../stores/movie";
+    import { currentMovie } from "../../stores/movie";
 </script>
 
 {#if $currentMovie.poster}
@@ -14,9 +14,8 @@
 
 <style>
     img {
-        /* width: 50%; */
+        width: 100%;
         height: 100%;
-        align-self: center;
         object-fit: contain;
     }
 </style>

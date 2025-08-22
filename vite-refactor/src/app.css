@@ -44,12 +44,12 @@ main {
   grid-template-rows: repeat(auto-fit, minmax(480px, 1fr));
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(3, 240px);
   grid-template-areas:
-    "info info info poster poster poster"
-    "info info info poster poster poster"
-    "disk extra extra extra controls controls";
+    "poster poster poster info info info info"
+    "poster poster poster info info info info"
+    "disk disk extra extra extra controls controls";
     /* grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr); */
 
@@ -64,9 +64,9 @@ main {
   * {
     font: inherit;
   }
-  div {
+  /* div {
     border: 1px solid grey;
-  }
+  } */
   /* 
   @media screen and (max-width: 600px) {
     max-height: 960px;

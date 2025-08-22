@@ -33,14 +33,16 @@
 </section>
 
 <style>
+  
     section {
-        border: var(--border-default);
-        font-size: 1.2rem;
+        /* border: var(--border-default); */
+        font-size: 1.25rem;
     }
     .row_header,
     .row_data_cell {
         /* border: var(--border-default); */
         padding-inline: 0.5rem;
+        padding-block: 0.4rem;
         white-space: nowrap;
     }
 
@@ -64,15 +66,6 @@
         overflow: hidden;
         overflow-x: scroll;
         scrollbar-width: none;
-    }
-
-    .column-dir:has(.row_header) {
-        grid-template-columns: 1fr;
-        grid-template-rows: unset;
-    }
-
-    .column-dir.row_data_cell {
-        text-wrap: nowrap;
     }
 
     button {

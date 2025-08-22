@@ -4,7 +4,7 @@
   import Screen from "./components/Screen.svelte";
   import Tabs from "./components/Tabs.svelte";
   import Tab from "./components/Tab.svelte";
-  import InfoRow from "./components/InfoRow.svelte";
+  import InfoRow from "./components/Info/InfoRow.svelte";
 
   import { Monitor1Screens, Monitor2Screens } from "./constants/screens";
   import TabContent from "./components/TabContent.svelte";
@@ -16,27 +16,28 @@
   } from "./lib/constants";
   import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
   import Button from "./components/Button.svelte";
-  import FilterCountries from "./components/FilterCountries.svelte";
+  import FilterCountries from "./components/Filters/FilterCountries.svelte";
   import {
     buildFilterQuery,
     formatRuntime,
     padNumber,
     showResultError,
   } from "./lib/helpers";
-  import FilterGenres from "./components/FilterGenres.svelte";
-  import FilterYear from "./components/FilterYear.svelte";
-  import FilterRating from "./components/FilterRating.svelte";
+  import FilterGenres from "./components/Filters/FilterGenres.svelte";
+  import FilterYear from "./components/Filters/FilterYear.svelte";
+  import FilterRating from "./components/Filters/FilterRating.svelte";
   import { currentFilters, currentMovie, useFilters } from "./stores/movie";
   import { currentHistory } from "./stores/history";
   import { activeTab } from "./stores/ui";
-  import FilterEnable from "./components/FilterEnable.svelte";
+  import FilterEnable from "./components/Filters/FilterEnable.svelte";
   import { onDestroy, onMount } from "svelte";
-  import InfoTitle from "./components/InfoTitle.svelte";
-  import FilterYears from "./components/FilterYears.svelte";
-  import ExtraInfo from "./components/ExtraInfo.svelte";
-  import InfoPlot from "./components/InfoPlot.svelte";
+  import InfoTitle from "./components/Info/InfoTitle.svelte";
+  import FilterYears from "./components/Filters/FilterYears.svelte";
+  import ExtraInfo from "./components/Info/ExtraInfo.svelte";
+  import InfoPlot from "./components/Info/InfoPlot.svelte";
   import RightSection from "./components/RightSection.svelte";
-  import InfoPoster from "./components/InfoPoster.svelte";
+  import InfoPoster from "./components/Info/InfoPoster.svelte";
+  import InfoRows from "./components/Info/InfoRows.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -225,6 +226,7 @@
         showResultError();
       })
       .finally(() => {
+        // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
         activeTab.set("Info");
 
         // pendingResponse.classList.remove("active");
@@ -307,6 +309,7 @@
   }
 
   function getMoviesByActor(actorId: number) {
+    console.log("HERE??");
     // resetFilter();
     fetch(
       `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
@@ -406,32 +409,34 @@
           {getMoviesByReleaseDate}
           {getMoviesByRuntime}
         />
+        <InfoRows>
+          
+          <InfoRow
+            label={"Genre"}
+            title={"GNR"}
+            items={$currentMovie.genres}
+            onClick={getMoviesByGenre}
+            getDescription={(name: string) =>
+              `Genre: ${name}. Click to find another ${name.toLowerCase()} movie.`}
+          />
+          <InfoRow
+            label={"Director"}
+            title={"DIR"}
+            items={$currentMovie.directors}
+            onClick={getMoviesByDirector}
+            getDescription={(name: string) =>
+              `Director: ${name}. Click to find another movie directed by ${name}`}
+          />
 
-        <InfoRow
-          label={"Genre"}
-          title={"GNR"}
-          items={$currentMovie.genres}
-          onClick={getMoviesByGenre}
-          getDescription={(name) =>
-            `Genre: ${name}. Click to find another ${name.toLowerCase()} movie.`}
-        />
-        <InfoRow
-          label={"Director"}
-          title={"DIR"}
-          items={$currentMovie.directors}
-          onClick={getMoviesByDirector}
-          getDescription={(name) =>
-            `Director: ${name}. Click to find another movie directed by ${name}`}
-        />
-
-        <InfoRow
-          label={"Actor"}
-          title={"ACT"}
-          items={$currentMovie.actors}
-          onClick={getMoviesByActor}
-          getDescription={(name) =>
-            `Actor: ${name}. Click to find another movie that features ${name}`}
-        />
+          <InfoRow
+            label={"Actor"}
+            title={"ACT"}
+            items={$currentMovie.actors}
+            onClick={getMoviesByActor}
+            getDescription={(name: string) =>
+              `Actor: ${name}. Click to find another movie that features ${name}`}
+          />
+        </InfoRows>
 
         <InfoPlot />
       </TabContent>
@@ -499,7 +504,7 @@
     <FilterEnable />
   </div>
   <div style="grid-area: extra;">
-    <div>
+    <div class="note-container history">
       {#each $currentHistory as log}
         <button on:click={() => getMovie(log.id)}>{log.name}</button>
       {/each}

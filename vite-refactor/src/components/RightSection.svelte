@@ -1,8 +1,8 @@
 <script lang="ts">
     import { currentHistory } from "../stores/history";
     import { currentMovie } from "../stores/movie";
-    import FilterEnable from "./FilterEnable.svelte";
-    import InfoPoster from "./InfoPoster.svelte";
+    import FilterEnable from "./Filters/FilterEnable.svelte";
+    import InfoPoster from "./Info/InfoPoster.svelte";
     import Monitor from "./Monitor.svelte";
     import Screen from "./Screen.svelte";
     import TabContent from "./TabContent.svelte";

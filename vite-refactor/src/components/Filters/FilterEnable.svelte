@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { useFilters } from "../stores/movie";
+    import { useFilters } from "../../stores/movie";
     function handleCheck(event: Event) {
         const target = event.target as HTMLInputElement;
         useFilters.set(target.checked);
