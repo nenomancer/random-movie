@@ -9,13 +9,13 @@
     $light: white,
     $shadow: black) {
     @if $blur {
-        box-shadow: inset $size $size $blur $size/2 rgba($light, $opacity),
-            inset $size * -1 $size * -1 $blur $size/2 rgba($shadow, $opacity);
+        box-shadow: inset $size $size $blur $size rgba($light, $opacity),
+            inset $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
     }
 
     @else {
-        box-shadow: inset $size $size $size $size/2 rgba($light, $opacity),
-            inset $size * -1 $size * -1 $size $size/2 rgba($shadow, $opacity);
+        box-shadow: inset $size $size $size $size rgba($light, $opacity),
+            inset $size * -1 $size * -1 $size $size rgba($shadow, $opacity);
     }
 
     border-radius: $size;
@@ -28,13 +28,16 @@
     $light: white,
     $shadow: black) {
     @if $blur {
-        box-shadow: $size $size $blur $size/2 rgba($light, $opacity),
-            $size * -1 $size * -1 $blur $size/2 rgba($shadow, $opacity);
+        box-shadow: $size $size $blur $size rgba($light, $opacity),
+            $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
     }
 
     @else {
-        box-shadow: $size $size $size $size/2 rgba($light, $opacity),
-            $size * -1 $size * -1 $size $size/2 rgba($shadow, $opacity), inset $size $size $size 0 rgba($shadow, $opacity / 3), inset $size * -1 $size * -1 $size 0 rgba($shadow, $opacity / 5);
+        box-shadow:
+            $size * -1 $size * -1 $size $size rgba($shadow, $opacity),
+            $size $size $size $size rgba($light, $opacity),
+            inset $size $size $size 0 rgba($shadow, $opacity / 3),
+            inset $size * -1 $size * -1 $size 0 rgba($shadow, $opacity / 5);
     }
 
     border-radius: $size;

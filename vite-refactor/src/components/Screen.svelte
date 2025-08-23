@@ -14,7 +14,7 @@
 <style lang="scss">
     @import "../styles/mixins";
     .screen {
-        @include edge-inset($size: 0.25rem, $blur: 0.15rem);
+        @include edge-inset($size: 2px, $blur: 1px);
         border-radius: 0.5rem;
         padding: 1rem;
         width: 100%;

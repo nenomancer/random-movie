@@ -37,7 +37,6 @@
         display: flex;
         font-size: 2rem;
         font-weight: 400;
-        padding-block: 0.25rem;
     }
 
     /* .label {
@@ -58,6 +57,8 @@
         display: flex;
         align-items: center;
         flex: 1;
+        padding-block: 0.25rem;
+        justify-content: center;
     }
 
     .title a:hover,

@@ -32,7 +32,7 @@
         background-color: var(--color-highlight);
         color: var(--color-dark);
         cursor: pointer;
-        font-weight: 700;
+        font-weight: 600;
     }
 
     button:focus-visible {

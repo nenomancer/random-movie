@@ -11,7 +11,7 @@
     @import "../styles/variables.css";
     @import "../styles/_mixins.scss";
     .monitor {
-        @include edge-bevel($size: 0.25rem, $blur: 0.15rem);
+        @include edge-bevel($size: 2px, $blur: 1px);
         // border: 2rem solid beige;
         padding: 2.5rem;
         background-color: #c9c5b1;
