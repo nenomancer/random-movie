@@ -25,13 +25,15 @@
     .perspective-container {
         perspective: 600px;
         position: absolute;
-        bottom: 5%;
+        bottom: -2%;
+        left: 30%;
     }
     .note-container {
         perspective: 150px;
         width: 16rem;
-        aspect-ratio: 1/0.9;
+        aspect-ratio: 0.9/1;
         transform: rotateX(10deg);
+        scale: 0.8;
         display: flex;
         flex-direction: column;
         box-shadow:
@@ -77,12 +79,13 @@
 
     .note {
         padding-inline: 0.5rem;
-        line-height: 1.5;
+        line-height: 1.9;
         // hyphens: auto;
         pointer-events: all;
         background-color: transparent;
         border: none;
         text-align: left;
+        // font-size: 0.9rem;
 
         white-space: nowrap;
         overflow: hidden;
@@ -94,7 +97,7 @@
         text-shadow: -0.5px -0.5px 0 grey;
         // counter-increment: history-counter;
         &::before {
-            content: "•";
+            // content: "•";
             // padding-right: 0.5rem;
         }
         &:hover {

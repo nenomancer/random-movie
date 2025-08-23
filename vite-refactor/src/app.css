@@ -79,3 +79,18 @@ main {
   }
 
 }
+
+.extras-disk {
+  background: red;
+  transition: 250ms ease-out;
+}
+
+.Loading .extras-disk {
+  background-color: blue;
+  translate: 0 50vh;
+}
+
+.kurac-border {
+  border: var(--border-default);
+
+}

@@ -1,8 +1,11 @@
 <script lang="ts">
-    import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
+    // import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
     import type { Genre } from "../../lib/types";
     import { useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
+    import Button from "../Button.svelte";
+
+    const DEFAULT_DROPDOWN_VALUE = "Choose Genre";
 
     export let label: string;
     export let options: Genre[] = [];
@@ -58,7 +61,7 @@
 
 <section>
     <div class="header">
-        <h3>{label}</h3>
+        <h3 class="title">{label}</h3>
         <button
             class="value"
             on:click={() => toggleDropdown()}
@@ -75,8 +78,21 @@
     {#if open}
         <ul class="options">
             {#each options as option}
-                <button
-                    on:click={() => selectOption(option)}
+                <Button
+                    ariaLabel={option.name}
+                    on:keydown={(event) => {
+                        if (event.key === "Escape") {
+                            toggleDropdown(true);
+                        }
+                    }}
+                    description={option.name}
+                    label={option.name}
+                    onClick={() => selectOption(option)}
+                />
+
+                <!-- <button
+                    class="option"
+                    on:click={() => selectOption(option)}1
                     on:keydown={(event) => {
                         if (event.key === "Escape") {
                             toggleDropdown(true);
@@ -84,24 +100,47 @@
                     }}
                 >
                     {option.name}
-                </button>
+                </button> -->
             {/each}
         </ul>
     {/if}
 </section>
 
-<style>
-    .header {
-        display: grid;
-        grid-template-columns: 4rem 6fr;
+<style lang="scss">
+    section {
+        border: var(--border-default);
+
+        button {
+            // background-color: transparent;
+            // border: none;
+        }
     }
+    .header {
+        // display: flex;
+        display: grid;
+        grid-template-columns: 5rem 6fr;
+    }
+    .title {
+        place-self: center;
+    }
+
     .options {
         display: flex;
-        flex-direction: column;
+        /* flex-direction: column; */
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        .option {
+            text-wrap: none;
+            white-space: nowrap;
+            text-align: left;
+        }
         /* display: none; */
     }
 
     .value {
-        display: flex;
+        /* display: flex; */
+        flex: 1;
+        text-align: center;
     }
 </style>

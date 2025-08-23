@@ -18,7 +18,7 @@
         overflow: hidden;
         font-size: 1.25rem;
 
-        border: 1px solid grey;
+        border: 1px solid var(--color-highlight);
     }
 
     .title,
@@ -29,6 +29,9 @@
     .title {
         border-bottom: none;
         text-align: center;
+        background-color: var(--color-highlight);
+        color: black;
+        font-weight: bold;
         /* height: var(--height-row-s); */
     }
 

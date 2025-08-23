@@ -25,9 +25,10 @@
         font-weight: 500;
         line-height: normal;
         font-size: 1.5rem;
-        * {
-            font: inherit;
-        }
+        // font-weight: 400;
+        // * {
+        //     font: inherit;
+        // }
     }
 
     .main {

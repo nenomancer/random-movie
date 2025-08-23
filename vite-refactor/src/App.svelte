@@ -10,6 +10,7 @@
   import TabContent from "./components/TabContent.svelte";
   import {
     API,
+    DEFAULT_FILTER,
     DEFAULT_MOVIE,
     DOCUMENT_TITLE,
     LOCAL_SESSION_HISTORY_KEY,
@@ -62,6 +63,14 @@
       getMovie(Number(params[2]));
     }
   };
+  
+  function resetFilter() {
+    console.log('clicked!');
+    console.log('current filters 1: ', $currentFilters);
+    currentFilters.set(DEFAULT_FILTER);
+    useFilters.set(false);
+    console.log('current filters 2: ', $currentFilters);
+  }
 
   onMount(() => {
     document.addEventListener("keydown", handleGlobalKeyboard);
@@ -228,7 +237,10 @@
       })
       .finally(() => {
         // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
-        activeTab.set("Info");
+        setTimeout(() => {
+          console.log("Delayed action");
+          activeTab.set("Info");
+        }, 1000);
 
         // pendingResponse.classList.remove("active");
         // successResponse.classList.add("active");
@@ -393,7 +405,7 @@
   initApp();
 </script>
 
-<main>
+<main class={$activeTab}>
   <Monitor classes={["main"]}>
     <Screen>
       <!-- <Tabs>
@@ -402,14 +414,16 @@
       </Tabs> -->
 
       <TabContent name={"Info"}>
-        <InfoTitle />
+        <div class="kurac-border">
+          <InfoTitle />
 
-        <ExtraInfo
-          {getMoviesByCountry}
-          {getMoviesByRating}
-          {getMoviesByReleaseDate}
-          {getMoviesByRuntime}
-        />
+          <ExtraInfo
+            {getMoviesByCountry}
+            {getMoviesByRating}
+            {getMoviesByReleaseDate}
+            {getMoviesByRuntime}
+          />
+        </div>
         <InfoRows>
           <InfoRow
             label={"Genre"}
@@ -490,7 +504,7 @@
       <TabContent name="About">ABOUT MEE!!!!</TabContent>
     </Screen>
   </Monitor>
-  <div style="grid-area: disk">DISK SHIT</div>
+  <div class="extras-disk" style="grid-area: disk">DISK SHIT</div>
   <div style="grid-area: controls;">
     <button on:click={() => fetchMovies()} style="display: block;"
       >CLICK ME</button
@@ -501,11 +515,13 @@
     <button on:click={() => toggleTab("Filters")} style="display: block;"
       >SHOW FILTERS!</button
     >
+    <button on:click={resetFilter} style="display: block;"
+      >RESET FILTERS</button
+    >
     <FilterEnable />
   </div>
+  <NoteContainer {getMovie} />
   <div style="grid-area: extra;">
-    <NoteContainer {getMovie} />
-
     <h4>country: {$currentFilters?.country}</h4>
     <h4>genres: {$currentFilters?.genres}</h4>
   </div>

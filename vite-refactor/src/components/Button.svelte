@@ -1,11 +1,12 @@
 <script lang="ts">
     export let label: string | undefined;
     export let onClick: () => void;
+    export let onKeydown: () => void | null;
     export let ariaLabel: string;
     export let description: string;
 </script>
 
-<button aria-label={ariaLabel} data-info={description} on:click={onClick}>
+<button aria-label={ariaLabel} data-info={description} on:click={onClick} on:keydown={onKeydown}>
     {label}
 </button>
 
@@ -15,16 +16,15 @@
         background-color: var(--color-dark);
         border: none;
         transition: all var(--anim-default);
-        border: var(--border-default);
-        border-left: none;
+        border-right: var(--border-default);
+        border-top: var(--border-default);
         flex: 1;
         white-space: nowrap;
-        height: 1.8rem;
         overflow-x: scroll;
     }
 
-    button:first-child {
-        border-left: var(--border-default);
+    button:last-child {
+        border-right: none;
     }
 
     button:hover,
@@ -32,6 +32,7 @@
         background-color: var(--color-highlight);
         color: var(--color-dark);
         cursor: pointer;
+        font-weight: 700;
     }
 
     button:focus-visible {

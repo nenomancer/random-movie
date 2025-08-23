@@ -21,7 +21,6 @@
 
 <style>
     section {
-        border: var(--border-default);
         /* height: var(--height-row); */
         align-items: center;
     }
@@ -38,6 +37,7 @@
         display: flex;
         font-size: 2rem;
         font-weight: 400;
+        padding-block: 0.25rem;
     }
 
     /* .label {

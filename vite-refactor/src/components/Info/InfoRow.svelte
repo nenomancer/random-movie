@@ -12,12 +12,12 @@
     aria-label={`${label}s`}
     data-info={`This movies ${label.toLowerCase()}s`}
 >
-    <h2 class="row_header">{title}</h2>
-    <div class="row_data" tabindex="-1">
+    <h2 class="title">{title}</h2>
+    <div class="content" tabindex="-1">
         {#if items}
             {#each items as item}
                 <button
-                    class="row_data_cell"
+                    class="cell"
                     aria-label={`${label}: ${item.name}`}
                     data-info={getDescription(item.name)}
                     on:click={() => onClick(item.id)}
@@ -27,48 +27,46 @@
             {/each}
         {/if}
         {#if !items.length}
-            <span class="row_data_cell">[{label} recognition failed]</span>
+            <span class="cell">[{label} recognition failed]</span>
         {/if}
     </div>
 </section>
 
 <style>
-  
     section {
         /* border: var(--border-default); */
         font-size: 1.25rem;
     }
-    .row_header,
-    .row_data_cell {
+    .title,
+    .cell {
         /* border: var(--border-default); */
         padding-inline: 0.5rem;
         padding-block: 0.4rem;
         white-space: nowrap;
     }
 
-    .row_data_cell {
-        border-left: none;
-    }
-
-    .row_header {
+    .title {
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: var(--color-highlight);
+        color: black;
+        font-weight: bold;
     }
-    .row:has(.row_header) {
+    .row:has(.title) {
         display: grid;
         grid-template-columns: 1fr 6fr;
         /* grid-template-rows: var(--height-row); */
     }
 
-    .row_data {
+    .content {
         display: flex;
         overflow: hidden;
         overflow-x: scroll;
         scrollbar-width: none;
     }
 
-    button {
+    .cell {
         height: 100%;
         border-radius: 0;
         border: none;

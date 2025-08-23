@@ -70,10 +70,14 @@
     <!-- {/if} -->
 </section>
 
-<style>
+<style lang="scss">
     section {
         display: flex;
         justify-content: stretch;
-        font-size: 1rem;
+        font-size: .9rem;
+
+        button {
+            padding: 200px;
+        }
     }
 </style>

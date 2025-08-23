@@ -7,6 +7,6 @@
 
 <style>
     .info-rows {
-        border: 1px solid grey;
+        border: 1px solid var(--color-highlight);
     }
 </style>

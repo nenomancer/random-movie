@@ -23,5 +23,6 @@
         display: flex;
         flex-direction: column;
         background-color: black;
+        overflow-y: scroll;
     }
 </style>

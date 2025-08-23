@@ -41,7 +41,7 @@ export const DEFAULT_MOVIE: Movie = {
 };
 
 export const DEFAULT_FILTER: Filters = {
-    country: "",
+    country: "Any",
     genres: [],
     yearFrom: RELEASE_YEAR_MIN,
     yearTo: RELEASE_YEAR_MAX,

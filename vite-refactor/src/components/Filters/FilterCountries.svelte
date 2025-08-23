@@ -1,11 +1,11 @@
 <script lang="ts">
-    // import { DEFAULT_DROPDOWN_VALUE } from "../lib/constants";
+    import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
     import type { Country } from "../../lib/types";
-    import { useFilters } from "../../stores/movie";
+    import { currentFilters, useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
 
     export let id: string;
-    const DEFAULT_DROPDOWN_VALUE = "Choose a country";
+    // const DEFAULT_DROPDOWN_VALUE = "Choose Country";
 
     export let label: string;
     export let options: Country[];
@@ -62,13 +62,13 @@
     );
 </script>
 
-<section aria-labelledby="header">
-    <div id="header" aria-label="Filter movies from a certain country">
-        <!-- <h3>{label}</h3> -->
+<section>
+    <div class="header" aria-label="Filter movies from a certain country">
+        <h3 class="title">{label}</h3>
 
         {#if !open}
             <button class="value" on:click={() => toggleDropdown(false)}
-                >{selected ? selected.name : DEFAULT_DROPDOWN_VALUE}</button
+                >{selected ? selected.name : $currentFilters.country}</button
             >
         {/if}
         {#if open}
@@ -86,7 +86,10 @@
                         }
                     }}
                 />
-                <span class="input-icon">X</span>
+                <button
+                    on:click={() => toggleDropdown(false)}
+                    class="input-icon">X</button
+                >
             </div>
         {/if}
     </div>
@@ -110,21 +113,46 @@
     {/if}
 </section>
 
-<style>
-    #header {
+<style lang="scss">
+    section {
+        border: var(--border-default);
+    }
+    .header {
         display: grid;
-        /* grid-template-columns: 4rem 6fr; */
+        grid-template-columns: 5rem 6fr;
     }
 
     .input-container {
         position: relative;
+        // width: 100%;
+        input {
+            width: 100%;
+            &::placeholder {
+                text-align: center;
+            }
+        }
+
+        button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            border: none;
+            height: 100%;
+            width: 20%;
+            background-color: transparent;
+            cursor: pointer;
+
+            &:hover {
+                color: black;
+                background-color: var(--color-highlight);
+            }
+        }
     }
 
-    .input-icon {
-        position: absolute;
-        right: 16px;
-        top: 8px;
+    .title {
+        place-self: center;
     }
+
     .options {
         display: flex;
         flex-direction: column;
