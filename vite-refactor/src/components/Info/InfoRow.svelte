@@ -49,9 +49,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: var(--color-highlight);
-        color: black;
         font-weight: bold;
+        border: var(--border-default);
     }
     .row:has(.title) {
         display: grid;

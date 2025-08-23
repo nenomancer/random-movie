@@ -11,7 +11,7 @@
     .tab-content {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.75rem;
         height: 100%;
     }
     .hidden {

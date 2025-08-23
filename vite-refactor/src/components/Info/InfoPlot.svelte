@@ -29,10 +29,9 @@
     .title {
         border-bottom: none;
         text-align: center;
-        background-color: var(--color-highlight);
-        color: black;
+        border: var(--border-default);
+
         font-weight: bold;
-        /* height: var(--height-row-s); */
     }
 
     .content {
