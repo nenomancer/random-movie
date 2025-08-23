@@ -40,6 +40,7 @@
   import InfoPoster from "./components/Info/InfoPoster.svelte";
   import InfoRows from "./components/Info/InfoRows.svelte";
   import NoteContainer from "./components/NoteContainer.svelte";
+  import ControlFilters from "./components/Controls/ControlFilters.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -65,14 +66,6 @@
       getMovie(Number(params[2]));
     }
   };
-
-  function resetFilter() {
-    console.log("clicked!");
-    console.log("current filters 1: ", $currentFilters);
-    currentFilters.set(DEFAULT_FILTER);
-    useFilters.set(false);
-    console.log("current filters 2: ", $currentFilters);
-  }
 
   onMount(() => {
     document.addEventListener("keydown", handleGlobalKeyboard);
@@ -258,13 +251,6 @@
       });
   }
 
-  function toggleTab(tabName: string) {
-    if ($activeTab != tabName) {
-      activeTab.set(tabName);
-    } else {
-      activeTab.set("Info");
-    }
-  }
   function getMovieCredits(movieId: number) {
     fetch(`${API.MOVIE}/${movieId}/credits`, API.OPTIONS)
       .then((response) => response.json())
@@ -510,20 +496,7 @@
     </Screen>
   </Monitor>
   <div class="extras-disk" style="grid-area: disk">DISK SHIT</div>
-  <div style="grid-area: controls;">
-    <button on:click={() => fetchMovies()} style="display: block;"
-      >CLICK ME</button
-    >
-    <button on:click={() => toggleTab("About")} style="display: block;"
-      >SHOW ABOBUT ME</button
-    >
-    <button on:click={() => toggleTab("Filters")} style="display: block;"
-      >SHOW FILTERS!</button
-    >
-    <button on:click={resetFilter} style="display: block;">RESET FILTERS</button
-    >
-    <FilterEnable />
-  </div>
+  <ControlFilters {fetchMovies} />
   <NoteContainer {getMovie} />
   <div style="grid-area: extra;">
     <h4>country: {$currentFilters?.country}</h4>
