@@ -47,6 +47,8 @@
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
 
+  let mainRef: HTMLElement;
+
   function handleGlobalKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter" && document.activeElement === document.body) {
       fetchMovies();
@@ -63,13 +65,13 @@
       getMovie(Number(params[2]));
     }
   };
-  
+
   function resetFilter() {
-    console.log('clicked!');
-    console.log('current filters 1: ', $currentFilters);
+    console.log("clicked!");
+    console.log("current filters 1: ", $currentFilters);
     currentFilters.set(DEFAULT_FILTER);
     useFilters.set(false);
-    console.log('current filters 2: ', $currentFilters);
+    console.log("current filters 2: ", $currentFilters);
   }
 
   onMount(() => {
@@ -109,6 +111,7 @@
 
   function fetchMovies(uiQueries = "", totalPages = 500) {
     activeTab.set("Loading");
+    mainRef.classList.add("loading-anim");
 
     let filterQueries = "";
 
@@ -158,7 +161,10 @@
   }
 
   function getRandomMovie(data: Array<Movie>) {
+    console.log("ALL LOADING ANIMATINOS HERE");
+
     activeTab.set("Loading");
+    mainRef.classList.add("loading-anim");
 
     const randomIndex = Math.floor(Math.random() * data.length);
 
@@ -227,7 +233,7 @@
         }
         getMovieCredits(movieId);
         getImdbUrl(movieId);
-        addHistoryLog(movieId, data.title);
+        setTimeout(() => addHistoryLog(movieId, data.title), 1500);
       })
       .catch((err) => {
         // pendingResponse.classList.remove("active");
@@ -237,6 +243,8 @@
       })
       .finally(() => {
         // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
+        mainRef.classList.remove("loading-anim");
+
         setTimeout(() => {
           console.log("Delayed action");
           activeTab.set("Info");
@@ -405,7 +413,7 @@
   initApp();
 </script>
 
-<main class={$activeTab}>
+<main bind:this={mainRef}>
   <Monitor classes={["main"]}>
     <Screen>
       <!-- <Tabs>
@@ -495,9 +503,6 @@
     <Screen>
       <TabContent name="Info">
         <InfoPoster />
-        {#if !$currentMovie.poster}
-          <p>Image data corrupted.</p>
-        {/if}
       </TabContent>
       <TabContent name="Loading">Loading...</TabContent>
       <TabContent name="Error">Error!!!</TabContent>
@@ -515,8 +520,7 @@
     <button on:click={() => toggleTab("Filters")} style="display: block;"
       >SHOW FILTERS!</button
     >
-    <button on:click={resetFilter} style="display: block;"
-      >RESET FILTERS</button
+    <button on:click={resetFilter} style="display: block;">RESET FILTERS</button
     >
     <FilterEnable />
   </div>

@@ -29,7 +29,7 @@
       content: "Loading image...";
     }
     &:has(.no-image)::after {
-      content: "Image data corrupted.";
+      // content: "Image data corrupted.";
     }
   }
 

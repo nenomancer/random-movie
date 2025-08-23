@@ -85,7 +85,7 @@ main {
   transition: 250ms ease-out;
 }
 
-.Loading .extras-disk {
+.loading-anim .extras-disk {
   background-color: blue;
   translate: 0 50vh;
 }
