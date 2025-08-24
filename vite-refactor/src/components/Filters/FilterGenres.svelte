@@ -3,7 +3,7 @@
     import type { Genre } from "../../lib/types";
     import { useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
-    import Button from "../Button.svelte";
+    import Button from "../ui/Button.svelte";
 
     const DEFAULT_DROPDOWN_VALUE = "Choose Genre";
 

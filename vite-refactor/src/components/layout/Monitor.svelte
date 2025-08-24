@@ -8,8 +8,8 @@
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
-    @import "../styles/variables.css";
-    @import "../styles/_mixins.scss";
+    @import "../../styles/variables.css";
+    @import "../../styles/_mixins.scss";
     .monitor {
         @include edge-bevel($size: 2px, $blur: 1px);
         // border: 2rem solid beige;

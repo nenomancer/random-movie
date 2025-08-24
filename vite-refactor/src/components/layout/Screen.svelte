@@ -4,15 +4,12 @@
     export let classes: Array<string> | undefined = undefined;
 </script>
 
-<!-- {#if name === activeScreen} -->
 <section class={`screen ${classes && classes.join(" ")}`}>
     <slot />
 </section>
 
-<!-- {/if} -->
-
 <style lang="scss">
-    @import "../styles/mixins";
+    @import "../../styles/mixins";
     .screen {
         @include edge-inset($size: 2px, $blur: 1px);
         border-radius: 0.5rem;

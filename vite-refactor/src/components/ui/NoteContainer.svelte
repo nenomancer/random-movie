@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentHistory } from "../stores/history";
+    import { currentHistory } from "../../stores/history";
     export let getMovie: (id: number) => void;
     let isFlipped: boolean = false;
     // use ref for go to favorites button
@@ -44,7 +44,7 @@
 </div>
 
 <style lang="scss">
-    @import "../styles/variables";
+    @import "../../styles/variables";
     @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
 
     $tape-size: 1.5rem;

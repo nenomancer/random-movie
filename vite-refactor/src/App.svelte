@@ -1,13 +1,13 @@
 <script lang="ts">
   import "./styles/variables.css";
-  import Monitor from "./components/Monitor.svelte";
-  import Screen from "./components/Screen.svelte";
-  import Tabs from "./components/Tabs.svelte";
-  import Tab from "./components/Tab.svelte";
-  import InfoRow from "./components/Info/InfoRow.svelte";
+  import Monitor from "./components/layout/Monitor.svelte";
+  import Screen from "./components/layout/Screen.svelte";
+  import Tabs from "./components/tabs/Tabs.svelte";
+  import Tab from "./components/tabs/Tab.svelte";
+  import InfoRow from "./components/info/InfoRow.svelte";
 
   import { Monitor1Screens, Monitor2Screens } from "./constants/screens";
-  import TabContent from "./components/TabContent.svelte";
+  import TabContent from "./components/tabs/TabContent.svelte";
   import {
     API,
     DEFAULT_FILTER,
@@ -16,31 +16,30 @@
     LOCAL_SESSION_HISTORY_KEY,
   } from "./lib/constants";
   import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
-  import Button from "./components/Button.svelte";
-  import FilterCountries from "./components/Filters/FilterCountries.svelte";
+  import Button from "./components/ui/Button.svelte";
+  import FilterCountries from "./components/filters/FilterCountries.svelte";
   import {
     buildFilterQuery,
     formatRuntime,
     padNumber,
     showResultError,
   } from "./lib/helpers";
-  import FilterGenres from "./components/Filters/FilterGenres.svelte";
-  import FilterYear from "./components/Filters/FilterYear.svelte";
-  import FilterRating from "./components/Filters/FilterRating.svelte";
+  import FilterGenres from "./components/filters/FilterGenres.svelte";
+  import FilterYear from "./components/filters/FilterYear.svelte";
+  import FilterRating from "./components/filters/FilterRating.svelte";
   import { currentFilters, currentMovie, useFilters } from "./stores/movie";
   import { currentHistory } from "./stores/history";
   import { activeTab } from "./stores/ui";
-  import FilterEnable from "./components/Filters/FilterEnable.svelte";
+  import FilterEnable from "./components/filters/FilterEnable.svelte";
   import { onDestroy, onMount } from "svelte";
-  import InfoTitle from "./components/Info/InfoTitle.svelte";
-  import FilterYears from "./components/Filters/FilterYears.svelte";
-  import ExtraInfo from "./components/Info/ExtraInfo.svelte";
-  import InfoPlot from "./components/Info/InfoPlot.svelte";
-  import RightSection from "./components/RightSection.svelte";
-  import InfoPoster from "./components/Info/InfoPoster.svelte";
-  import InfoRows from "./components/Info/InfoRows.svelte";
-  import NoteContainer from "./components/NoteContainer.svelte";
-  import ControlFilters from "./components/Controls/ControlFilters.svelte";
+  import InfoTitle from "./components/info/InfoTitle.svelte";
+  import FilterYears from "./components/filters/FilterYears.svelte";
+  import ExtraInfo from "./components/info/ExtraInfo.svelte";
+  import InfoPlot from "./components/info/InfoPlot.svelte";
+  import InfoPoster from "./components/info/InfoPoster.svelte";
+  import InfoRows from "./components/info/InfoRows.svelte";
+  import NoteContainer from "./components/ui/NoteContainer.svelte";
+  import ControlPanel from "./components/ui/ControlPanel.svelte";
 
   let monitor1_active_screen = Monitor1Screens.Screen1;
   let monitor2_active_screen = Monitor2Screens.Screen1;
@@ -496,9 +495,9 @@
     </Screen>
   </Monitor>
   <div class="extras-disk" style="grid-area: disk; background: grey;">
-    <img style='width: 40%'src={$currentMovie.poster} alt="">
+    <img style="width: 40%" src={$currentMovie.poster} alt="" />
   </div>
-  <ControlFilters {fetchMovies} />
+  <ControlPanel {fetchMovies} />
   <NoteContainer {getMovie} />
   <div style="grid-area: extra; background: grey;">
     <h4>country: {$currentFilters?.country}</h4>

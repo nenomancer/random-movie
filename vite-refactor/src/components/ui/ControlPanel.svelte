@@ -2,7 +2,7 @@
     import { DEFAULT_FILTER } from "../../lib/constants";
     import { currentFilters, useFilters } from "../../stores/movie";
     import { activeTab } from "../../stores/ui";
-    import FilterEnable from "../Filters/FilterEnable.svelte";
+    import FilterEnable from "../filters/FilterEnable.svelte";
 
     export let fetchMovies: () => void;
 
