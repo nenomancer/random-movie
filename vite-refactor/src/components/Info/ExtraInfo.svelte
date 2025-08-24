@@ -71,10 +71,12 @@
 </section>
 
 <style lang="scss">
+    @import '../../styles/variables';
+    
     section {
         display: flex;
         justify-content: stretch;
-        font-size: .9rem;
+        font-size: 1rem;
 
         button {
             padding: 200px;

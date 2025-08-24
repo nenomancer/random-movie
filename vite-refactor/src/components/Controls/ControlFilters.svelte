@@ -97,56 +97,6 @@
         border: none;
         aspect-ratio: 1/1;
         @include control-button();
-        // box-shadow:
-        //     inset 0 0 2px 4px hsl(0, 100%, 0%),
-        //     0 4px 3px 0 hsla(0, 0%, 0%, 0.6),
-        //     0 0 1px 1px rgba(255, 255, 255, 0.4),
-        //     -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
-
-        // background-color: grey;
-        // position: relative;
-
-        // &::after {
-        //     content: "";
-        //     inset: 0.5rem;
-        //     inset: 2px;
-        //     position: absolute;
-
-        //     box-shadow:
-        //         2px 2px 4px 2px rgba(0, 0, 0, 0.4),
-        //         -2px -2px 4px 2px rgba(255, 255, 255, 0.4),
-        //         inset 0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.65),
-        //         inset -0.5px -0.5px 1px 0 rgba(255, 255, 255, 0.3);
-        //     background: linear-gradient(
-        //         125deg,
-        //         rgba(255, 255, 255, 0.75),
-        //         rgba(255, 255, 255, 0)
-        //     );
-        //     border: 4px outset rgb(160, 160, 160);
-        // }
-
-        // &.active,
-        // &:active {
-        //     box-shadow:
-        //         inset 0 0 3px 4px hsl(0, 100%, 0%),
-        //         0 1px 1px 0 hsla(0, 0%, 0%, 0.6),
-        //         0 0 1px 1px rgba(255, 255, 255, 0.4),
-        //         -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
-
-        //     &::after {
-        //         box-shadow:
-        //             2px 2px 4px 2px rgba(0, 0, 0, 0.4),
-        //             -2px -2px 4px 2px rgba(255, 255, 255, 0.4),
-        //             inset 0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.65),
-        //             inset -0.5px -0.5px 1px 0 rgba(255, 255, 255, 0.3);
-        //         background: linear-gradient(
-        //             125deg,
-        //             rgba(255, 255, 255, 0.5),
-        //             rgba(255, 255, 255, 0)
-        //         );
-        //         border: 4px outset rgb(120, 120, 120);
-        //     }
-        // }
     }
 
     .control-button-reset {
@@ -155,11 +105,12 @@
 
     .control-button.search {
         aspect-ratio: unset;
+        padding-block: 1rem;
     }
 
     .control-button.about {
-        // width: 40%;
-        width: 20%;
+        // width: 20%;
+        aspect-ratio: unset;
 
         &,
         &::after {

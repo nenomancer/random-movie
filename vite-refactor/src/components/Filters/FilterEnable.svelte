@@ -15,7 +15,7 @@
 </script>
 
 <div class="control-button">
-    <label for="useFilters">Enable</label>
+    <label for="useFilters">Use</label>
     <input
         type="checkbox"
         id="useFilters"

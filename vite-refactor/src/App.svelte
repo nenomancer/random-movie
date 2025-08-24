@@ -495,10 +495,12 @@
       <TabContent name="About">ABOUT MEE!!!!</TabContent>
     </Screen>
   </Monitor>
-  <div class="extras-disk" style="grid-area: disk">DISK SHIT</div>
+  <div class="extras-disk" style="grid-area: disk; background: grey;">
+    <img style='width: 40%'src={$currentMovie.poster} alt="">
+  </div>
   <ControlFilters {fetchMovies} />
   <NoteContainer {getMovie} />
-  <div style="grid-area: extra;">
+  <div style="grid-area: extra; background: grey;">
     <h4>country: {$currentFilters?.country}</h4>
     <h4>genres: {$currentFilters?.genres}</h4>
   </div>
