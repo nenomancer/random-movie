@@ -1,11 +1,9 @@
 <script lang="ts">
-    // import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
+    import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
     import type { Genre } from "../../lib/types";
-    import { useFilters } from "../../stores/movie";
+    import { currentFilters, useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
     import Button from "../ui/Button.svelte";
-
-    const DEFAULT_DROPDOWN_VALUE = "Choose Genre";
 
     export let label: string;
     export let options: Genre[] = [];
@@ -36,6 +34,13 @@
     $: openDropdown.subscribe((activeId) => {
         if (activeId !== id) {
             open = false;
+        }
+    });
+
+    $: currentFilters.subscribe(() => {
+        if (!$currentFilters.genres?.length) {
+            genreNames = [DEFAULT_DROPDOWN_VALUE];
+            selected = [];
         }
     });
     const selectOption = (option: Genre) => {
@@ -89,18 +94,6 @@
                     label={option.name}
                     onClick={() => selectOption(option)}
                 />
-
-                <!-- <button
-                    class="option"
-                    on:click={() => selectOption(option)}1
-                    on:keydown={(event) => {
-                        if (event.key === "Escape") {
-                            toggleDropdown(true);
-                        }
-                    }}
-                >
-                    {option.name}
-                </button> -->
             {/each}
         </ul>
     {/if}
