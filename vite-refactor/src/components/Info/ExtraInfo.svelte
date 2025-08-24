@@ -71,8 +71,6 @@
 </section>
 
 <style lang="scss">
-    @import '../../styles/variables';
-    
     section {
         display: flex;
         justify-content: stretch;

@@ -26,31 +26,15 @@
 </div>
 
 <style lang="scss">
-    @import "../../styles/mixins";
+    @use "../../styles/mixins";
     .control-button {
-        background: red;
+        @include mixins.control-button();
         border: none;
         transition: 250ms ease-out;
         position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-        @include control-button();
-        // box-shadow:
-        //     inset 0 0 3px 4px hsl(0, 100%, 0%),
-        //     0 4px 3px 0 hsla(0, 0%, 0%, 0.6),
-        //     0 0 1px 1px rgba(255, 255, 255, 0.4),
-        //     -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
-
-        // &:has(input:checked),
-        // &:active {
-        //     box-shadow:
-        //         inset 0 0 3px 4px hsl(0, 100%, 0%),
-        //         0 1px 1px 0 hsla(0, 0%, 0%, 0.6),
-        //         0 0 1px 1px rgba(255, 255, 255, 0.4),
-        //         -1px -1px 1px 0 hsla(0, 0%, 0%, 0.425);
-        // }
-
         input {
             position: absolute;
             inset: 0;

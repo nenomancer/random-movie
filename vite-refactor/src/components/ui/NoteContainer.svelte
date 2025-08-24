@@ -44,7 +44,8 @@
 </div>
 
 <style lang="scss">
-    @import "../../styles/variables";
+    @use "../../styles/variables";
+    @use "sass:color";
     @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
 
     $tape-size: 1.5rem;
@@ -57,7 +58,11 @@
     }
 
     .tape {
-        background-color: desaturate(darken($note-color, 15), 25);
+        background-color: color.adjust(
+            $color: variables.$note-color,
+            $saturation: -25%,
+            $lightness: -15%
+        );
         width: 100%;
         height: $tape-size;
         border-top-left-radius: 0.1rem;
@@ -81,9 +86,10 @@
         transform-origin: top;
         background: repeating-linear-gradient(
             to bottom,
-            $note-color,
-            $note-color 10.5%,
-            darken($note-color, 30%) 11.5%
+            variables.$note-color,
+            variables.$note-color 10.5%,
+            color.adjust($color: variables.$note-color, $lightness: -30%)
+            11.5%
         );
         pointer-events: none;
         -webkit-font-smoothing: antialiased; /* For WebKit browsers */
@@ -134,7 +140,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: $note-marker-color;
+        color: variables.$note-marker-color;
         font-family: "Permanent Marker", cursive, "Arial";
         font-weight: 700;
         font-style: normal;

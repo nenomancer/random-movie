@@ -55,17 +55,17 @@
 </div>
 
 <style lang="scss">
-    @import "../../styles/mixins";
-    @import "../../styles/variables";
+    @use "../../styles/mixins";
+    @use "../../styles/variables";
 
     .controls-container {
-        @include edge-bevel();
+        @include mixins.edge-bevel();
         grid-area: controls;
         display: flex;
         flex-direction: column;
         padding: 1rem;
         row-gap: 1rem;
-        background-color: $monitor-color;
+        background-color: variables.$monitor-color;
     }
 
     .controls-filters {
@@ -85,7 +85,7 @@
             top: -0.5rem;
             left: 50%;
             translate: -50% 0;
-            background-color: $monitor-color;
+            background-color: variables.$monitor-color;
             color: black;
             padding-inline: 1rem;
             line-height: 1rem;
@@ -96,7 +96,7 @@
         transition: 250ms ease-out;
         border: none;
         aspect-ratio: 1/1;
-        @include control-button();
+        @include mixins.control-button();
     }
 
     .control-button-reset {
