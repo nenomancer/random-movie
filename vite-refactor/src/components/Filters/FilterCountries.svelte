@@ -1,16 +1,19 @@
 <script lang="ts">
-    import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
+    import {
+        DEFAULT_COUNTRY,
+        DEFAULT_DROPDOWN_VALUE,
+    } from "../../lib/constants";
     import type { Country } from "../../lib/types";
     import { currentFilters, useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
 
     export let id: string;
-    // const DEFAULT_DROPDOWN_VALUE = "Choose Country";
 
     export let label: string;
     export let options: Country[];
     export let onChange: (option: Country) => void;
     export const closeDropdown = () => (open = false);
+    let country;
 
     let selected: Country;
     let open: boolean = false;
@@ -60,12 +63,17 @@
     $: filteredCountries = options.filter((option) =>
         option.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
+
+    $: currentFilters.subscribe(() => {
+        if ($currentFilters.country == DEFAULT_COUNTRY.name) {
+            selected = DEFAULT_COUNTRY;
+        }
+    });
 </script>
 
 <section>
     <div class="header" aria-label="Filter movies from a certain country">
         <h3 class="title">{label}</h3>
-
         {#if !open}
             <button class="value" on:click={() => toggleDropdown(false)}
                 >{selected ? selected.name : $currentFilters.country}</button
@@ -78,7 +86,7 @@
                     bind:value={searchTerm}
                     placeholder={selected
                         ? selected.name
-                        : DEFAULT_DROPDOWN_VALUE}
+                        : DEFAULT_COUNTRY.name}
                     bind:this={inputRef}
                     on:keydown={(event) => {
                         if (event.key === "Escape") {

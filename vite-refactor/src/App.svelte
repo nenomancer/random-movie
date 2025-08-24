@@ -466,6 +466,7 @@
       <TabContent name="Loading">Loading...</TabContent>
       <TabContent name="Error">Error!!!</TabContent>
       <TabContent name="About">ABOUT MEE!!!!</TabContent>
+      <TabContent name="Filters">Filter Sectuin</TabContent>
     </Screen>
   </Monitor>
   <div class="extras-disk" style="grid-area: disk; background: grey;">

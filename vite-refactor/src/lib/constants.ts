@@ -1,5 +1,5 @@
 
-import type { Filters, Movie } from "./types";
+import type { Country, Filters, Movie } from "./types";
 
 export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
 export const DEFAULT_DROPDOWN_VALUE = "Any";
@@ -33,7 +33,7 @@ export const DEFAULT_MOVIE: Movie = {
     directors: [],
     actors: [],
     year: undefined,
-    country: { code: "", name: "" },
+    country: { code: "", name: "", native: '' },
     rating: undefined,
     runtime: undefined,
     plot: "",
@@ -49,4 +49,8 @@ export const DEFAULT_FILTER: Filters = {
     ratingTo: 10,
     runtimeFrom: 0,
     runtimeTo: 500,
+}
+
+export const DEFAULT_COUNTRY: Country = {
+    code: "", name: DEFAULT_DROPDOWN_VALUE, native: ""
 }
