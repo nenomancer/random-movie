@@ -1,4 +1,4 @@
-<script lang="ts"> 
+<script lang="ts">
     import { RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "../../lib/constants";
     export let placeholder: string;
     export let yearValue: string | "" = "";
@@ -73,7 +73,7 @@
 <style>
     input {
         width: 3rem;
-        padding-inline: 0.25rem;
+        padding: 0.1rem;
         appearance: none;
         border: none;
         background-color: var(--color-dark);
@@ -82,7 +82,8 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
-
+        flex: 1;
+        text-align: center;
         &:hover,
         &:focus-visible {
             background-color: var(--color-highlight);

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "../../lib/constants";
     import { currentFilters } from "../../stores/movie";
     import FilterYear from "./FilterYear.svelte";
 </script>
@@ -7,15 +8,16 @@
     <h3>Year</h3>
     <div class="filters">
         <FilterYear
-            placeholder={"From"}
+            placeholder={RELEASE_YEAR_MIN.toString()}
             onChange={(yearValue) =>
                 currentFilters.update((filters) => ({
                     ...filters,
                     yearFrom: yearValue,
                 }))}
         />
+        <span>-</span>
         <FilterYear
-            placeholder={"To"}
+            placeholder={RELEASE_YEAR_MAX.toString()}
             onChange={(yearValue) =>
                 currentFilters.update((filters) => ({
                     ...filters,
@@ -28,7 +30,7 @@
 <style>
     section {
         display: grid;
-        grid-template-columns: 1fr 6fr;
+        grid-template-columns: 5rem 6fr;
         border: var(--border-default);
     }
 
@@ -39,6 +41,8 @@
     }
 
     .filters {
-        /* display: flex; */
+        display: flex;
+        gap: 1rem;
+
     }
 </style>
