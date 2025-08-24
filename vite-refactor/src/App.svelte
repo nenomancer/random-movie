@@ -1,48 +1,37 @@
 <script lang="ts">
-  import "./styles/variables.css";
   import Monitor from "./components/layout/Monitor.svelte";
   import Screen from "./components/layout/Screen.svelte";
-  import Tabs from "./components/tabs/Tabs.svelte";
-  import Tab from "./components/tabs/Tab.svelte";
-  import InfoRow from "./components/info/InfoRow.svelte";
-
-  import { Monitor1Screens, Monitor2Screens } from "./constants/screens";
   import TabContent from "./components/tabs/TabContent.svelte";
+  import ControlPanel from "./components/ui/ControlPanel.svelte";
+  import NoteContainer from "./components/ui/NoteContainer.svelte";
+
+  import InfoTitle from "./components/info/InfoTitle.svelte";
+  import ExtraInfo from "./components/info/ExtraInfo.svelte";
+  import InfoRows from "./components/info/InfoRows.svelte";
+  import InfoRow from "./components/info/InfoRow.svelte";
+  import InfoPlot from "./components/info/InfoPlot.svelte";
+  import InfoPoster from "./components/info/InfoPoster.svelte";
+
+  import FilterYears from "./components/filters/FilterYears.svelte";
+  import FilterGenres from "./components/filters/FilterGenres.svelte";
+  import FilterRating from "./components/filters/FilterRating.svelte";
+  import FilterCountries from "./components/filters/FilterCountries.svelte";
+
+  import { buildFilterQuery, showResultError } from "./lib/helpers";
+  import type { Country, Genre, Movie, Person } from "./lib/types";
   import {
     API,
-    DEFAULT_FILTER,
     DEFAULT_MOVIE,
     DOCUMENT_TITLE,
     LOCAL_SESSION_HISTORY_KEY,
   } from "./lib/constants";
-  import type { Country, Genre, HistoryLog, Movie, Person } from "./lib/types";
-  import Button from "./components/ui/Button.svelte";
-  import FilterCountries from "./components/filters/FilterCountries.svelte";
-  import {
-    buildFilterQuery,
-    formatRuntime,
-    padNumber,
-    showResultError,
-  } from "./lib/helpers";
-  import FilterGenres from "./components/filters/FilterGenres.svelte";
-  import FilterYear from "./components/filters/FilterYear.svelte";
-  import FilterRating from "./components/filters/FilterRating.svelte";
+
   import { currentFilters, currentMovie, useFilters } from "./stores/movie";
   import { currentHistory } from "./stores/history";
   import { activeTab } from "./stores/ui";
-  import FilterEnable from "./components/filters/FilterEnable.svelte";
-  import { onDestroy, onMount } from "svelte";
-  import InfoTitle from "./components/info/InfoTitle.svelte";
-  import FilterYears from "./components/filters/FilterYears.svelte";
-  import ExtraInfo from "./components/info/ExtraInfo.svelte";
-  import InfoPlot from "./components/info/InfoPlot.svelte";
-  import InfoPoster from "./components/info/InfoPoster.svelte";
-  import InfoRows from "./components/info/InfoRows.svelte";
-  import NoteContainer from "./components/ui/NoteContainer.svelte";
-  import ControlPanel from "./components/ui/ControlPanel.svelte";
 
-  let monitor1_active_screen = Monitor1Screens.Screen1;
-  let monitor2_active_screen = Monitor2Screens.Screen1;
+  import { onDestroy, onMount } from "svelte";
+  import "./styles/variables.css";
 
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
@@ -228,9 +217,6 @@
         setTimeout(() => addHistoryLog(movieId, data.title), 1500);
       })
       .catch((err) => {
-        // pendingResponse.classList.remove("active");
-        // errorResponse.classList.add("active");
-        // activeTab.set("Error");
         showResultError();
       })
       .finally(() => {
@@ -241,12 +227,6 @@
           console.log("Delayed action");
           activeTab.set("Info");
         }, 1000);
-
-        // pendingResponse.classList.remove("active");
-        // successResponse.classList.add("active");
-
-        // hideLoadingScreens();
-        // return;
       });
   }
 
@@ -401,15 +381,9 @@
 <main bind:this={mainRef}>
   <Monitor classes={["main"]}>
     <Screen>
-      <!-- <Tabs>
-        <Tab name={"Info"} />
-        <Tab name="Filters" />
-      </Tabs> -->
-
       <TabContent name={"Info"}>
         <div class="kurac-border">
           <InfoTitle />
-
           <ExtraInfo
             {getMoviesByCountry}
             {getMoviesByRating}
