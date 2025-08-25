@@ -7,13 +7,26 @@
         onChange(ratingFrom, ratingTo);
     }
 
-    $: {
-        if (ratingFrom > ratingTo) {
-            ratingFrom = ratingTo;
+    const minGap = 0;
+
+    function slideOne(e: any) {
+        const value = parseFloat(e.target.value);
+        if (value > ratingTo - minGap) {
+            ratingFrom = ratingTo - minGap;
+        } else {
+            ratingFrom = value;
         }
-        if (ratingTo < ratingFrom) {
-            ratingTo = ratingFrom;
+        handleOnChange();
+    }
+
+    function slideTwo(e: any) {
+        const value = parseFloat(e.target.value);
+        if (value < ratingFrom + minGap) {
+            ratingTo = ratingFrom + minGap;
+        } else {
+            ratingTo = value;
         }
+        handleOnChange();
     }
 </script>
 
@@ -28,7 +41,7 @@
             max="10"
             step="0.1"
             bind:value={ratingFrom}
-            on:change={handleOnChange}
+            on:input={slideOne}
         />
         <input
             id="ratingTo"
@@ -37,7 +50,7 @@
             max="10"
             step="0.1"
             bind:value={ratingTo}
-            on:change={handleOnChange}
+            on:input={slideTwo}
         />
     </div>
     <input type="number" value={ratingFrom} />
