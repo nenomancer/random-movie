@@ -1,7 +1,6 @@
 <script lang="ts">
     import {
         DEFAULT_COUNTRY,
-        DEFAULT_DROPDOWN_VALUE,
     } from "../../lib/constants";
     import type { Country } from "../../lib/types";
     import { currentFilters, useFilters } from "../../stores/movie";
@@ -40,7 +39,7 @@
 
     const selectOption = (option: Country) => {
         if (option === selected) {
-            selected = { code: "", name: DEFAULT_DROPDOWN_VALUE, native: "" };
+            selected = DEFAULT_COUNTRY;
             onChange?.(selected);
             useFilters.set(false); // THIS MUST BE REFACTORED
         } else {

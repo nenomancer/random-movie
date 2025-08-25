@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "../../lib/constants";
+    import { FILTER_DEFAULTS } from "../../lib/constants";
     export let placeholder: string;
     export let yearValue: string | "" = "";
     let inputElement: HTMLInputElement;
@@ -24,8 +24,10 @@
         }
 
         let numeric = Number(input.value);
-        if (numeric < RELEASE_YEAR_MIN) numeric = RELEASE_YEAR_MIN;
-        if (numeric > RELEASE_YEAR_MAX) numeric = RELEASE_YEAR_MAX;
+        if (numeric < FILTER_DEFAULTS.YEAR_MIN)
+            numeric = FILTER_DEFAULTS.YEAR_MIN;
+        if (numeric > FILTER_DEFAULTS.YEAR_MAX)
+            numeric = FILTER_DEFAULTS.YEAR_MAX;
 
         input.value = numeric.toString();
         yearValue = input.value;
@@ -35,8 +37,8 @@
 
     function clamp(value: number) {
         return Math.min(
-            RELEASE_YEAR_MAX,
-            Math.max(RELEASE_YEAR_MIN, value),
+            FILTER_DEFAULTS.YEAR_MAX,
+            Math.max(FILTER_DEFAULTS.YEAR_MIN, value),
         ).toString();
     }
 
@@ -57,8 +59,8 @@
 </script>
 
 <input
-    min={RELEASE_YEAR_MIN}
-    max={RELEASE_YEAR_MAX}
+    min={FILTER_DEFAULTS.YEAR_MIN}
+    max={FILTER_DEFAULTS.YEAR_MAX}
     maxlength={4}
     {placeholder}
     inputmode="numeric"

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { DEFAULT_FILTER } from "../../lib/constants";
+    import { DEFAULT_FILTER, TAB_NAME } from "../../lib/constants";
     import { currentFilters, useFilters } from "../../stores/movie";
     import { activeTab } from "../../stores/ui";
     import FilterEnable from "../filters/FilterEnable.svelte";
@@ -10,7 +10,7 @@
         if ($activeTab != tabName) {
             activeTab.set(tabName);
         } else {
-            activeTab.set("Info");
+            activeTab.set(TAB_NAME.INFO);
         }
     }
 
@@ -27,16 +27,16 @@
     <button
         class="control-button search"
         on:click={() => fetchMovies()}
-        class:active={$activeTab === "Loading"}
-        disabled={$activeTab === "Loading"}
+        class:active={$activeTab === TAB_NAME.LOADING}
+        disabled={$activeTab === TAB_NAME.LOADING}
         style="display: block;">Search</button
     >
 
     <div class="controls-filters">
         <button
             class="control-button"
-            on:click={() => toggleTab("Filters")}
-            class:active={$activeTab === "Filters"}
+            on:click={() => toggleTab(TAB_NAME.FILTERS)}
+            class:active={$activeTab === TAB_NAME.FILTERS}
             style="display: block;">Set</button
         >
         <FilterEnable />
@@ -49,8 +49,8 @@
     </div>
     <button
         class="control-button about"
-        on:click={() => toggleTab("About")}
-        class:active={$activeTab === "About"}
+        on:click={() => toggleTab(TAB_NAME.ABOUT)}
+        class:active={$activeTab === TAB_NAME.ABOUT}
         style="display: block;">About</button
     >
 </div>

@@ -3,11 +3,21 @@ import type { Country, Filters, Movie } from "./types";
 
 export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
 export const DEFAULT_DROPDOWN_VALUE = "Any";
-export const RELEASE_YEAR_MIN = 1878;
-export const RELEASE_YEAR_MAX = new Date().getFullYear();
 export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"
-export const TAB_INFO = "Info"
-export const TAB_FILTERS = "Filters"
+
+export const FILTER_DEFAULTS = {
+    DROPDOWN: "Any",
+    YEAR_MIN: 1878,
+    YEAR_MAX: new Date().getFullYear()
+}
+
+export const TAB_NAME = {
+    INFO: 'Info',
+    FILTERS: 'Filters',
+    ABOUT: 'About',
+    LOADING: 'Loading',
+    ERROR: 'Error',
+}
 
 export const API = {
     OPTIONS: {
@@ -43,8 +53,8 @@ export const DEFAULT_MOVIE: Movie = {
 export const DEFAULT_FILTER: Filters = {
     country: "Any",
     genres: [],
-    yearFrom: RELEASE_YEAR_MIN,
-    yearTo: RELEASE_YEAR_MAX,
+    yearFrom: FILTER_DEFAULTS.YEAR_MIN,
+    yearTo: FILTER_DEFAULTS.YEAR_MAX,
     ratingFrom: 0,
     ratingTo: 10,
     runtimeFrom: 0,

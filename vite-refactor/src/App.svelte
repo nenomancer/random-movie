@@ -24,6 +24,7 @@
     DEFAULT_MOVIE,
     DOCUMENT_TITLE,
     LOCAL_SESSION_HISTORY_KEY,
+    TAB_NAME,
   } from "./lib/constants";
 
   import { currentFilters, currentMovie, useFilters } from "./stores/movie";
@@ -91,7 +92,7 @@
   }
 
   function fetchMovies(uiQueries = "", totalPages = 500) {
-    activeTab.set("Loading");
+    activeTab.set(TAB_NAME.LOADING);
     mainRef?.classList?.add("loading-anim");
 
     let filterQueries = "";
@@ -143,9 +144,8 @@
 
   function getRandomMovie(data: Array<Movie>) {
     console.log("ALL LOADING ANIMATINOS HERE");
-
-    activeTab.set("Loading");
     mainRef?.classList?.add("loading-anim");
+    activeTab.set(TAB_NAME.LOADING);
 
     const randomIndex = Math.floor(Math.random() * data.length);
 
@@ -159,6 +159,7 @@
   }
 
   async function getMovie(movieId: number) {
+    
     currentMovie.set(DEFAULT_MOVIE);
     fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
@@ -225,7 +226,7 @@
 
         setTimeout(() => {
           console.log("Delayed action");
-          activeTab.set("Info");
+          activeTab.set(TAB_NAME.INFO);
         }, 1000);
       });
   }
@@ -380,7 +381,7 @@
 <main bind:this={mainRef}>
   <Monitor classes={["main"]}>
     <Screen>
-      <TabContent name={"Info"}>
+      <TabContent name={TAB_NAME.INFO}>
         <div class="kurac-border">
           <InfoTitle />
           <ExtraInfo
@@ -421,7 +422,7 @@
         <InfoPlot />
       </TabContent>
 
-      <TabContent name={"Filters"}>
+      <TabContent name={TAB_NAME.FILTERS}>
         <FilterCountries
           id="country"
           label={"Country"}
@@ -452,20 +453,20 @@
             }))}
         />
       </TabContent>
-      <TabContent name="Loading">Loading....</TabContent>
-      <TabContent name="Error">Error!!!</TabContent>
-      <TabContent name="About">About moi</TabContent>
+      <TabContent name={TAB_NAME.LOADING}>Loading....</TabContent>
+      <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
+      <TabContent name={TAB_NAME.ABOUT}>About moi</TabContent>
     </Screen>
   </Monitor>
   <Monitor classes={["poster"]}>
     <Screen>
-      <TabContent name="Info">
+      <TabContent name={TAB_NAME.INFO}>
         <InfoPoster />
       </TabContent>
-      <TabContent name="Loading">Loading...</TabContent>
-      <TabContent name="Error">Error!!!</TabContent>
-      <TabContent name="About">ABOUT MEE!!!!</TabContent>
-      <TabContent name="Filters">Filter Sectuin</TabContent>
+      <TabContent name={TAB_NAME.LOADING}>Loading...</TabContent>
+      <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
+      <TabContent name={TAB_NAME.ABOUT}>ABOUT MEE!!!!</TabContent>
+      <TabContent name={TAB_NAME.FILTERS}>Filter Sectuin</TabContent>
     </Screen>
   </Monitor>
   <div class="extras-disk" style="grid-area: disk; background: grey;">
