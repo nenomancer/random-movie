@@ -92,7 +92,7 @@
 
   function fetchMovies(uiQueries = "", totalPages = 500) {
     activeTab.set("Loading");
-    mainRef.classList.add("loading-anim");
+    mainRef?.classList?.add("loading-anim");
 
     let filterQueries = "";
 
@@ -145,7 +145,7 @@
     console.log("ALL LOADING ANIMATINOS HERE");
 
     activeTab.set("Loading");
-    mainRef.classList.add("loading-anim");
+    mainRef?.classList?.add("loading-anim");
 
     const randomIndex = Math.floor(Math.random() * data.length);
 
@@ -221,7 +221,7 @@
       })
       .finally(() => {
         // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
-        mainRef.classList.remove("loading-anim");
+        mainRef?.classList?.remove("loading-anim");
 
         setTimeout(() => {
           console.log("Delayed action");
@@ -295,7 +295,6 @@
   }
 
   function getMoviesByActor(actorId: number) {
-    console.log("HERE??");
     // resetFilter();
     fetch(
       `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
