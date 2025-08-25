@@ -28,6 +28,7 @@
         class="control-button search"
         on:click={() => fetchMovies()}
         class:active={$activeTab === "Loading"}
+        disabled={$activeTab === "Loading"}
         style="display: block;">Search</button
     >
 
