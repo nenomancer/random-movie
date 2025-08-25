@@ -1,10 +1,16 @@
 <script lang="ts">
     let ratingFrom: number = 0.0;
     let ratingTo: number = 10.0;
+    let sliderTrack: HTMLElement;
     export let onChange: (from: number, to: number) => void;
 
     function handleOnChange() {
         onChange(ratingFrom, ratingTo);
+        const percent1 = (ratingFrom / 10) * 100;
+        const percent2 = (ratingTo / 10) * 100;
+
+        // TODO: make sure colors use variables
+        sliderTrack.style.background = `linear-gradient(to right, red ${percent1}%, white ${percent1}%, white ${percent2}%, red ${percent2}%)`;
     }
 
     const minGap = 0;
@@ -16,6 +22,7 @@
         } else {
             ratingFrom = value;
         }
+
         handleOnChange();
     }
 
@@ -34,6 +41,7 @@
     <!-- rating filter  -->
     <h3>Rating</h3>
     <div class="ranges">
+        <div class="range-track-bg" bind:this={sliderTrack}></div>
         <input
             id="ratingFrom"
             type="range"
@@ -94,8 +102,17 @@
     }
 
     .ranges {
-        background-color: red;
         position: relative;
+        display: flex;
+        justify-content: center;
+        padding-inline: 50px;
+        .range-track,
+        .range-track-bg {
+            inset-inline: 0.75rem;
+            height: 4px;
+            background-color: white;
+            position: absolute;
+        }
     }
 
     input[type="range"] {
@@ -118,45 +135,41 @@
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
-        height: 5px;
     }
     input[type="range"]::-moz-range-thumb,
     input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
         border: none;
         appearance: none;
-        // height: 2.6rem;
-        width: 2.6rem;
-        background-color: #3264fe;
+        height: 2.6rem;
         cursor: pointer;
-        margin-top: -9px;
         pointer-events: auto;
         border-radius: 0;
     }
 
     input[type="range"] {
-        &:first-child::-moz-range-thumb {
+        &#ratingFrom::-moz-range-thumb {
             background: linear-gradient(-45deg, white 75%, transparent 75%);
             clip-path: rect(0 50% 100% 0%);
         }
-        &:nth-of-type(2)::-moz-range-thumb {
+        &#ratingTo::-moz-range-thumb {
             background: linear-gradient(45deg, white 75%, transparent 75%);
             clip-path: rect(0 100% 100% 50%);
         }
     }
 
     input[type="range"]::-ms-thumb {
-        appearance: none;
-        height: 1.7em;
-        width: 1.7em;
-        cursor: pointer;
-        border-radius: 50%;
-        background-color: #3264fe;
-        pointer-events: auto;
+        // appearance: none;
+        // height: 1.7em;
+        // width: 1.7em;
+        // cursor: pointer;
+        // border-radius: 50%;
+        // background-color: #3264fe;
+        // pointer-events: auto;
     }
     input[type="range"]:active::-webkit-slider-thumb {
-        background-color: #ffffff;
-        background-color: red;
-        border: 3px solid #3264fe;
+        // background-color: #ffffff;
+        // background-color: red;
+        // border: 3px solid #3264fe;
     }
 </style>
