@@ -1,7 +1,7 @@
 <script lang="ts">
     export let label: string | undefined;
     export let onClick: () => void;
-    export let onKeydown: () => void | null;
+    export let onKeydown: () => void | null = () => null;
     export let ariaLabel: string;
     export let description: string;
 </script>
