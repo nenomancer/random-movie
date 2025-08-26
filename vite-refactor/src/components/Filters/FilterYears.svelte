@@ -9,11 +9,14 @@
     <div class="filters">
         <FilterYear
             placeholder={FILTER_DEFAULTS.YEAR_MIN.toString()}
-            onChange={(yearValue) =>
-                currentFilters.update((filters) => ({
-                    ...filters,
-                    yearFrom: yearValue,
-                }))}
+            onChange={(yearValue) => {
+                if (yearValue) {
+                    currentFilters.update((filters) => ({
+                        ...filters,
+                        yearFrom: yearValue,
+                    }));
+                }
+            }}
         />
         <span>-</span>
         <FilterYear

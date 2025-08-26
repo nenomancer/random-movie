@@ -15,6 +15,8 @@
         const input = event.target as HTMLInputElement;
         input.value = input.value.replace(/\D/g, "");
         yearValue = input.value;
+
+        onChange(Number(yearValue));
     }
 
     function handleChange(event: Event) {
@@ -55,6 +57,7 @@
         }
 
         moveCursorToEnd();
+        onChange(Number(yearValue));
     }
 </script>
 
