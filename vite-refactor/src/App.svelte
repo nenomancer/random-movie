@@ -33,6 +33,8 @@
 
   import { onDestroy, onMount } from "svelte";
   import "./styles/variables.css";
+  import Disk from "./components/ui/Disk.svelte";
+  import Extras from "./components/ui/Extras.svelte";
 
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
@@ -93,7 +95,7 @@
 
   function fetchMovies(uiQueries = "", totalPages = 500) {
     activeTab.set(TAB_NAME.LOADING);
-    mainRef?.classList?.add("loading-anim");
+    mainRef?.classList.add("loading-anim");
 
     let filterQueries = "";
 
@@ -159,11 +161,16 @@
   }
 
   async function getMovie(movieId: number) {
-    
     currentMovie.set(DEFAULT_MOVIE);
-    fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
+    await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
+        if (data.backdrop_path) {
+          currentMovie.update((movie) => ({
+            ...movie,
+            backdrop: `${API.POSTER}/${data.backdrop_path}`,
+          }));
+        }
         if (data.poster_path) {
           currentMovie.update((movie) => ({
             ...movie,
@@ -222,8 +229,10 @@
       })
       .finally(() => {
         // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
-        mainRef?.classList?.remove("loading-anim");
 
+        setTimeout(() => {
+          mainRef?.classList?.remove("loading-anim");
+        }, 500);
         setTimeout(() => {
           console.log("Delayed action");
           activeTab.set(TAB_NAME.INFO);
@@ -268,7 +277,7 @@
       .catch((err) => console.error(err));
   }
 
-  function generateGenres() {
+  async function generateGenres() {
     return fetch(API.GENRES, API.OPTIONS)
       .then((response) => response.json())
       .then((response) => {
@@ -280,7 +289,7 @@
       });
   }
 
-  function generateCountries() {
+  async function generateCountries() {
     return fetch(API.COUNTRIES, API.OPTIONS)
       .then((response) => response.json())
       .then((response) => {
@@ -469,15 +478,10 @@
       <TabContent name={TAB_NAME.FILTERS}>Filter Sectuin</TabContent>
     </Screen>
   </Monitor>
-  <div class="extras-disk" style="grid-area: disk; background: grey;">
-    <img style="width: 40%" src={$currentMovie.poster} alt="" />
-  </div>
+  <Disk />
   <ControlPanel {fetchMovies} />
   <NoteContainer {getMovie} />
-  <div style="grid-area: extra; background: grey;">
-    <h4>country: {$currentFilters?.country}</h4>
-    <h4>genres: {$currentFilters?.genres}</h4>
-  </div>
+  <Extras />
 </main>
 
 <!-- 240px -->
