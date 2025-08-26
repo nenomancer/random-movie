@@ -43,10 +43,17 @@
 }
 
 
-@mixin text-bevel($color: pink) {
+@mixin text-bevel($color: variables.$monitor-color) {
     color: transparent;
-    text-shadow: 0 0 0.5px $color, 0.75px 0.75px 0.75px darken($color, 40),
-        -0.75px -0.75px 0.75px lighten($color, 35);
+    text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px darken($color, 40),
+        -0.5px -0.5px 0.5px lighten($color, 35);
+}
+
+@mixin text-inset($color: variables.$monitor-color) {
+    color: transparent;
+
+    text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px lighten($color, 30),
+        -0.5px -0.5px 0.5px darken($color, 40);
 }
 
 @mixin control-button() {
