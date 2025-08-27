@@ -28,46 +28,57 @@
         if ($currentMovie.runtime) {
             return formatRuntime($currentMovie.runtime);
         } else {
-            return undefined;
+            return "-";
+        }
+    }
+
+    function getYearLabel() {
+        if ($currentMovie.year) {
+            return $currentMovie.year.toString();
+        } else {
+            return "-";
+        }
+    }
+
+    function getLabel(property: any) {
+        if (property) {
+            return property.toString();
+        } else {
+            return "-";
         }
     }
 </script>
 
 <section class="extra-information" aria-label="Extra information">
-    <!-- {#if $currentMovie.year} -->
     <Button
-        label={$currentMovie.year ? $currentMovie.year.toString() : undefined}
-        onClick={() => getMoviesByReleaseDate($currentMovie.year!)}
+        label={getYearLabel()}
+        onClick={() =>
+            $currentMovie.year && getMoviesByReleaseDate($currentMovie.year)}
         ariaLabel={`Release year: ${$currentMovie.year}`}
         description={`This movie's release year. Click to find another movie released in ${$currentMovie.year}.`}
     />
-    <!-- {/if} -->
-    <!-- {#if $currentMovie.country} -->
     <Button
-        label={$currentMovie.country.native}
-        onClick={() => getMoviesByCountry($currentMovie.country.code)}
-        ariaLabel={`Country: ${$currentMovie.country.name}.`}
-        description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`}
+        label={getLabel($currentMovie.country?.native)}
+        onClick={() =>
+            $currentMovie.country &&
+            getMoviesByCountry($currentMovie.country?.code)}
+        ariaLabel={`Country: ${$currentMovie.country?.name}.`}
+        description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country?.name}`}
     />
-    <!-- {/if} -->
-    <!-- {#if $currentMovie.rating} -->
     <Button
-        label={$currentMovie.rating
-            ? $currentMovie.rating.toString()
-            : undefined}
-        onClick={() => getMoviesByRating($currentMovie.rating!)}
+        label={getLabel($currentMovie.rating)}
+        onClick={() =>
+            $currentMovie.rating && getMoviesByRating($currentMovie.rating)}
         ariaLabel={`TMDB rating: ${$currentMovie.rating}.`}
         description={`TMDB rating: ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
+        disabled={!$currentMovie.rating}
     />
-    <!-- {/if} -->
-    <!-- {#if $currentMovie.runtime} -->
     <Button
         label={getRuntimeLabel()}
         onClick={() => getMoviesByRuntime($currentMovie.runtime!)}
         ariaLabel={getRuntimeAria()}
         description={getRuntimeDescription()}
     />
-    <!-- {/if} -->
 </section>
 
 <style lang="scss">
