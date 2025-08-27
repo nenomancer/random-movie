@@ -4,9 +4,16 @@
     export let onKeydown: () => void | null = () => null;
     export let ariaLabel: string;
     export let description: string;
+    export let disabled: boolean = false;
 </script>
 
-<button aria-label={ariaLabel} data-info={description} on:click={onClick} on:keydown={onKeydown}>
+<button
+    aria-label={ariaLabel}
+    data-info={description}
+    {disabled}
+    on:click={onClick}
+    on:keydown={onKeydown}
+>
     {label}
 </button>
 
@@ -27,7 +34,7 @@
         border-right: none;
     }
 
-    button:hover,
+    button:hover:not(:disabled),
     button:focus-visible {
         background-color: var(--color-highlight);
         color: var(--color-dark);
