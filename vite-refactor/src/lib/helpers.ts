@@ -1,5 +1,7 @@
+import { get } from "svelte/store";
+import { currentFilters, useFilters } from "../stores/movie";
 import { activeTab } from "../stores/ui";
-import { DEFAULT_DROPDOWN_VALUE, RELEASE_YEAR_MAX, RELEASE_YEAR_MIN } from "./constants";
+import { DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, FILTER_DEFAULTS, TAB_NAME } from "./constants";
 import type { Filters } from "./types";
 
 export function buildFilterQuery(filters: Filters) {
@@ -15,13 +17,13 @@ export function buildFilterQuery(filters: Filters) {
     }
 
     if (filters.yearFrom) {
-        const clamped = clampYearValue(filters.yearFrom, RELEASE_YEAR_MIN);
+        const clamped = clampYearValue(filters.yearFrom, FILTER_DEFAULTS.YEAR_MIN);
         const from = `${clamped}-01-01`
         queries.push(`primary_release_date.gte=${from}`)
     }
 
     if (filters.yearTo) {
-        const clamped = clampYearValue(filters.yearTo, RELEASE_YEAR_MAX);
+        const clamped = clampYearValue(filters.yearTo, FILTER_DEFAULTS.YEAR_MAX);
         const to = `${clamped}-12-31`
         queries.push(`primary_release_date.lte=${to}`)
     }
@@ -41,7 +43,7 @@ function clampYearValue(input: number, fallback: number) {
     if (isNaN(input)) {
         return fallback;
     }
-    return Math.max(Math.min(input, RELEASE_YEAR_MAX), RELEASE_YEAR_MIN)
+    return Math.max(Math.min(input, FILTER_DEFAULTS.YEAR_MAX), FILTER_DEFAULTS.YEAR_MIN)
 }
 
 export function padNumber(number: number, size = 10) {
@@ -57,5 +59,13 @@ export function showResultError() {
     console.error(
         "A result with the filtered parameters cannot be found! Try changing some of them, if the error persists, please reach out.",
     );
-    activeTab.set("Error");
+    activeTab.set(TAB_NAME.ERROR);
+}
+
+export function checkFilterEnable() {
+    if (JSON.stringify(get(currentFilters)) == JSON.stringify(DEFAULT_FILTER)) {
+        useFilters.set(false);
+    } else {
+        useFilters.set(true);
+    }
 }
