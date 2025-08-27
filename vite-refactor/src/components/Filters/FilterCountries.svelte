@@ -1,7 +1,6 @@
 <script lang="ts">
-    import {
-        DEFAULT_COUNTRY,
-    } from "../../lib/constants";
+    import { DEFAULT_COUNTRY } from "../../lib/constants";
+    import { checkFilterEnable } from "../../lib/helpers";
     import type { Country } from "../../lib/types";
     import { currentFilters, useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
@@ -41,13 +40,12 @@
         if (option === selected) {
             selected = DEFAULT_COUNTRY;
             onChange?.(selected);
-            useFilters.set(false); // THIS MUST BE REFACTORED
         } else {
             selected = option;
             toggleDropdown(true);
             onChange?.(option);
-            useFilters.set(true); // THIS MUST BE REFACTORED
         }
+        checkFilterEnable();
     };
 
     $: openDropdown.subscribe((activeId) => {

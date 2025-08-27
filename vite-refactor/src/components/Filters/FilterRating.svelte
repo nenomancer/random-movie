@@ -1,4 +1,8 @@
 <script lang="ts">
+    import { DEFAULT_FILTER } from "../../lib/constants";
+    import { checkFilterEnable } from "../../lib/helpers";
+    import { currentFilters } from "../../stores/movie";
+
     let ratingFrom: number = 0.0;
     let ratingTo: number = 10.0;
     let sliderTrack: HTMLElement;
@@ -11,6 +15,7 @@
 
         // TODO: make sure colors use variables
         sliderTrack.style.background = `linear-gradient(to right, red ${percent1}%, white ${percent1}%, white ${percent2}%, red ${percent2}%)`;
+        checkFilterEnable();
     }
 
     const minGap = 0;

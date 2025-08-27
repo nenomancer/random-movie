@@ -1,5 +1,6 @@
 <script lang="ts">
     import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
+    import { checkFilterEnable } from "../../lib/helpers";
     import type { Genre } from "../../lib/types";
     import { currentFilters, useFilters } from "../../stores/movie";
     import { openDropdown } from "../../stores/ui";
@@ -54,13 +55,8 @@
         genreIds = selected.map((genre) => genre.id.toString());
         genreNames = selected.map((genre) => genre.name);
 
-        if (genreIds.length) {
-            useFilters.set(true); // THIS MUST BE REFACTORED
-        } else {
-            useFilters.set(false); // THIS MUST BE REFACTORED
-        }
-
         onChange?.(genreIds);
+        checkFilterEnable();
     };
 </script>
 

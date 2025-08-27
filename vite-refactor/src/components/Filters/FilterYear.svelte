@@ -1,5 +1,6 @@
 <script lang="ts">
     import { FILTER_DEFAULTS } from "../../lib/constants";
+    import { checkFilterEnable } from "../../lib/helpers";
     export let placeholder: string;
     export let yearValue: string | "" = "";
     let inputElement: HTMLInputElement;
@@ -17,6 +18,7 @@
         yearValue = input.value;
 
         onChange(Number(yearValue));
+        checkFilterEnable();
     }
 
     function handleChange(event: Event) {
@@ -35,6 +37,7 @@
         yearValue = input.value;
 
         onChange(Number(yearValue));
+        checkFilterEnable();
     }
 
     function clamp(value: number) {
@@ -58,6 +61,7 @@
 
         moveCursorToEnd();
         onChange(Number(yearValue));
+        checkFilterEnable();
     }
 </script>
 
