@@ -3,7 +3,7 @@
 
 
 @mixin edge-bevel($size: 2px,
-    $blur: null,
+    $blur: 1px,
     $opacity: 0.5,
     $light: white,
     $shadow: black) {
@@ -22,7 +22,7 @@
 }
 
 @mixin edge-inset($size: 2px,
-    $blur: null,
+    $blur: 1px,
     $opacity: 0.5,
     $light: white,
     $shadow: black) {

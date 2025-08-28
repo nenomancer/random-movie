@@ -13,7 +13,7 @@
                 <img src={$currentMovie.backdrop} alt="" />
             {/if}
             {#if !$currentMovie.backdrop}
-                <p class="title-name">{$currentMovie.title.name}!</p>
+                <p class="title">{$currentMovie.title.name}</p>
             {/if}
             <!-- <p>kurac</p> -->
         </div>
@@ -28,6 +28,9 @@
     @use "sass:color";
     @use "../../styles/variables";
     @use "../../styles/mixins";
+
+    @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
+
     section {
         @include mixins.edge-bevel();
         grid-area: disk;
@@ -68,6 +71,8 @@
         margin-bottom: 0.25rem;
         margin-top: 1rem;
         &::before {
+            @include mixins.edge-inset($size: 1px);
+
             content: "";
             position: absolute;
             inset: 0;
@@ -79,7 +84,6 @@
                 $lightness: -25%,
                 $saturation: -10%
             );
-            @include mixins.edge-inset($size: 1px);
             clip-path: rect(-100% 110% 100% -110%);
         }
 
@@ -98,14 +102,15 @@
     }
 
     .image {
+        @include mixins.edge-bevel($size: 1px);
+
         $color: color.adjust(
             variables.$monitor-color,
             $lightness: -50%,
             $saturation: -15%
         );
-        padding: 1rem;
+        padding: 0.75rem;
         background: $color;
-        @include mixins.edge-bevel($size: 1px);
         height: 100%;
         margin-right: 1rem;
         margin-top: 1.5rem;
@@ -115,6 +120,16 @@
         position: relative;
 
         &::before {
+            @include mixins.edge-inset($size: 0.5px, $opacity: 0.3);
+            content: "";
+            position: absolute;
+            inset: 0;
+            inset: 0.6rem;
+            bottom: 1.85rem;
+            border-radius: 0.1rem;
+        }
+
+        &::after {
             content: "Nenomancer Cartridge";
             @include mixins.text-bevel($color: $color);
             color: $color;
@@ -128,31 +143,45 @@
             text-align: center;
             font-weight: bold;
             line-height: 1;
-            font-size: 0.75rem;
+            font-size: 0.5rem;
             padding-bottom: 0.1rem;
             text-transform: uppercase;
-
+            text-wrap: nowrap;
             box-shadow:
                 0 2.5px 1px 0 rgba(0, 0, 0, 0.75),
                 0 3px 1px 0 rgba(255, 255, 255, 0.6);
         }
-
-        &::after {
-        }
         img {
             width: 100%;
             object-fit: contain;
-            border-radius: 0.25rem;
-            margin-bottom: 1.5rem;
+            border-radius: 0.15rem;
             box-shadow:
-                1px 0.5px 0 0 rgba(white, 0.6),
-                -0.75px -0.75px 0.5px 0 rgba(black, 0.8);
+                -0.66px -0.5px 0 -0.25px rgba(white, 0.35),
+                0.75px 0.75px 0.5px -0.25px rgba(black, 0.8);
+            rotate: 0.75deg; // maybe randomize?
         }
     }
 
     .title {
-        padding: 2rem;
+        // padding: 2rem;
         text-align: center;
+        background-color: rgb(228, 228, 228);
+        box-shadow: inset 0 0 0 0.25rem darkblue;
+        position: absolute;
+        inset: 0.75rem;
+        bottom: 2rem;
+        border-radius: 0.15rem;
+        color: darkblue;
+        font-family: "Caveat";
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        padding-inline: 1rem;
+        rotate: -0.75deg; // maybe randomize?
+
     }
     .embed {
         @include mixins.text-inset();
