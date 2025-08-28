@@ -47,13 +47,14 @@
     @use "../../styles/variables";
     @use "sass:color";
     @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
 
     $tape-size: 1.5rem;
     .perspective-container {
         perspective: 1200px;
         position: absolute;
         bottom: 3rem;
-        left: 45%;
+        left: 45.75%;
         scale: 0.8;
     }
 
@@ -88,8 +89,7 @@
             to bottom,
             variables.$note-color,
             variables.$note-color 10.5%,
-            color.adjust($color: variables.$note-color, $lightness: -30%)
-            11.5%
+            color.adjust($color: variables.$note-color, $lightness: -30%) 11.5%
         );
         pointer-events: none;
         -webkit-font-smoothing: antialiased; /* For WebKit browsers */
@@ -130,7 +130,7 @@
 
     .note {
         padding-inline: 0.5rem;
-        line-height: 1.5;
+        line-height: 1;
         pointer-events: all;
         background-color: transparent;
         border: none;
@@ -141,10 +141,11 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: variables.$note-marker-color;
-        font-family: "Permanent Marker", cursive, "Arial";
+        font-family: "Caveat", cursive;
         font-weight: 700;
         font-style: normal;
         text-shadow: -0.5px -0.5px 0 grey;
+        font-size: 1.5rem;
 
         &:hover {
             text-decoration: underline;
@@ -159,6 +160,7 @@
         padding-inline: 1rem;
         padding-bottom: 1rem;
         font-size: 1.25rem;
+        text-transform: uppercase;
     }
     .note.to-favorites {
         align-self: flex-end;
