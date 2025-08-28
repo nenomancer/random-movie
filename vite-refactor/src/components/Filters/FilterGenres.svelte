@@ -128,8 +128,9 @@
     }
 
     .value {
-        /* display: flex; */
+        display: flex;
         flex: 1;
-        text-align: center;
+        white-space: nowrap;
+        overflow: scroll;
     }
 </style>
