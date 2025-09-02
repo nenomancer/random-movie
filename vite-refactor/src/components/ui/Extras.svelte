@@ -77,14 +77,15 @@
             </div>
             <!-- </div> -->
         </div>
-        <div>asdasd</div>
+        <div class="status-lights">STATUS LIGHTS</div>
     </div>
     <!-- </Monitor> -->
     <div class="extras-speaker">
-        <div class="speaker">SPEAKR</div>
+        <div class="speaker"></div>
         <div class="buttons">
             <span class="light"></span>
-            <button>Mute</button>
+            <label for="mute">Mute Audio</label>
+            <input type="checkbox" class="mute" id="mute" />
         </div>
     </div>
 </section>
@@ -148,13 +149,22 @@
         }
     }
     .extras-speaker {
+        @include mixins.edge-bevel();
+        background: variables.$monitor-color;
         grid-area: speaker;
-        background-color: red;
         display: grid;
         grid-template-rows: 1fr min-content;
+        padding: 1rem;
+        align-items: center;
+        gap: 1rem;
         .speaker {
+            @include mixins.edge-bevel($opacity: 0.5, $blur: 0.5rem);
             background-color: blue;
-            border-radius: 50%;
+            border-radius: 1rem;
+            background: radial-gradient(ellipse at center, black 15%, grey 70%);
+            background-repeat: repeat;
+            background-size: 0.25rem 0.25rem;
+            height: 100%;
         }
     }
 
