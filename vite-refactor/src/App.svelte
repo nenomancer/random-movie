@@ -21,6 +21,7 @@
   import type { Country, Genre, Movie, Person } from "./lib/types";
   import {
     API,
+    DEFAULT_FILTER,
     DEFAULT_MOVIE,
     DOCUMENT_TITLE,
     LOCAL_SESSION_HISTORY_KEY,
@@ -120,6 +121,8 @@
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
+    console.log("CURRENT FILTERS: ", filterQueries);
+
     fetch(
       `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`,
       API.OPTIONS,
@@ -165,6 +168,7 @@
     await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
+        console.log("MOVIE? ", data);
         if (data.backdrop_path) {
           currentMovie.update((movie) => ({
             ...movie,

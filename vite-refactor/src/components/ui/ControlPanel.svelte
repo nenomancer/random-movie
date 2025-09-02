@@ -21,8 +21,6 @@
     }
 </script>
 
-<!-- TODO: Export tab names as constants -->
-
 <div class="controls-container">
     <button
         class="control-button search"
@@ -94,10 +92,9 @@
     }
 
     .control-button {
+        @include mixins.control-button();
         transition: 250ms ease-out;
         border: none;
-        aspect-ratio: 1/1;
-        @include mixins.control-button();
     }
 
     .control-button-reset {
@@ -111,11 +108,7 @@
 
     .control-button.about {
         // width: 20%;
-        aspect-ratio: unset;
+        // aspect-ratio: unset;
 
-        &,
-        &::after {
-            border-radius: 50%;
-        }
     }
 </style>
