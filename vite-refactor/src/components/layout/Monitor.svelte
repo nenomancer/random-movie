@@ -1,8 +1,21 @@
 <script lang="ts">
     export let classes: Array<string> = [""];
+    export let padding: number | undefined = undefined;
+    export let radius: number | undefined = undefined;
+
+    const default_values = {
+        padding: "2.5rem",
+        radius: "2px",
+    };
 </script>
 
-<div class={`monitor ${classes && classes.join(" ")}`}>
+<div
+    class={`monitor ${classes && classes.join(" ")}`}
+    style={`
+    ${padding ? `padding: ${padding}rem;` : `padding: ${default_values.padding}rem;`}
+    ${radius ? `border-radius: ${radius}px;` : `border-radius: ${default_values.radius}px;`}
+    `}
+>
     <slot />
 </div>
 
@@ -30,5 +43,12 @@
 
     .poster {
         grid-area: poster;
+    }
+    .extras-info {
+        grid-area: info;
+    }
+    .monitor.extras-filter {
+        grid-area: filters;
+        grid-column: span 2;
     }
 </style>
