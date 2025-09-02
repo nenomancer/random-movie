@@ -1,7 +1,6 @@
 <script lang="ts">
     import { DEFAULT_FILTER, TAB_NAME } from "../../lib/constants";
-    import { currentFilters, useFilters } from "../../stores/movie";
-    import { activeTab } from "../../stores/ui";
+    import { activeTab, currentFilters, useFilters } from "../../lib/stores.ts";
     import FilterEnable from "../filters/FilterEnable.svelte";
 
     export let fetchMovies: () => void;

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentHistory } from "../../stores/history";
+    import { currentHistory } from "../../lib/stores.ts";
     export let getMovie: (id: number) => void;
     let isFlipped: boolean = false;
     // use ref for go to favorites button

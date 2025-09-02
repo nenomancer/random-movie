@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentMovie } from "../../stores/movie";
+    import { currentMovie } from "../../lib/stores.ts";
 </script>
 
 <section id="disk">
@@ -48,6 +48,10 @@
             "grip content content content";
         transition-delay: 500ms !important;
         position: relative;
+
+        @media screen and (max-width: 580px) {
+            display: none;
+        }
     }
 
     .content {
@@ -181,7 +185,6 @@
         align-items: center;
         padding-inline: 1rem;
         rotate: -0.75deg; // maybe randomize?
-
     }
     .embed {
         @include mixins.text-inset();

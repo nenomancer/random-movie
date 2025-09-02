@@ -1,6 +1,5 @@
 import { get } from "svelte/store";
-import { currentFilters, useFilters } from "../stores/movie";
-import { activeTab } from "../stores/ui";
+import { activeTab, currentFilters, useFilters } from "../lib/stores";
 import { DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, FILTER_DEFAULTS, TAB_NAME } from "./constants";
 import type { Filters } from "./types";
 

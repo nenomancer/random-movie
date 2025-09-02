@@ -2,8 +2,11 @@
     import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
     import type { Genre } from "../../lib/types";
-    import { currentFilters, useFilters } from "../../stores/movie";
-    import { openDropdown } from "../../stores/ui";
+    import {
+        openDropdown,
+        currentFilters,
+        useFilters,
+    } from "../../lib/stores.ts";
     import Button from "../ui/Button.svelte";
 
     export let label: string;

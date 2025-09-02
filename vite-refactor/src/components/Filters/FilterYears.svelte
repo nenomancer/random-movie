@@ -1,6 +1,6 @@
 <script lang="ts">
     import { FILTER_DEFAULTS } from "../../lib/constants";
-    import { currentFilters } from "../../stores/movie";
+    import { currentFilters } from "../../lib/stores.ts";
     import FilterYear from "./FilterYear.svelte";
 </script>
 

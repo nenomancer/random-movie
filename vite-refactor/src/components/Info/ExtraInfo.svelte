@@ -1,6 +1,6 @@
 <script lang="ts">
     import { formatRuntime, padNumber } from "../../lib/helpers";
-    import { currentMovie } from "../../stores/movie";
+    import { currentMovie } from "../../lib/stores.ts";
     import Button from "../ui/Button.svelte";
 
     export let getMoviesByReleaseDate: (currentYear: number) => void;

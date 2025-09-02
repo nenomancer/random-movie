@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentMovie } from "../../stores/movie";
+    import { currentMovie } from "../../lib/stores.ts";
 </script>
 
 <section aria-labelledby="title" class="row">

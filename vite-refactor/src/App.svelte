@@ -28,9 +28,13 @@
     TAB_NAME,
   } from "./lib/constants";
 
-  import { currentFilters, currentMovie, useFilters } from "./stores/movie";
-  import { currentHistory } from "./stores/history";
-  import { activeTab } from "./stores/ui";
+  import {
+    currentHistory,
+    currentFilters,
+    currentMovie,
+    useFilters,
+    activeTab,
+  } from './lib/stores';
 
   import { onDestroy, onMount } from "svelte";
   import "./styles/variables.css";
@@ -121,8 +125,6 @@
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
-    console.log("CURRENT FILTERS: ", filterQueries);
-
     fetch(
       `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`,
       API.OPTIONS,
@@ -168,7 +170,6 @@
     await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
-        console.log("MOVIE? ", data);
         if (data.backdrop_path) {
           currentMovie.update((movie) => ({
             ...movie,

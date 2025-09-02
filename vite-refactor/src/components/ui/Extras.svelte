@@ -1,7 +1,7 @@
 <script lang="ts">
     import { FILTER_DEFAULTS } from "../../lib/constants";
     import type { Filters } from "../../lib/types";
-    import { currentFilters } from "../../stores/movie";
+    import { currentFilters } from "../../lib/stores.ts";
     import Monitor from "../layout/Monitor.svelte";
     import Screen from "../layout/Screen.svelte";
 

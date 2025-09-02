@@ -2,8 +2,11 @@
     import { DEFAULT_COUNTRY } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
     import type { Country } from "../../lib/types";
-    import { currentFilters, useFilters } from "../../stores/movie";
-    import { openDropdown } from "../../stores/ui";
+    import {
+        openDropdown,
+        currentFilters,
+        useFilters,
+    } from "../../lib/stores.ts";
 
     export let id: string;
 
