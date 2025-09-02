@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { DEFAULT_FILTER } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
-    import { currentFilters } from "../../stores/movie";
 
     let ratingFrom: number = 0.0;
     let ratingTo: number = 10.0;
     let sliderTrack: HTMLElement;
+    let sliderBg: HTMLElement;
     export let onChange: (from: number, to: number) => void;
 
     function handleOnChange() {
         onChange(ratingFrom, ratingTo);
         const percent1 = (ratingFrom / 10) * 100;
-        const percent2 = (ratingTo / 10) * 100;
+        const percent2 = 100 - ((ratingTo / 10) * 100);
 
         // TODO: make sure colors use variables
-        sliderTrack.style.background = `linear-gradient(to right, red ${percent1}%, white ${percent1}%, white ${percent2}%, red ${percent2}%)`;
+        sliderBg.style.left = `${percent1}%`;
+        sliderBg.style.right = `${percent2}%`;
         checkFilterEnable();
     }
 
@@ -44,9 +44,31 @@
 
 <section>
     <!-- rating filter  -->
-    <h3>Rating</h3>
+    <div class="header">
+        <h3>Rating</h3>
+
+        <div class="values">
+            <input
+                type="number"
+                min={0}
+                max={10.0}
+                bind:value={ratingFrom}
+                on:input={slideOne}
+                step="0.1"
+            />
+            <input
+                type="number"
+                min={0}
+                max={10.0}
+                bind:value={ratingTo}
+                on:input={slideTwo}
+                step="0.1"
+            />
+        </div>
+    </div>
     <div class="ranges">
         <div class="range-track-bg" bind:this={sliderTrack}></div>
+        <div class="range-track" bind:this={sliderBg}></div>
         <input
             id="ratingFrom"
             type="range"
@@ -66,24 +88,6 @@
             on:input={slideTwo}
         />
     </div>
-    <div class="values">
-        <input
-            type="number"
-            min={0}
-            max={10.0}
-            bind:value={ratingFrom}
-            on:input={slideOne}
-            step="0.1"
-        />
-        <input
-            type="number"
-            min={0}
-            max={10.0}
-            bind:value={ratingTo}
-            on:input={slideTwo}
-            step="0.1"
-        />
-    </div>
 </section>
 
 <style lang="scss">
@@ -92,14 +96,21 @@
     section {
         position: relative;
         display: grid;
-        grid-template-rows: repeat(3, 1fr);
-        gap: 0.5rem;
+        // grid-template-rows: repeat(3, 1fr);
+        // gap: 0.5rem;
         border: variables.$border-default;
+    }
+    .header {
+        display: grid;
+        grid-template-columns: 5rem 6fr;
+        flex: 1;
+        place-content: center;
+        place-items: center;
     }
 
     .values {
         display: flex;
-
+        width: 100%;
         input[type="number"] {
             flex: 1;
             text-align: center;
@@ -110,13 +121,17 @@
         position: relative;
         display: flex;
         justify-content: center;
-        padding-inline: 50px;
+        // padding-inline: 50px;
         .range-track,
         .range-track-bg {
             inset-inline: 0.75rem;
-            height: 4px;
-            background-color: white;
+            height: 1.5rem;
+            background-color: blue;
             position: absolute;
+        }
+
+        .range-track {
+            background-color: orange;
         }
     }
 
@@ -128,8 +143,7 @@
         outline: none;
         position: absolute;
         margin: auto;
-        top: 0;
-        bottom: 0;
+        top: -0.25rem;
         background-color: transparent;
         pointer-events: none;
     }
@@ -146,7 +160,6 @@
         -webkit-appearance: none;
         border: none;
         appearance: none;
-        height: 2.6rem;
         cursor: pointer;
         pointer-events: auto;
         border-radius: 0;
