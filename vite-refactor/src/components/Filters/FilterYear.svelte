@@ -2,7 +2,7 @@
     import { FILTER_DEFAULTS } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
     export let placeholder: string;
-    export let yearValue: string | "" = "";
+    export let yearValue: string | "" = placeholder;
     let inputElement: HTMLInputElement;
     export let onChange: (yearValue: number) => void;
 
