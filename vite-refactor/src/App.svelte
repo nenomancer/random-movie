@@ -17,6 +17,8 @@
   import FilterRating from "./components/filters/FilterRating.svelte";
   import FilterCountries from "./components/filters/FilterCountries.svelte";
 
+  import { addHistoryLog } from "./lib/useHistory.ts";
+
   import { buildFilterQuery, showResultError } from "./lib/helpers";
   import type { Country, Genre, Movie, Person } from "./lib/types";
   import {
@@ -34,7 +36,7 @@
     currentMovie,
     useFilters,
     activeTab,
-  } from './lib/stores';
+  } from "./lib/stores";
 
   import { onDestroy, onMount } from "svelte";
   import "./styles/variables.css";
@@ -73,30 +75,6 @@
     document.removeEventListener("keydown", handleGlobalKeyboard);
     window.removeEventListener("popstate", handlePopState);
   });
-
-  /**
-   * Logs movie to history without duplicates (local storage)
-   * @param movieId used to write and retrieve movie from history
-   * @param movieTitle used for display
-   */
-  function addHistoryLog(movieId: number, movieTitle: string) {
-    const maxHistory = 6;
-    currentHistory.update((currentHistory) => {
-      const updated = [...currentHistory, { id: movieId, name: movieTitle }];
-      const uniqueHistory = Array.from(
-        new Map(updated.map((item) => [item.id, item])).values(),
-      );
-
-      if (uniqueHistory.length > maxHistory) {
-        uniqueHistory.shift();
-      }
-      window.localStorage.setItem(
-        LOCAL_SESSION_HISTORY_KEY,
-        JSON.stringify(uniqueHistory),
-      );
-      return uniqueHistory;
-    });
-  }
 
   function fetchMovies(uiQueries = "", totalPages = 500) {
     activeTab.set(TAB_NAME.LOADING);
@@ -488,9 +466,6 @@
   <NoteContainer {getMovie} />
   <Extras />
 </main>
-
-<!-- 240px -->
-<!-- 480px -->
 
 <style global>
   @import "./styles/variables.css";
