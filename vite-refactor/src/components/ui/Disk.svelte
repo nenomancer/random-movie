@@ -50,7 +50,7 @@
         position: relative;
 
         @media screen and (max-width: 580px) {
-            display: none;
+            // display: none;
         }
     }
 

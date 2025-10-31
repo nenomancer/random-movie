@@ -27,8 +27,9 @@
 
 <style lang="scss">
     @use "../../styles/mixins";
+    @use "../../styles/variables";
     .control-button {
-        @include mixins.control-button();
+        @include mixins.control-button(variables.$button-size-short);
         border: none;
         transition: 250ms ease-out;
         position: relative;

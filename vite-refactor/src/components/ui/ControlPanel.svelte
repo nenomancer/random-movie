@@ -62,7 +62,7 @@
         display: flex;
         flex-direction: column;
         padding: 1rem;
-        row-gap: 1rem;
+        // row-gap: 2rem;
         background-color: variables.$monitor-color;
     }
 
@@ -71,14 +71,22 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         border: 1px solid white;
-        border-bottom: none;
-        padding-top: 1rem;
+        // border-bottom: none;
+        padding-block: 1rem;
+        // padding-top: 2rem;
+        margin-block: 1.2rem 0.6rem;
         padding-inline: 0.5rem;
+        gap: 0.25rem;
         // margin-block: 0.5rem;
         position: relative;
+        flex: 1;
+
+        .control-button {
+            @include mixins.control-button(variables.$button-size-short);
+        }
 
         &::before {
-            content: "filterszz";
+            content: "FILTERS";
             position: absolute;
             top: -0.5rem;
             left: 50%;
@@ -91,9 +99,10 @@
     }
 
     .control-button {
-        @include mixins.control-button();
+        @include mixins.control-button(variables.$button-size-tall);
         transition: 250ms ease-out;
         border: none;
+        flex: 1;
     }
 
     .control-button-reset {
@@ -108,6 +117,5 @@
     .control-button.about {
         // width: 20%;
         // aspect-ratio: unset;
-
     }
 </style>

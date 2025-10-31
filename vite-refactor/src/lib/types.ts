@@ -10,6 +10,7 @@ export interface Movie {
     rating?: number;
     plot?: string;
     poster?: string;
+    backdrop?: string;
 }
 export interface Title {
     imdb?: string,
@@ -45,6 +46,8 @@ export interface HistoryLog {
 export interface Filters {
     country?: string,
     genres?: string[],
+    actor?: string,
+    director?: string,
     yearFrom?: number,
     yearTo?: number,
     ratingFrom?: number,

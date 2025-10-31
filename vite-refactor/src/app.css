@@ -53,6 +53,29 @@ main {
 
   gap: .25rem;
   position: relative;
+  
+/* 
+  @media screen and (min-width: 580px) and (max-width: 640px) {
+    grid-template-areas:
+      "poster poster poster info info info info"
+      "poster poster poster info info info info"
+      "extra extra rating rating controls controls";
+    grid-template-columns: repeat(6, 1fr);
+    background-color: red;
+
+  } */
+
+  @media screen and (max-width: 580px) {
+    max-height: 640px;
+
+    grid-template-areas:
+      "poster poster"
+      "info info"
+      "disk controls"
+      "extra extra";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
 
   /* grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr); */
@@ -80,14 +103,25 @@ main {
 
 }
 
-.extras-disk {
+/* 
+.disk {
   background: red;
   transition: 250ms ease-out;
 }
 
-.loading-anim .extras-disk {
+.loading-anim .disk {
   background-color: blue;
   translate: 0 50vh;
+} */
+
+.loading-anim #disk {
+  /* translate: -10% 0; */
+  /* transition-delay: 0 !important; */
+}
+
+.loading-anim .image {
+  translate: 0 50vh;
+  /* transition-delay: 250ms !important; */
 }
 
 .kurac-border {

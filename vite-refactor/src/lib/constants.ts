@@ -1,31 +1,27 @@
 
-import type { Country, Filters, Movie } from "./types";
+import type { Country, Filters, Movie, Person } from "./types";
 
-export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
-export const DEFAULT_DROPDOWN_VALUE = "Any";
+// Document's title
 export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"
+// Cookie key for recent history
+export const LOCAL_SESSION_HISTORY_KEY = "movieHistory";
+// A default value for all dropdowns
+export const DEFAULT_DROPDOWN_VALUE = "Any";
 
-export const FILTER_DEFAULTS = {
-    DROPDOWN: "Any",
-    YEAR_MIN: 1878,
-    YEAR_MAX: new Date().getFullYear()
+export const CLASSNAMES = {
+    LOAD_IN: 'anim-load-in',
+    LOAD_OUT: 'anim-load-out'
 }
 
-export const TAB_NAME = {
-    INFO: 'Info',
-    FILTERS: 'Filters',
-    ABOUT: 'About',
-    LOADING: 'Loading',
-    ERROR: 'Error',
-}
 
+
+// API endpoints
 export const API = {
     OPTIONS: {
         method: "GET",
         headers: {
             accept: "application/json",
-            Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ODg3OTU1MzhmOGVmMGUxMTU5Y2E3MWJlNTM4YmU4NCIsIm5iZiI6MTcyNjUyMjM0OS4xNTU2MzEsInN1YiI6IjY2ZTVlZjYzZTgyMTFlY2QyMmIwM2I2ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.kZ--6xTSfsDgHDDlDqhVvxXFiLSdDCmwYXdThKJQH54",
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
         },
     },
     COUNTRIES: "https://api.themoviedb.org/3/configuration/countries",
@@ -36,6 +32,26 @@ export const API = {
     POSTER: "https://image.tmdb.org/t/p/w500",
 }
 
+
+// Default values for the Filters tab
+export const FILTER_DEFAULTS = {
+    DROPDOWN: "Any",
+    YEAR_MIN: 1878,
+    YEAR_MAX: new Date().getFullYear(),
+    RATING_MIN: 0,
+    RATING_MAX: 10,
+}
+
+// Tab names
+export const TAB_NAME = {
+    INFO: 'Info',
+    FILTERS: 'Filters',
+    ABOUT: 'About',
+    LOADING: 'Loading',
+    ERROR: 'Error',
+}
+
+// Default movie values
 export const DEFAULT_MOVIE: Movie = {
     id: -1,
     title: { name: "" },
@@ -48,11 +64,15 @@ export const DEFAULT_MOVIE: Movie = {
     runtime: undefined,
     plot: "",
     poster: "",
+    backdrop: "",
 };
 
+// Default filter values
 export const DEFAULT_FILTER: Filters = {
     country: "Any",
     genres: [],
+    actor: '',
+    director: '',
     yearFrom: FILTER_DEFAULTS.YEAR_MIN,
     yearTo: FILTER_DEFAULTS.YEAR_MAX,
     ratingFrom: 0,
@@ -62,5 +82,9 @@ export const DEFAULT_FILTER: Filters = {
 }
 
 export const DEFAULT_COUNTRY: Country = {
-    code: "", name: DEFAULT_DROPDOWN_VALUE, native: ""
+    code: "Any", name: DEFAULT_DROPDOWN_VALUE, native: "Any"
+}
+
+export const DEFAULT_PERSON: Person = {
+    name: '', id: 0, job: '',
 }

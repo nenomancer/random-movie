@@ -17,7 +17,7 @@
   import FilterRating from "./components/filters/FilterRating.svelte";
   import FilterCountries from "./components/filters/FilterCountries.svelte";
 
-  import { addHistoryLog } from "./lib/useHistory.ts";
+  import { addHistoryLog } from "./lib/useHistory";
 
   import { buildFilterQuery, showResultError } from "./lib/helpers";
   import type { Country, Genre, Movie, Person } from "./lib/types";
