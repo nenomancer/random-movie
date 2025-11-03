@@ -2,10 +2,11 @@
     import { FILTER_DEFAULTS } from "../../lib/constants";
     import { currentFilters } from "../../lib/stores.ts";
     import FilterYear from "./FilterYear.svelte";
+    export let label: string = "";
 </script>
 
 <section>
-    <h3>Year</h3>
+    <h3 class="title">{label}</h3>
     <div class="filters">
         <FilterYear
             placeholder={FILTER_DEFAULTS.YEAR_MIN.toString()}
@@ -15,7 +16,7 @@
                     yearFrom: yearValue,
                 }))}
         />
-        <span>-</span>
+        <!-- <span>-</span> -->
         <FilterYear
             placeholder={FILTER_DEFAULTS.YEAR_MAX.toString()}
             onChange={(yearValue) =>
@@ -27,21 +28,23 @@
     </div>
 </section>
 
-<style>
+<style lang="scss">
+    @use "../../styles/mixins";
     section {
         display: grid;
-        grid-template-columns: 5rem 6fr;
+        grid-template-columns: 1fr 6fr;
         border: var(--border-default);
     }
 
-    h3 {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .title {
+        @include mixins.ui-button();
+        pointer-events: none;
+        border-right: var(--border-default);
+        font-weight: bold;
     }
 
     .filters {
         display: flex;
-        gap: 1rem;
+        /* gap: 1rem; */
     }
 </style>

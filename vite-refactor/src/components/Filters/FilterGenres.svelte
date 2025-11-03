@@ -6,6 +6,7 @@
         openDropdown,
         currentFilters,
         useFilters,
+        resetFiltersSignal,
     } from "../../lib/stores.ts";
     import Button from "../ui/Button.svelte";
 
@@ -20,10 +21,43 @@
     let selected: Genre[] = [];
     let open: boolean = false;
 
-    // TO-DO: CLOSE DROPDOWN ON CLICK ELSEWHERE,
+    let kuracRef: HTMLUListElement;
+
     // ADD BUTTONS FOR EACH GENRE, INSTEAD OF JUST ONE
     // BUTTON WITH A DYNAMIC LABEL
-    const toggleDropdown = (close: boolean = false) => {
+
+    const checkSelectedGenres = () => {
+        const kurovi = kuracRef?.querySelectorAll(".option");
+        kurovi?.forEach((child) => {
+            const kur = child.getAttribute("data-id")!;
+            if ($currentFilters?.genres?.includes(kur)) {
+                console.log(open, " ", kur, $currentFilters.genres);
+                child.classList.add("selected");
+            } else if (!$currentFilters?.genres?.includes(kur)) {
+                child.classList.remove("selected");
+            }
+        });
+    };
+
+    const selectOption = (option: Genre) => {
+        if (selected.includes(option)) {
+            const index = selected.indexOf(option);
+            selected.splice(index, 1);
+        } else {
+            selected = [...selected, option];
+        }
+
+        selected.forEach((kur) => console.log(kur));
+        genreIds = selected.map((genre) => genre.id.toString());
+        genreNames = selected.map((genre) => genre.name);
+        onChange?.(genreIds);
+        checkFilterEnable();
+        checkSelectedGenres();
+    };
+
+    const toggleDropdown = () => {
+        checkSelectedGenres();
+
         openDropdown.update((current) => {
             if (current === id) {
                 open = false;
@@ -34,6 +68,10 @@
                 return id;
             }
         });
+        console.log("open? ", open);
+        if (open) {
+            console.log("hee...");
+        }
     };
     $: openDropdown.subscribe((activeId) => {
         if (activeId !== id) {
@@ -41,26 +79,18 @@
         }
     });
 
-    $: currentFilters.subscribe(() => {
-        if (!$currentFilters.genres?.length) {
+    $: resetFiltersSignal.subscribe(() => {
+        if ($resetFiltersSignal == true) {
             genreNames = [DEFAULT_DROPDOWN_VALUE];
             selected = [];
         }
     });
-    const selectOption = (option: Genre) => {
-        if (selected.includes(option)) {
-            const index = selected.indexOf(option);
-            selected.splice(index, 1);
-        } else {
-            selected = [...selected, option];
-        }
 
-        genreIds = selected.map((genre) => genre.id.toString());
-        genreNames = selected.map((genre) => genre.name);
-
-        onChange?.(genreIds);
-        checkFilterEnable();
-    };
+    // $: currentFilters.subscribe(() => {
+    //     if ($currentFilters.genres?.includes(id)) {
+    //         console.log("eyo its here! ", label);
+    //     }
+    // });
 </script>
 
 <section>
@@ -71,7 +101,7 @@
             on:click={() => toggleDropdown()}
             on:keydown={(event) => {
                 if (event.key === "Escape") {
-                    toggleDropdown(true);
+                    toggleDropdown();
                 }
             }}
             >{genreNames.length
@@ -79,59 +109,60 @@
                 : DEFAULT_DROPDOWN_VALUE}</button
         >
     </div>
-    {#if open}
-        <ul class="options">
-            {#each options as option}
-                <Button
-                    ariaLabel={option.name}
-                    on:keydown={(event) => {
-                        if (event.key === "Escape") {
-                            toggleDropdown(true);
-                        }
-                    }}
-                    description={option.name}
-                    label={option.name}
-                    onClick={() => selectOption(option)}
-                />
-            {/each}
-        </ul>
-    {/if}
+    <ul class="options" bind:this={kuracRef} data-open={open}>
+        {#each options as option}
+            <Button
+                classes={["option", "no-border"]}
+                ariaLabel={option.name}
+                id={option.id}
+                on:keydown={(event) => {
+                    if (event.key === "Escape") {
+                        toggleDropdown();
+                    }
+                }}
+                description={option.name}
+                label={option.name}
+                onClick={() => selectOption(option)}
+            />
+        {/each}
+    </ul>
+    <!-- {#if open}{/if} -->
 </section>
 
 <style lang="scss">
+    @use "../../styles/mixins";
     section {
         border: var(--border-default);
-
-        button {
-            // background-color: transparent;
-            // border: none;
-        }
     }
     .header {
         // display: flex;
         display: grid;
-        grid-template-columns: 5rem 6fr;
+        grid-template-columns: 1fr 6fr;
+        border-bottom: var(--border-default);
     }
     .title {
-        place-self: center;
+        @include mixins.ui-button();
+        pointer-events: none;
+        border-right: var(--border-default);
+        font-weight: bold;
     }
 
     .options {
-        display: flex;
-        /* flex-direction: column; */
         display: grid;
         grid-template-columns: repeat(3, 1fr);
 
-        .option {
-            text-wrap: none;
-            white-space: nowrap;
-            text-align: left;
+        &[data-open="false"] {
+            display: none;
         }
-        /* display: none; */
+
+        button {
+            background-color: red;
+        }
     }
 
     .value {
-        display: flex;
+        @include mixins.ui-button();
+        justify-content: flex-start;
         flex: 1;
         white-space: nowrap;
         overflow: scroll;

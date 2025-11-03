@@ -44,47 +44,19 @@ main {
   grid-template-rows: repeat(auto-fit, minmax(480px, 1fr));
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(3, 240px);
   grid-template-areas:
-    "poster poster poster info info info info"
-    "poster poster poster info info info info"
-    "disk disk extra extra extra controls controls";
+    "poster poster info info info "
+    "poster poster info info info "
+    "tooltip history history controls controls";
 
   gap: .25rem;
   position: relative;
-  
-/* 
-  @media screen and (min-width: 580px) and (max-width: 640px) {
-    grid-template-areas:
-      "poster poster poster info info info info"
-      "poster poster poster info info info info"
-      "extra extra rating rating controls controls";
-    grid-template-columns: repeat(6, 1fr);
-    background-color: red;
 
-  } */
 
-  @media screen and (max-width: 580px) {
-    max-height: 640px;
-
-    grid-template-areas:
-      "poster poster"
-      "info info"
-      "disk controls"
-      "extra extra";
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-  }
-
-  /* grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(5, 1fr); */
-
-  @media screen and (max-width: 480px) {
-    /* grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(6, 1fr); */
-
+  @media screen and (max-width: 768px) {
+    /* tab;let  */
 
   }
 
@@ -92,6 +64,23 @@ main {
     font: inherit;
   }
 
+}
+
+@media screen and (max-width: 580px) {
+  main {
+  /* grid-template-rows: repeat(6, 240px); */
+
+    grid-template-areas:
+      "poster poster poster poster poster "
+      "poster poster poster poster poster "
+      "info info info info info "
+      "info info info info info "
+      "history history controls controls controls";
+  }
+
+  .monitor.tooltip {
+    display: none !important;
+  }
 }
 
 

@@ -5,11 +5,15 @@
     export let ariaLabel: string;
     export let description: string;
     export let disabled: boolean = false;
+    export let classes: Array<string> = [];
+    export let id: number | undefined = undefined;
 </script>
 
 <button
     aria-label={ariaLabel}
     data-info={description}
+    data-id={id}
+    class={`${classes.length && classes.join(" ")}`}
     {disabled}
     on:click={onClick}
     on:keydown={onKeydown}
@@ -17,32 +21,27 @@
     {label}
 </button>
 
-<style>
+<style lang="scss">
+    @use "../../styles/mixins";
     button {
-        color: var(--color-highlight);
-        background-color: var(--color-dark);
-        border: none;
-        transition: all var(--anim-default);
+        @include mixins.ui-button();
         border-right: var(--border-default);
         border-top: var(--border-default);
         flex: 1;
         white-space: nowrap;
         overflow-x: scroll;
+
+        &.selected {
+            background-color: white;
+            color: black;
+        }
+
+        &.no-border {
+            border: none;
+        }
     }
 
     button:last-child {
         border-right: none;
-    }
-
-    button:hover:not(:disabled),
-    button:focus-visible {
-        background-color: var(--color-highlight);
-        color: var(--color-dark);
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-    button:focus-visible {
-        outline: none;
     }
 </style>

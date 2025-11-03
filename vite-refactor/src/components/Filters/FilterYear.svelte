@@ -1,6 +1,7 @@
 <script lang="ts">
     import { FILTER_DEFAULTS } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
+    import { currentFilters, resetFiltersSignal } from "../../lib/stores";
     export let placeholder: string;
     export let yearValue: string | "" = placeholder;
     let inputElement: HTMLInputElement;
@@ -63,6 +64,12 @@
         onChange(Number(yearValue));
         checkFilterEnable();
     }
+
+    $: resetFiltersSignal.subscribe(() => {
+        if ($resetFiltersSignal == true) {
+            yearValue = placeholder;
+        }
+    });
 </script>
 
 <input
@@ -79,20 +86,15 @@
     on:keydown={handleIncrement}
 />
 
-<style>
+<style lang="scss">
+    @use "../../styles/mixins";
     input {
-        width: 3rem;
-        padding: 0.1rem;
-        appearance: none;
-        border: none;
-        background-color: var(--color-dark);
-        color: var(--color-highlight);
-        cursor: pointer;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        flex: 1;
+        @include mixins.ui-button();
+        width: 100%;
         text-align: center;
+        &:nth-child(1) {
+            border-right: var(--border-default);
+        }
         &:hover,
         &:focus-visible {
             background-color: var(--color-highlight);

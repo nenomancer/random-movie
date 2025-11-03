@@ -6,7 +6,7 @@
 </div>
 
 <style>
-    .info-rows {
+    /* .info-rows {
         border: 1px solid var(--color-highlight);
-    }
+    } */
 </style>

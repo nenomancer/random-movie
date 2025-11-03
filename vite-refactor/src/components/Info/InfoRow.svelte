@@ -32,7 +32,8 @@
     </div>
 </section>
 
-<style>
+<style lang="scss">
+    @import '../../styles/mixins';
     section {
         /* border: var(--border-default); */
         font-size: 1.25rem;
@@ -50,11 +51,16 @@
         justify-content: center;
         align-items: center;
         font-weight: bold;
-        border: var(--border-default);
+        border-right: var(--border-default);
     }
     .row:has(.title) {
         display: grid;
         grid-template-columns: 1fr 6fr;
+        border: var(--border-default);
+        &:not(:last-child) {
+            border-bottom: none;
+        }
+
         /* grid-template-rows: var(--height-row); */
     }
 
@@ -66,10 +72,11 @@
     }
 
     .cell {
+        @include ui-button();
         height: 100%;
         border-radius: 0;
         border: none;
-        transition: all var(--anim-default);
+        /* transition: all var(--anim-default);
         background-color: var(--color-dark);
         &:hover,
         &:focus-visible {
@@ -77,6 +84,6 @@
             background-color: var(--color-highlight);
             color: var(--color-dark);
             outline: none;
-        }
+        } */
     }
 </style>

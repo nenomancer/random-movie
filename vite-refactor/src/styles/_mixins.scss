@@ -56,27 +56,51 @@
         -0.5px -0.5px 0.5px darken($color, 40);
 }
 
-@mixin control-button($height: 10px) {
+@mixin ui-button() {
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-inline: 0.5rem;
+    padding-block: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+        color: black;
+        background-color: white;
+        outline: none;
+    }
+}
+
+@mixin control-button($background: variables.$monitor-color, $height: 3px) {
     box-shadow:
-        inset -2px -2px 2px 2px hsl(0, 100%, 0%, 0.5),
-        inset 2px 2px 2px 2px hsl(0, 100%, 100%, 0.5),
+        inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.4),
+        inset 1px 1px 1px 1px hsl(0, 100%, 100%, 0.5),
         0 $height 2px 0 hsla(0, 0%, 0%, 0.6);
 
-    background-color: variables.$monitor-color;
+    background-color: $background;
     position: relative;
     color: black;
     text-transform: uppercase;
-    background-color: orange;
+    text-shadow: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter";
+    font-weight: bold;
     // border-radius: 4px;
 
     &::after {
         content: "";
         inset: 5px;
         position: absolute;
-        transition: 250ms ease-out;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.4) 10%,
-                rgba(255, 255, 255, 0) 50%);
+        background: linear-gradient(0deg,
+                rgba(255, 255, 255, 0.2) 10%,
+                rgba(255, 255, 255, 0) 80%);
         // border: 4px outset $monitor-color;
         pointer-events: none;
     }
@@ -89,9 +113,9 @@
             0 1px 1px 0 hsla(0, 0%, 0%, 0.1);
 
         box-shadow:
-        inset -2px -2px 2px 2px hsl(0, 100%, 0%, 1),
-        inset 2px 2px 2px 2px hsl(0, 100%, 0%, 1),
-        0 0 0 0 hsla(0, 0%, 0%, 0.6);
+            inset 0 0 2px 2px hsl(0, 100%, 0%, .5),
+            inset 0 0 2px 2px hsl(0, 100%, 0%, 0),
+            0 0 0 0 hsla(0, 0%, 0%, 0.6);
 
         // background-color: red;
         // background: radial-gradient(at center, color.adjust($color: red, $lightness: 40%) 20%, red 80%);
@@ -100,8 +124,11 @@
 
     }
 
-    &:active {
+    &.active,
+    &:has(input:checked) {
         scale: .99;
+        text-shadow: 0 0 2px greenyellow, 0 0 10px greenyellow;
+        color: white;
 
     }
 }

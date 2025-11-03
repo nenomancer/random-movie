@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentMovie } from "../../lib/stores.ts";
+    import { currentMovie } from "../../lib/stores";
 </script>
 
 <section aria-labelledby="title" class="row">
@@ -19,59 +19,27 @@
     </h1>
 </section>
 
-<style>
+<style lang="scss">
+    @use "../../styles/mixins";
+
     section {
-        /* height: var(--height-row); */
-        align-items: center;
+        // align-items: center;
     }
 
-    /* .label, */
     .title {
         display: flex;
         overflow-x: scroll;
-        /* border: var(--border-default); */
-        color: var(--color-highlight);
+
         justify-content: start;
         align-items: stretch;
-        /* height: 100%; */
         display: flex;
         font-size: 2rem;
         font-weight: 400;
     }
 
-    /* .label {
-        border-right: none;
-    } */
-    /* 
-    .title {
-        justify-content: start;
-        align-items: stretch;
-        height: 100%;
-        display: flex;
-    } */
-
     .title a {
-        white-space: nowrap;
+        @include mixins.ui-button();
         padding-inline: 0.5rem;
-        transition: all var(--anim-default);
-        display: flex;
-        align-items: center;
         flex: 1;
-        padding-block: 0.25rem;
-        justify-content: center;
     }
-
-    .title a:hover,
-    .title a:focus-visible {
-        color: var(--color-dark);
-        background-color: var(--color-highlight);
-    }
-
-    section {
-        /* display: grid;
-        grid-template-columns: 1fr 6fr; */
-        /* grid-template-rows: 2rem; */
-    }
-
-    /* duplcicate code  */
 </style>

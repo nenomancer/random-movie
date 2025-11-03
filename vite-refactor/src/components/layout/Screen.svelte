@@ -21,5 +21,15 @@
         flex-direction: column;
         background-color: black;
         overflow-y: scroll;
+        font-size: 1.25rem;
+        .cell {
+            /* border: var(--border-default); */
+            @include mixins.ui-button();
+    
+            padding-inline: 0.5rem;
+            padding-block: 0.4rem;
+            white-space: nowrap;
+        }
     }
+
 </style>

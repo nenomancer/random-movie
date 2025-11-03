@@ -6,6 +6,7 @@
         openDropdown,
         currentFilters,
         useFilters,
+        resetFiltersSignal,
     } from "../../lib/stores.ts";
 
     export let id: string;
@@ -64,8 +65,8 @@
         option.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-    $: currentFilters.subscribe(() => {
-        if ($currentFilters.country == DEFAULT_COUNTRY.name) {
+    $: resetFiltersSignal.subscribe(() => {
+        if ($resetFiltersSignal == true) {
             selected = DEFAULT_COUNTRY;
         }
     });
@@ -96,7 +97,7 @@
                 />
                 <button
                     on:click={() => toggleDropdown(false)}
-                    class="input-icon">X</button
+                    class="button-close">X</button
                 >
             </div>
         {/if}
@@ -105,6 +106,7 @@
         <ul class="options">
             {#each filteredCountries as option}
                 <button
+                    class="option"
                     aria-label={`Filter ${label.toLowerCase()}: ${option.name}`}
                     data-info={`Pick to find movies from  ${option.name}`}
                     on:click={() => selectOption(option)}
@@ -122,12 +124,21 @@
 </section>
 
 <style lang="scss">
+    @use "../../styles/mixins";
     section {
-        border: var(--border-default);
+        // border: var(--border-default);
     }
     .header {
         display: grid;
-        grid-template-columns: 5rem 6fr;
+        grid-template-columns: 1fr 6fr;
+        border: var(--border-default);
+
+    }
+
+    .value {
+        @include mixins.ui-button();
+        // text-align: left;
+        justify-content: flex-start;
     }
 
     .input-container {
@@ -135,12 +146,11 @@
         // width: 100%;
         input {
             width: 100%;
-            &::placeholder {
-                text-align: center;
-            }
+            @include mixins.ui-button();
+            // text-align: center;
         }
 
-        button {
+        .button-close {
             position: absolute;
             right: 0;
             top: 0;
@@ -158,7 +168,12 @@
     }
 
     .title {
-        place-self: center;
+        @include mixins.ui-button();
+        pointer-events: none;
+        
+        border-right: var(--border-default);
+        // text-align: center;
+        font-weight: bold;
     }
 
     .options {
@@ -167,5 +182,15 @@
         /* display: none; */
         max-height: 200px;
         overflow: scroll;
+        border: var(--border-default);
+        border-top: none
+    }
+
+    .option {
+        @include mixins.ui-button();
+        border-bottom: var(--border-default);
+        &:last-child {
+            border-bottom: none;
+        }
     }
 </style>

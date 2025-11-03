@@ -417,7 +417,7 @@
       <TabContent name={TAB_NAME.FILTERS}>
         <FilterCountries
           id="country"
-          label={"Country"}
+          label={"CTR"}
           options={allCountries}
           onChange={(countryCode) =>
             currentFilters.update((filters) => ({
@@ -427,7 +427,7 @@
         />
         <FilterGenres
           id="genre"
-          label={"Genre"}
+          label={"GNR"}
           options={allGenres}
           onChange={(genreCodes) =>
             currentFilters.update((filters) => ({
@@ -435,8 +435,9 @@
               genres: genreCodes,
             }))}
         />
-        <FilterYears />
+        <FilterYears label={"YRS"}/>
         <FilterRating
+          label={"RTG"}
           onChange={(fromValue, toValue) =>
             currentFilters.update((filters) => ({
               ...filters,
@@ -461,10 +462,19 @@
       <TabContent name={TAB_NAME.FILTERS}>Filter Sectuin</TabContent>
     </Screen>
   </Monitor>
-  <Disk />
+  <!-- <Disk /> -->
   <ControlPanel {fetchMovies} />
-  <NoteContainer {getMovie} />
-  <Extras />
+  <Monitor classes={["history"]}>
+    <Screen>
+      <NoteContainer {getMovie} />
+    </Screen>
+  </Monitor>
+  <Monitor classes={["tooltip"]} padding={1.5}>
+    <Screen>
+      <div style="background: red;">KUR</div>
+    </Screen>
+  </Monitor>
+  <!-- <Extras /> -->
 </main>
 
 <style global>

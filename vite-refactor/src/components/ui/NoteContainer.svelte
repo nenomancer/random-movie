@@ -14,144 +14,76 @@
     }
 </script>
 
-<div class={`perspective-container ${isFlipped ? "flipped" : ""}`}>
-    <div class="tape"></div>
-
-    <div class="note-container favorites">
-        <div class="favorites">
-            {#each $currentHistory as log}
-                <button class="note" on:click={() => getMovie(log.id)}
-                    >{"- " + log.name}</button
-                >
-            {/each}
-        </div>
-        <button class="note to-history" on:click={openHistory}>
-            &lt; History
-        </button>
+<div
+    class={`perspective-container ${isFlipped ? "flipped" : ""}`}
+    data-selected={isFlipped}
+>
+    <div class="tabs">
+        <button
+            class="tab"
+            on:click={() => (isFlipped = false)}
+            data-selected={!isFlipped}>History</button
+        >
+        <!-- <button class="tab" on:click={() => isFlipped = true} data-selected={isFlipped}>Favorites</button> -->
     </div>
-    <div class="note-container history">
-        <div class="history">
-            {#each $currentHistory as log}
-                <button class="note" on:click={() => getMovie(log.id)}
-                    >{`- ` + log.name}</button
-                >
-            {/each}
-        </div>
-        <button class="note to-favorites" on:click={openFavorites}>
-            Favorites &gt;
-        </button>
+    <div class="list">
+        {#each $currentHistory as log}
+            <button class="note" on:click={() => getMovie(log.id)}
+                >{log.name}</button
+            >
+        {/each}
     </div>
 </div>
 
 <style lang="scss">
     @use "../../styles/variables";
+    @use "../../styles/mixins";
     @use "sass:color";
     @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
     @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
 
-    $tape-size: 1.5rem;
     .perspective-container {
-        perspective: 1200px;
-        position: absolute;
-        bottom: 3rem;
-        left: 45.75%;
-        scale: 0.8;
+        display: flex;
+        // gap: 0.25rem;
+        height: 100%;
     }
 
-    .tape {
-        background-color: color.adjust(
-            $color: variables.$note-color,
-            $saturation: -25%,
-            $lightness: -15%
-        );
-        width: 100%;
-        height: $tape-size;
-        border-top-left-radius: 0.1rem;
-        border-top-right-radius: 0.1rem;
-        box-shadow: 1px 1px 0.5px -0.5px rgba(0, 0, 0, 0.4);
-    }
-
-    .history {
+    .list {
         display: flex;
-        flex-direction: column-reverse;
-    }
-    .note-container {
-        width: 16rem;
-        height: 14rem;
-        transform: rotateX(10deg);
-        display: flex;
+        // justify-content: space-between;
         flex-direction: column;
-        box-shadow:
-            3px 16px 3px -4px rgba(0, 0, 0, 0.15),
-            inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
-        transform-origin: top;
-        background: repeating-linear-gradient(
-            to bottom,
-            variables.$note-color,
-            variables.$note-color 10.5%,
-            color.adjust($color: variables.$note-color, $lightness: -30%) 11.5%
-        );
-        pointer-events: none;
-        -webkit-font-smoothing: antialiased; /* For WebKit browsers */
-        -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
-        transition: 250ms ease-out;
-        border-bottom-left-radius: 0.1rem;
-        border-bottom-right-radius: 0.1rem;
-        &:hover {
-            transform: rotateX(7deg);
-            box-shadow:
-                2px 10px 2px -2px rgba(0, 0, 0, 0.2),
-                inset -0.1px -0.1px 0.5px -0.4px rgba(0, 0, 0, 0.4);
-        }
+        overflow: hidden;
+        border: var(--border-default);
+        border-left: none;
+        // width: 100%;
+        flex: 1;
     }
 
-    .note-container.history {
-        position: absolute;
-        top: $tape-size;
+    .tabs {
+        text-orientation: mixed;
+        writing-mode: vertical-rl;
+        display: flex;
+        // flex-direction: column;
     }
-
-    .perspective-container.flipped {
-        .note-container.history {
-            transform: rotateX(180deg);
-            pointer-events: none;
-            .note {
-                pointer-events: none;
-                opacity: 0.4;
-            }
-        }
-    }
-
-    .perspective-container:not(.flipped):has(.note-container.history:hover) {
-        .note-container.favorites,
-        .note-container.history {
-            transform: rotateX(7deg);
+    .tab {
+        background-color: transparent;
+        border: none;
+        font-size: 1rem;
+        text-align: center;
+        flex: 1;
+        &[data-selected="true"] {
+            border: var(--border-default);
         }
     }
 
     .note {
-        padding-inline: 0.5rem;
-        line-height: 1;
-        pointer-events: all;
-        background-color: transparent;
-        border: none;
-        text-align: left;
+        @include mixins.ui-button();
         width: 100%;
-
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: variables.$note-marker-color;
-        font-family: "Caveat", cursive;
-        font-weight: 700;
-        font-style: normal;
-        text-shadow: -0.5px -0.5px 0 grey;
-        font-size: 1.5rem;
-
-        &:hover {
-            text-decoration: underline;
-            cursor: pointer;
-            text-decoration-thickness: 0.1rem;
-        }
+        justify-content: flex-start;
+        font-size: 16px;
     }
 
     .note.to-history,

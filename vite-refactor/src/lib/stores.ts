@@ -7,7 +7,7 @@ export const currentMovie = writable<Movie>(DEFAULT_MOVIE);
 export const useFilters = writable<boolean>(false);
 export const currentFilters = writable<Filters>(DEFAULT_FILTER);
 export const allCountries = writable<Array<Country>>([DEFAULT_COUNTRY]);
-
+export const resetFiltersSignal = writable<boolean>(false);
 
 const storedHistory = localStorage.getItem(LOCAL_SESSION_HISTORY_KEY);
 export const currentHistory = writable<HistoryLog[]>(

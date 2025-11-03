@@ -18,7 +18,7 @@
         overflow: hidden;
         font-size: 1.25rem;
 
-        border: 1px solid var(--color-highlight);
+        border: var(--border-default);
     }
 
     .title,
@@ -29,7 +29,7 @@
     .title {
         border-bottom: none;
         text-align: center;
-        border: var(--border-default);
+        border-bottom: var(--border-default);
 
         font-weight: bold;
     }

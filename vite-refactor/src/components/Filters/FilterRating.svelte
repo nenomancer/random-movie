@@ -1,16 +1,19 @@
 <script lang="ts">
+    import { FILTER_DEFAULTS } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
+    import { currentFilters, resetFiltersSignal } from "../../lib/stores";
 
     let ratingFrom: number = 0.0;
     let ratingTo: number = 10.0;
     let sliderTrack: HTMLElement;
     let sliderBg: HTMLElement;
     export let onChange: (from: number, to: number) => void;
+    export let label: string = "";
 
     function handleOnChange() {
         onChange(ratingFrom, ratingTo);
         const percent1 = (ratingFrom / 10) * 100;
-        const percent2 = 100 - ((ratingTo / 10) * 100);
+        const percent2 = 100 - (ratingTo / 10) * 100;
 
         // TODO: make sure colors use variables
         sliderBg.style.left = `${percent1}%`;
@@ -40,12 +43,26 @@
         }
         handleOnChange();
     }
+
+    $: resetFiltersSignal.subscribe(() => {
+        if (
+            ratingFrom == FILTER_DEFAULTS.RATING_MIN &&
+            ratingTo == FILTER_DEFAULTS.RATING_MAX
+        ) {
+            return;
+        }
+        if ($resetFiltersSignal == true) {
+            ratingFrom = FILTER_DEFAULTS.RATING_MIN;
+            ratingTo = FILTER_DEFAULTS.RATING_MAX;
+            handleOnChange();
+        }
+    });
 </script>
 
 <section>
     <!-- rating filter  -->
     <div class="header">
-        <h3>Rating</h3>
+        <h3 class="title">{label}</h3>
 
         <div class="values">
             <input
@@ -92,46 +109,65 @@
 
 <style lang="scss">
     @use "../../styles/variables";
+    @use "../../styles/mixins";
 
     section {
         position: relative;
         display: grid;
-        // grid-template-rows: repeat(3, 1fr);
-        // gap: 0.5rem;
-        border: variables.$border-default;
+        gap: 0.25rem;
     }
     .header {
         display: grid;
-        grid-template-columns: 5rem 6fr;
+        grid-template-columns: 1fr 6fr;
         flex: 1;
         place-content: center;
         place-items: center;
+        border: var(--border-default);
     }
 
+    .title {
+        @include mixins.ui-button();
+        pointer-events: none;
+        border-right: var(--border-default);
+        font-weight: bold;
+        width: 100%;
+    }
     .values {
         display: flex;
         width: 100%;
         input[type="number"] {
+            @include mixins.ui-button();
             flex: 1;
             text-align: center;
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+            appearance: textfield;
+            &::-webkit-inner-spin-button,
+            &::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+            }
+
+            &:first-child {
+                border-right: var(--border-default);
+            }
         }
     }
 
     .ranges {
         position: relative;
-        display: flex;
-        justify-content: center;
-        // padding-inline: 50px;
+        display: subgrid;
+
         .range-track,
         .range-track-bg {
-            inset-inline: 0.75rem;
+            inset-inline: 0;
+            border: var(--border-default);
+
             height: 1.5rem;
-            background-color: blue;
             position: absolute;
         }
 
         .range-track {
-            background-color: orange;
+            background-color: white;
         }
     }
 
@@ -143,8 +179,11 @@
         outline: none;
         position: absolute;
         margin: auto;
-        top: -0.25rem;
+        top: -3.5px;
+
+        // bottom: 0;
         background-color: transparent;
+        // background-color: red;
         pointer-events: none;
     }
 
@@ -163,31 +202,7 @@
         cursor: pointer;
         pointer-events: auto;
         border-radius: 0;
-    }
-
-    input[type="range"] {
-        &#ratingFrom::-moz-range-thumb {
-            background: linear-gradient(-45deg, white 75%, transparent 75%);
-            clip-path: rect(0 50% 100% 0%);
-        }
-        &#ratingTo::-moz-range-thumb {
-            background: linear-gradient(45deg, white 75%, transparent 75%);
-            clip-path: rect(0 100% 100% 50%);
-        }
-    }
-
-    input[type="range"]::-ms-thumb {
-        // appearance: none;
-        // height: 1.7em;
-        // width: 1.7em;
-        // cursor: pointer;
-        // border-radius: 50%;
-        // background-color: #3264fe;
-        // pointer-events: auto;
-    }
-    input[type="range"]:active::-webkit-slider-thumb {
-        // background-color: #ffffff;
-        // background-color: red;
-        // border: 3px solid #3264fe;
+        background-color: transparent;
+        // border: 10px solid black;
     }
 </style>
