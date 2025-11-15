@@ -68,7 +68,7 @@ main {
 
 @media screen and (max-width: 580px) {
   main {
-  /* grid-template-rows: repeat(6, 240px); */
+  grid-template-rows: repeat(5, 1fr);
 
     grid-template-areas:
       "poster poster poster poster poster "

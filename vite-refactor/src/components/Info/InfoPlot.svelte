@@ -16,7 +16,6 @@
         font: inherit;
         flex: 1;
         overflow: hidden;
-        font-size: 1.25rem;
 
         border: var(--border-default);
     }
@@ -40,5 +39,6 @@
         height: 8rem;
         padding: 0.25rem 0.5rem;
         flex: 1;
+        hyphens: auto;
     }
 </style>

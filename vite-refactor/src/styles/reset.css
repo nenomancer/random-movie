@@ -23,17 +23,18 @@ dd {
     padding: 0;
     font-size: 1rem;
     font-weight: 300;
+    hyphens: auto;
 }
 
 ul,
 ol {
-    list-style: none;
+    /* list-style: none; */
+    list-style-position: inside;
     padding: 0;
     margin: 0;
 }
 
 a {
-    text-decoration: none;
     color: inherit;
     font: inherit;
 }

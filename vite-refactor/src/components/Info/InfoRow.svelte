@@ -2,7 +2,7 @@
     export let label: string;
     export let title: string;
     export let items: { id: number; name: string }[];
-    export let link: string = "";
+    export const link: string = "";
     export let onClick: (id: number) => void;
     export let getDescription: (name: string) => string;
 </script>
@@ -33,7 +33,7 @@
 </section>
 
 <style lang="scss">
-    @import '../../styles/mixins';
+    @use '../../styles/mixins';
     section {
         /* border: var(--border-default); */
         font-size: 1.25rem;
@@ -55,7 +55,7 @@
     }
     .row:has(.title) {
         display: grid;
-        grid-template-columns: 1fr 6fr;
+        grid-template-columns: 4rem 6fr;
         border: var(--border-default);
         &:not(:last-child) {
             border-bottom: none;
@@ -72,18 +72,9 @@
     }
 
     .cell {
-        @include ui-button();
+        @include mixins.ui-button();
         height: 100%;
         border-radius: 0;
         border: none;
-        /* transition: all var(--anim-default);
-        background-color: var(--color-dark);
-        &:hover,
-        &:focus-visible {
-            cursor: pointer;
-            background-color: var(--color-highlight);
-            color: var(--color-dark);
-            outline: none;
-        } */
     }
 </style>
