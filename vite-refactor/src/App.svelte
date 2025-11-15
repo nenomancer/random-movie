@@ -374,7 +374,7 @@
   <Monitor classes={["main"]}>
     <Screen>
       <TabContent name={TAB_NAME.INFO}>
-        <div class="kurac-border">
+        <div class="custom-border">
           <InfoTitle />
           <ExtraInfo
             {getMoviesByCountry}
@@ -473,9 +473,9 @@
     </Screen>
   </Monitor>
   <Monitor classes={["tooltip"]} padding={1.5}>
-    <Screen>
-      <div style="background: red;">KUR</div>
-    </Screen>
+    <!-- <Screen>
+      <div">Tooltip in progress</div>
+    </Screen> -->
   </Monitor>
   <!-- <Extras /> -->
 </main>

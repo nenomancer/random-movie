@@ -15,12 +15,7 @@
             {#if !$currentMovie.backdrop}
                 <p class="title">{$currentMovie.title.name}</p>
             {/if}
-            <!-- <p>kurac</p> -->
         </div>
-        <!-- <div class="title">
-                <p>这是从市场买来的</p>
-                <p class="bootleg-sticker">{$currentMovie.runtime} in 1</p>
-            </div> -->
     </div>
 </section>
 

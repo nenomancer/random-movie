@@ -113,7 +113,7 @@ main {
   /* transition-delay: 250ms !important; */
 }
 
-.kurac-border {
+.custom-border {
   border: var(--border-default);
 
 }
