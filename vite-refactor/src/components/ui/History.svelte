@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentHistory } from "../../lib/stores.ts";
+    import { currentHistory } from "../../lib/stores.js";
     export let getMovie: (id: number) => void;
     let isFlipped: boolean = false;
     // use ref for go to favorites button
@@ -24,7 +24,6 @@
             on:click={() => (isFlipped = false)}
             data-selected={!isFlipped}>History</button
         >
-        <!-- <button class="tab" on:click={() => isFlipped = true} data-selected={isFlipped}>Favorites</button> -->
     </div>
     <div class="list">
         {#each $currentHistory as log}
@@ -44,14 +43,13 @@
 
     .perspective-container {
         display: flex;
-        // gap: 0.25rem;
         height: 100%;
     }
 
     .list {
         display: flex;
-        // justify-content: space-between;
-        flex-direction: column;
+        flex-direction: column-reverse;
+        justify-content: start;
         overflow: hidden;
         border: var(--border-default);
         border-left: none;
@@ -78,6 +76,7 @@
 
     .note {
         @include mixins.ui-button();
+        padding-block: 0;
         width: 100%;
         white-space: nowrap;
         overflow: hidden;

@@ -3,7 +3,7 @@
   import Screen from "./components/layout/Screen.svelte";
   import TabContent from "./components/tabs/TabContent.svelte";
   import ControlPanel from "./components/ui/ControlPanel.svelte";
-  import NoteContainer from "./components/ui/NoteContainer.svelte";
+  import History from "./components/ui/History.svelte";
 
   import InfoTitle from "./components/info/InfoTitle.svelte";
   import ExtraInfo from "./components/info/ExtraInfo.svelte";
@@ -42,6 +42,7 @@
   import "./styles/variables.css";
   import Disk from "./components/ui/Disk.svelte";
   import Extras from "./components/ui/Extras.svelte";
+  import AboutContent from "./components/Info/AboutContent.svelte";
 
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
@@ -67,7 +68,6 @@
 
   onMount(() => {
     document.addEventListener("keydown", handleGlobalKeyboard);
-
     window.addEventListener("popstate", handlePopState);
   });
 
@@ -105,7 +105,7 @@
 
     fetch(
       `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`,
-      API.OPTIONS,
+      API.OPTIONS
     )
       .then((response) => response.json())
       .then((response) => {
@@ -163,7 +163,7 @@
 
         function generateTitle(
           originalTitle: string,
-          englishTitle: string,
+          englishTitle: string
         ): string {
           if (
             data.original_language !== "en" &&
@@ -191,7 +191,7 @@
               : undefined,
           runtime: data.runtime > 0 ? data.runtime : undefined,
           country: allCountries.find(
-            (country) => country.code === data.origin_country[0],
+            (country) => country.code === data.origin_country[0]
           )!,
           genres: data.genres,
           plot: data.overview,
@@ -228,7 +228,7 @@
       .then((response) => response.json())
       .then((data) => {
         const directors = data.crew.filter(
-          (person: Person) => person.job == "Director",
+          (person: Person) => person.job == "Director"
         );
 
         currentMovie.update((movie) => ({
@@ -291,7 +291,7 @@
     // resetFilter();
     fetch(
       `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
-      API.OPTIONS,
+      API.OPTIONS
     )
       .then((response) => response.json())
       .then((response) => {
@@ -306,12 +306,12 @@
   function getMoviesByDirector(directorId: number) {
     fetch(
       `${API.PERSON}/${directorId}?append_to_response=movie_credits`,
-      API.OPTIONS,
+      API.OPTIONS
     )
       .then((response) => response.json())
       .then((response) => {
         const temp = response.movie_credits.crew.filter(
-          (credit: any) => credit.job === "Director",
+          (credit: any) => credit.job === "Director"
         );
         return getRandomMovie(temp);
       })
@@ -335,14 +335,14 @@
       buildFilterQuery({
         ratingFrom: rating - range,
         ratingTo: rating + range,
-      }),
+      })
     );
   }
 
   export function getMoviesByCountry(countryCode: string) {
     fetch(
       `${API.DISCOVER_MOVIE}?with_origin_country=${countryCode}`,
-      API.OPTIONS,
+      API.OPTIONS
     )
       .then((response) => response.json())
       .then((response) => {
@@ -435,7 +435,7 @@
               genres: genreCodes,
             }))}
         />
-        <FilterYears label={"YRS"}/>
+        <FilterYears label={"YRS"} />
         <FilterRating
           label={"RTG"}
           onChange={(fromValue, toValue) =>
@@ -448,7 +448,9 @@
       </TabContent>
       <TabContent name={TAB_NAME.LOADING}>Loading....</TabContent>
       <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
-      <TabContent name={TAB_NAME.ABOUT}>About moi</TabContent>
+      <TabContent name={TAB_NAME.ABOUT}>
+        <AboutContent />
+      </TabContent>
     </Screen>
   </Monitor>
   <Monitor classes={["poster"]}>
@@ -458,7 +460,8 @@
       </TabContent>
       <TabContent name={TAB_NAME.LOADING}>Loading...</TabContent>
       <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
-      <TabContent name={TAB_NAME.ABOUT}>ABOUT MEE!!!!</TabContent>
+
+      <TabContent name={TAB_NAME.ABOUT}>Abouc</TabContent>
       <TabContent name={TAB_NAME.FILTERS}>Filter Sectuin</TabContent>
     </Screen>
   </Monitor>
@@ -466,7 +469,7 @@
   <ControlPanel {fetchMovies} />
   <Monitor classes={["history"]}>
     <Screen>
-      <NoteContainer {getMovie} />
+      <History {getMovie} />
     </Screen>
   </Monitor>
   <Monitor classes={["tooltip"]} padding={1.5}>
