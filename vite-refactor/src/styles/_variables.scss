@@ -1,10 +1,9 @@
 $color-highlight: rgb(1, 245, 113);
-$color-beige: #c9c5b1;
+$color-beige: #beb999;
 
 $screen-color: #222;
 $note-marker-color: #222;
 $note-color: palegoldenrod;
-$monitor-color: #c9c5b1;
 
 // Breakpoints
 
@@ -16,7 +15,7 @@ $breakpoint-xl: 1024px;
 
 // Monitor variables
 $monitor-padding: 2rem;
-$monitor-border-radius: 0.5rem;
+$monitor-border-radius: 1rem;
 $monitor-color: $color-beige;
 
 // Bevels

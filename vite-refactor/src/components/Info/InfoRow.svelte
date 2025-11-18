@@ -36,7 +36,7 @@
     @use '../../styles/mixins';
     section {
         /* border: var(--border-default); */
-        font-size: 1.25rem;
+        // font-size: 1.25rem;
     }
     .title,
     .cell {

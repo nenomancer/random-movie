@@ -11,7 +11,7 @@
 <style lang="scss">
     @use "../../styles/mixins";
     .screen {
-        @include mixins.edge-inset($size: 2px, $blur: 1px);
+        @include mixins.edge-inset($size: 2px, $blur: 1px, $shadow-size: 1rem);
         border-radius: 0.5rem;
         padding: 1rem;
         width: 100%;
@@ -19,11 +19,9 @@
         /* display: grid; */
         display: flex;
         flex-direction: column;
-        background-color: black;
+        background-color: #131313;
         overflow-y: scroll;
-        font-size: 1.25rem;
         .cell {
-            /* border: var(--border-default); */
             @include mixins.ui-button();
     
             padding-inline: 0.5rem;

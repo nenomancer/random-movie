@@ -9,14 +9,7 @@
   };
 </script>
 
-<div
-  class={`monitor ${classes && classes.join(" ")} data-padding=${padding}`}
-  style={`
-    ${padding ? `padding: ${padding}rem;` : `padding: ${default_values.padding}rem;`}
-    ${padding && `padding: ${padding}rem;`}
-    ${radius && `border-radius: ${radius}px;`}
-    `}
->
+<div class={`monitor ${classes && classes.join(" ")} data-padding=${padding}`}>
   <slot />
 </div>
 
@@ -26,8 +19,9 @@
   @import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap");
   .monitor {
-    @include mixins.edge-bevel($size: 2px, $blur: 1px);
-    padding: 2.5rem;
+    // @include mixins.edge-bevel($size: 2px, $blur: 1px, $radius: 24px);
+    @include mixins.monitor-edge();
+    padding: 2rem;
     background-color: variables.$monitor-color;
     display: flex;
     flex-direction: column;

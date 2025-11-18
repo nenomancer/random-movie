@@ -88,13 +88,12 @@
   @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
   .controls-container {
-    @include mixins.edge-bevel();
+    @include mixins.monitor-edge();
+
     grid-area: controls;
     display: flex;
     flex-direction: column;
     display: grid;
-    // grid ttemplate neshto sakav..
-
     padding: 1.5rem;
     background-color: variables.$monitor-color;
   }
@@ -109,9 +108,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border: var(--border-default);
-    border: 2px solid black;
     border-color: black;
-    font-weight: bold;
     padding-block: 1rem;
     margin-top: 1.5rem;
     padding-inline: 0.5rem;
@@ -138,7 +135,6 @@
   }
 
   .control-button {
-    @include mixins.control-button();
     border: none;
     flex: 1;
 
@@ -149,24 +145,27 @@
     }
 
     &.search {
-      @include mixins.control-button();
-
       // background-color: darkgreen;
       aspect-ratio: unset;
       padding-block: 1rem;
       // outline: 2px solid black;
       outline-offset: -0.5rem;
-      // color: white;
+      @include mixins.control-button();
+    }
+    &.about {
+      @include mixins.control-button();
     }
 
-    &.set,
+    &.set {
+      @include mixins.control-button();
+    }
     &.use {
-      // background-color: darkorange;
+      @include mixins.control-button();
     }
 
     &.reset {
       // background-color: purple;
-      // background-color: darkred;
+      @include mixins.control-button();
     }
   }
 </style>

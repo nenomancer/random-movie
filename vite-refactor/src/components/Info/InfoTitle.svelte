@@ -21,11 +21,6 @@
 
 <style lang="scss">
     @use "../../styles/mixins";
-
-    section {
-        // align-items: center;
-    }
-
     .title {
         display: flex;
         overflow-x: scroll;

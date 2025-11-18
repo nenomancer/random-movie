@@ -60,8 +60,7 @@
   <Button
     label={getLabel($currentMovie.country?.code)}
     onClick={() =>
-            $currentMovie.country &&
-            getMoviesByCountry($currentMovie.country?.code)}
+      $currentMovie.country && getMoviesByCountry($currentMovie.country?.code)}
     ariaLabel={`Country: ${$currentMovie.country?.name}.`}
     description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country?.name}`}
   />
@@ -85,8 +84,7 @@
   section {
     display: flex;
     justify-content: stretch;
-    font-size: 1rem;
-
+    font-size: 0.75rem;
     button {
       padding: 200px;
     }

@@ -177,6 +177,7 @@
 
         currentMovie.update((movie) => ({
           ...movie,
+          id: movieId,
           title: {
             imdb: "",
             name: generateTitle(data.original_title, data.title),
@@ -205,7 +206,8 @@
         }
         getMovieCredits(movieId);
         getImdbUrl(movieId);
-        setTimeout(() => addHistoryLog(movieId, data.title), 1500);
+        addHistoryLog(movieId, data.title);
+        // setTimeout(() =>, 1500);
       })
       .catch((err) => {
         showResultError();

@@ -1,55 +1,58 @@
 @use "variables";
 @use "sass:color";
 
+@mixin monitor-edge() {
+  @include edge-bevel($size: 2px, $blur: 1px, $radius: 12px);
+}
+
 @mixin edge-bevel(
   $size: 2px,
   $blur: 1px,
+  $radius: 2px,
   $opacity: 0.5,
   $light: white,
   $shadow: black
 ) {
-  @if $blur {
-    box-shadow: inset $size $size $blur $size rgba($light, $opacity),
-      inset $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
-  } @else {
-    box-shadow: inset $size $size $size $size rgba($light, $opacity),
-      inset $size * -1 $size * -1 $size $size rgba($shadow, $opacity);
-  }
+  box-shadow: inset $size $size $blur $size rgba($light, $opacity),
+    inset $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
 
-  border-radius: $size;
+  border-radius: $radius;
 }
 
 @mixin edge-inset(
   $size: 2px,
   $blur: 1px,
+  $shadow-size: 10px,
   $opacity: 0.5,
   $light: white,
   $shadow: black
 ) {
-  @if $blur {
-    box-shadow: $size $size $blur $size rgba($light, $opacity),
-      $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
-  } @else {
-    box-shadow: $size * -1 $size * -1 $size $size rgba($shadow, $opacity),
-      $size $size $size $size rgba($light, $opacity),
-      inset $size $size $size 0 rgba($shadow, $opacity / 3),
-      inset $size * -1 $size * -1 $size 0 rgba($shadow, $opacity / 5);
-  }
-
+  position: relative;
+  box-shadow: $size $size $blur $size rgba($light, $opacity),
+    $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
+  // box-shadow: inset 0 0 10px 10px black;
   border-radius: $size;
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    box-shadow: inset 0 0 $shadow-size * 2 $shadow-size rgba($shadow, 1);
+    pointer-events: none;
+  }
 }
 
 @mixin text-bevel($color: variables.$monitor-color) {
   color: transparent;
-  text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px darken($color, 40),
+  text-shadow: 0 0 0.5px $color,
+    0.5px 0.5px 0.5px color.adjust($color, $lightness: -40%),
     -0.5px -0.5px 0.5px lighten($color, 35);
 }
 
 @mixin text-inset($color: variables.$monitor-color) {
   color: transparent;
 
-  text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px lighten($color, 30),
-    -0.5px -0.5px 0.5px darken($color, 40);
+  // text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px red;
+  // -0.5px -0.5px 0.5px darken($color, 40);
 }
 
 @mixin ui-button() {
@@ -71,14 +74,23 @@
     background-color: white;
     outline: none;
   }
+
+  &.selected {
+    background-color: white;
+    color: black;
+  }
+
+  &.no-border {
+    border: none;
+  }
 }
 
 @mixin control-button($background: variables.$monitor-color, $height: 3px) {
   box-shadow: inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
     inset 1px 1px 1px 1px hsl(0, 100%, 100%, 0.6),
-    0 $height 2px 0 hsla(0, 0%, 0%, 0.6);
+    0 $height 1px 0 hsla(0, 0%, 0%, 0.6);
 
-  background-color: $background;
+  background-color: rgb(97, 94, 83);
   position: relative;
   color: black;
   text-transform: uppercase;
@@ -88,7 +100,6 @@
   align-items: center;
   font-family: "Inter";
   font-weight: bold;
-
   &::after {
     content: "";
     inset: 5px;
@@ -102,8 +113,6 @@
   }
 
   &:active {
-    text-shadow: 0 0 2px greenyellow, 0 0 10px greenyellow;
-    color: white;
     box-shadow: inset 0 0 2px 2px hsl(0, 100%, 0%, 0.5),
       inset 0 0 2px 2px hsl(0, 100%, 0%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
   }
@@ -112,9 +121,6 @@
   &:has(input:checked) {
     box-shadow: inset 0 0 1px 1px hsl(0, 100%, 0%, 0.5),
       inset 0 0 2px 2px hsl(0, 100%, 100%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
-    scale: 1;
-    text-shadow: 0 0 2px greenyellow, 0 0 10px greenyellow;
-    color: white;
 
     &:active:not(:disabled) {
       text-shadow: none;

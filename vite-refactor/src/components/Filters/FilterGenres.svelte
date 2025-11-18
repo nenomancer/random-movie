@@ -91,8 +91,8 @@
   // });
 </script>
 
-<section>
-  <div class="header">
+<section data-open={open}>
+  <div class="header" >
     <h3 class="title">{label}</h3>
     <button
       class="value"
@@ -107,7 +107,7 @@
         : DEFAULT_DROPDOWN_VALUE}</button
     >
   </div>
-  <ul class="options" bind:this={genreListElement} data-open={open}>
+  <ul class="options" bind:this={genreListElement} >
     {#each options as option}
       <Button
         classes={["option", "no-border"]}
@@ -131,6 +131,15 @@
   @use "../../styles/mixins";
   section {
     border: var(--border-default);
+
+    &[data-open="false"] {
+      .header {
+        border: none;
+      }
+      .options {
+        display: none;
+      }
+    }
   }
   .header {
     // display: flex;
@@ -151,6 +160,9 @@
 
     &[data-open="false"] {
       display: none;
+      .header {
+        border: none;
+      }
     }
 
     button {

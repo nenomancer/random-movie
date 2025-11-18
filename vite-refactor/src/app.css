@@ -10,7 +10,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #151515;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -68,14 +68,16 @@ main {
 
 @media screen and (max-width: 580px) {
   main {
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr) repeat(2, .5fr);
+  grid-template-rows: repeat(6, 240px);
 
     grid-template-areas:
       "poster poster poster poster poster "
       "poster poster poster poster poster "
       "info info info info info "
       "info info info info info "
-      "history history controls controls controls";
+      "controls controls controls controls controls"
+      "history history history history history";
   }
 
   .monitor.tooltip {
