@@ -129,8 +129,9 @@
 
 <style lang="scss">
   @use "../../styles/mixins";
+  @use "../../styles/variables";
   section {
-    border: var(--border-default);
+    border: variables.$border-default;
 
     &[data-open="false"] {
       .header {
@@ -145,12 +146,12 @@
     // display: flex;
     display: grid;
     grid-template-columns: 1fr 6fr;
-    border-bottom: var(--border-default);
+    border-bottom: variables.$border-default;
   }
   .title {
     @include mixins.ui-button();
     pointer-events: none;
-    border-right: var(--border-default);
+    border-right: variables.$border-default;
     font-weight: bold;
   }
 

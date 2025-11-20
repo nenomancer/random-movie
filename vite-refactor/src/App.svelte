@@ -39,10 +39,8 @@
   } from "./lib/stores";
 
   import { onDestroy, onMount } from "svelte";
-  import "./styles/variables.css";
-  import Disk from "./components/ui/Disk.svelte";
-  import Extras from "./components/ui/Extras.svelte";
   import AboutContent from "./components/Info/AboutContent.svelte";
+  import FilterContent from "./components/Filters/FilterContent.svelte";
 
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
@@ -464,7 +462,9 @@
       <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
 
       <TabContent name={TAB_NAME.ABOUT}>Abouc</TabContent>
-      <TabContent name={TAB_NAME.FILTERS}>Filter Sectuin</TabContent>
+      <TabContent name={TAB_NAME.FILTERS}>
+        <FilterContent />
+      </TabContent>
     </Screen>
   </Monitor>
   <!-- <Disk /> -->
@@ -483,5 +483,5 @@
 </main>
 
 <style global>
-  @import "./styles/variables.css";
+  /* @import "./styles/variables.css"; */
 </style>

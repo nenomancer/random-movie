@@ -7,12 +7,14 @@
     <slot></slot>
 </article>
 
-<style>
+<style lang="scss">
+    @use "../../styles/variables";
     .tab-content {
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
         height: 100%;
+        color: variables.$ui-color-foreground;
     }
     .hidden {
         display: none;

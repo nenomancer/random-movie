@@ -1,8 +1,7 @@
 <script lang="ts">
   import { FILTER_DEFAULTS } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
-  import { currentFilters } from "../../lib/stores.ts";
-  import FilterYear from "./FilterYear.svelte";
+  import { currentFilters, resetFiltersSignal } from "../../lib/stores.ts";
   export let label: string = "";
   let yearFrom: number = FILTER_DEFAULTS.YEAR_MIN;
   let yearTo: number = FILTER_DEFAULTS.YEAR_MAX;
@@ -56,6 +55,20 @@
     }
     handleOnChange();
   }
+
+  $: resetFiltersSignal.subscribe(() => {
+    if (
+      yearFrom == FILTER_DEFAULTS.YEAR_MIN &&
+      yearTo == FILTER_DEFAULTS.YEAR_MAX
+    ) {
+      return;
+    }
+    if ($resetFiltersSignal == true) {
+      yearFrom = FILTER_DEFAULTS.YEAR_MIN;
+      yearTo = FILTER_DEFAULTS.YEAR_MAX;
+      handleOnChange();
+    }
+  });
 </script>
 
 <section>
@@ -117,17 +130,17 @@
     flex: 1;
     place-content: center;
     place-items: center;
-    border: var(--border-default);
+    border: variables.$border-default;
   }
 
   .title {
     @include mixins.ui-button();
     pointer-events: none;
-    border-right: var(--border-default);
+    border-right: variables.$border-default;
     font-weight: bold;
     width: 100%;
   }
-  
+
   .values {
     display: flex;
     width: 100%;
@@ -144,7 +157,7 @@
       }
 
       &:first-child {
-        border-right: var(--border-default);
+        border-right: variables.$border-default;
       }
     }
   }
@@ -157,30 +170,27 @@
     .range-track,
     .range-track-bg {
       inset-inline: 0;
-      border: var(--border-default);
+      border: variables.$border-default;
       border-top: 0;
       height: 100%;
       position: absolute;
     }
 
     .range-track {
-      background-color: white;
+      background-color: variables.$ui-color-foreground;
     }
   }
 
   input[type="range"] {
+    position: absolute;
+    top: -3.5px;
+    margin: auto;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     width: 100%;
     outline: none;
-    position: absolute;
-    margin: auto;
-    top: -3.5px;
-
-    // bottom: 0;
     background-color: transparent;
-    // background-color: red;
     pointer-events: none;
   }
 
@@ -200,6 +210,5 @@
     pointer-events: auto;
     border-radius: 0;
     background-color: transparent;
-    // border: 10px solid black;
   }
 </style>

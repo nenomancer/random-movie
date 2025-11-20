@@ -1,33 +1,31 @@
 <script lang="ts">
-    // export let name: string;
-    // export let activeScreen: string;
-    export let classes: Array<string> | undefined = undefined;
+  // export let name: string;
+  // export let activeScreen: string;
+  export let classes: Array<string> | undefined = undefined;
 </script>
 
 <section class={`screen ${classes && classes.join(" ")}`}>
+  <div class="scrollable">
     <slot />
+  </div>
 </section>
 
 <style lang="scss">
-    @use "../../styles/mixins";
-    .screen {
-        @include mixins.edge-inset($size: 2px, $blur: 1px, $shadow-size: 1rem);
-        border-radius: 0.5rem;
-        padding: 1rem;
-        width: 100%;
-        height: 100%;
-        /* display: grid; */
-        display: flex;
-        flex-direction: column;
-        background-color: #131313;
-        overflow-y: scroll;
-        .cell {
-            @include mixins.ui-button();
-    
-            padding-inline: 0.5rem;
-            padding-block: 0.4rem;
-            white-space: nowrap;
-        }
-    }
+  @use "../../styles/mixins";
+  @use "../../styles/variables";
+  .screen {
+    @include mixins.screen-inset();
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: variables.$screen-color;
 
+    .scrollable {
+      padding: 1rem;
+      width: 100%;
+      overflow-y: scroll;
+      height: 100%;
+    }
+  }
 </style>

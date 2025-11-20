@@ -28,7 +28,10 @@
     font-family: "Quantico";
     letter-spacing: -1.2px;
     font-weight: 350;
-    line-height: normal;
+    // font-family: "Handjet";
+    // font-weight: 900;
+    // letter-spacing: 1.9px;
+    // line-height: normal;
   }
 
   .main {
@@ -42,12 +45,4 @@
   .history {
     grid-area: history;
   }
-
-  // .extras-info {
-  //     grid-area: info;
-  // }
-  // .monitor.extras-filter {
-  //     grid-area: filters;
-  //     grid-column: span 2;
-  // }
 </style>

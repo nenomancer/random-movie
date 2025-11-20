@@ -121,13 +121,13 @@
     flex: 1;
     place-content: center;
     place-items: center;
-    border: var(--border-default);
+    border: variables.$border-default;
   }
 
   .title {
     @include mixins.ui-button();
     pointer-events: none;
-    border-right: var(--border-default);
+    border-right: variables.$border-default;
     font-weight: bold;
     width: 100%;
   }
@@ -147,7 +147,7 @@
       }
 
       &:first-child {
-        border-right: var(--border-default);
+        border-right: variables.$border-default;
       }
     }
   }
@@ -160,7 +160,7 @@
     .range-track,
     .range-track-bg {
       inset-inline: 0;
-      border: var(--border-default);
+      border: variables.$border-default;
       border-top: 0;
 
       height: 100%;
@@ -168,7 +168,7 @@
     }
 
     .range-track {
-      background-color: white;
+      background-color: variables.$ui-color-foreground;
     }
   }
 

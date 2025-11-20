@@ -23,10 +23,11 @@
 
 <style lang="scss">
   @use "../../styles/mixins";
+  @use "../../styles/variables";
   button {
     @include mixins.ui-button();
-    border-right: var(--border-default);
-    border-top: var(--border-default);
+    border-right: variables.$border-default;
+    border-top: variables.$border-default;
     flex: 1;
     white-space: nowrap;
     overflow-x: scroll;

@@ -1,8 +1,30 @@
 @use "variables";
 @use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100..800;1,100..800&display=swap");
 
 @mixin monitor-edge() {
-  @include edge-bevel($size: 2px, $blur: 1px, $radius: 12px);
+  @include edge-bevel(
+    $size: 2px,
+    $blur: 1px,
+    $radius: 12px,
+    $light:
+      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
+    $shadow:
+      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+  );
+}
+
+@mixin screen-inset() {
+  @include edge-inset(
+    $size: 2px,
+    $radius: 0.5rem,
+    $blur: 1px,
+    $shadow-size: 1rem,
+    $light:
+      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
+    $shadow:
+      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+  );
 }
 
 @mixin edge-bevel(
@@ -22,6 +44,7 @@
 @mixin edge-inset(
   $size: 2px,
   $blur: 1px,
+  $radius: 2px,
   $shadow-size: 10px,
   $opacity: 0.5,
   $light: white,
@@ -31,13 +54,14 @@
   box-shadow: $size $size $blur $size rgba($light, $opacity),
     $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
   // box-shadow: inset 0 0 10px 10px black;
-  border-radius: $size;
+  border-radius: $radius;
   &::after {
     position: absolute;
     inset: 0;
     content: "";
     box-shadow: inset 0 0 $shadow-size * 2 $shadow-size rgba($shadow, 1);
     pointer-events: none;
+    border-radius: $radius;
   }
 }
 
@@ -45,7 +69,7 @@
   color: transparent;
   text-shadow: 0 0 0.5px $color,
     0.5px 0.5px 0.5px color.adjust($color, $lightness: -40%),
-    -0.5px -0.5px 0.5px lighten($color, 35);
+    -0.5px -0.5px 0.5px color.adjust($color, $lightness: 30%);
 }
 
 @mixin text-inset($color: variables.$monitor-color) {
@@ -57,7 +81,7 @@
 
 @mixin ui-button() {
   background-color: transparent;
-  color: white;
+  color: variables.$ui-color-foreground;
   border: none;
   cursor: pointer;
   white-space: nowrap;
@@ -70,14 +94,14 @@
 
   &:hover:not(:disabled),
   &:focus-visible {
-    color: black;
-    background-color: white;
+    color: variables.$ui-color-background;
+    background-color: variables.$ui-color-foreground;
     outline: none;
   }
 
   &.selected {
-    background-color: white;
-    color: black;
+    background-color: variables.$ui-color-foreground;
+    color: variables.$ui-color-background;
   }
 
   &.no-border {
@@ -85,12 +109,19 @@
   }
 }
 
-@mixin control-button($background: variables.$monitor-color, $height: 3px) {
+@mixin control-button(
+  $content: "Button",
+  $background: variables.$monitor-color,
+  $height: 3px,
+  $indicator: 0
+    // namesto ova, neka ima control-button-light mixin, shto kje go zema ovoj mixin i samo
+  // kje mu dodava ::after element svetlence (Y)
+) {
   box-shadow: inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
-    inset 1px 1px 1px 1px hsl(0, 100%, 100%, 0.6),
-    0 $height 1px 0 hsla(0, 0%, 0%, 0.6);
+    inset 1px 1px 1px 1px color.adjust($background, $lightness: 20%),
+    0 $height 1px 0 color.adjust($background, $lightness: -30%);
 
-  background-color: rgb(97, 94, 83);
+  background-color: color.adjust(variables.$monitor-color, $lightness: 15%);
   position: relative;
   color: black;
   text-transform: uppercase;
@@ -100,33 +131,126 @@
   align-items: center;
   font-family: "Inter";
   font-weight: bold;
+  // @include text-bevel(variables.$screen-color);
+
+  // new shit
+  flex: 1;
+  height: 100%;
+  min-height: 2rem;
+  width: 100%;
+  border: none;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  // border: 4px solid darkred;
+  box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
+    0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.7),
+    inset -1px -1px 0.5px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 0.5px lighten(variables.$monitor-color, 5%);
+  border-radius: 0.25rem;
+  display: flex;
+  // justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  background-color: darken(variables.$monitor-color, 5%);
+  background: linear-gradient(
+    to bottom right,
+    desaturate(darken(variables.$monitor-color, 0%), 10%),
+    desaturate(darken(variables.$monitor-color, 10%), 10%)
+  );
+
+  // width: min-content;
+  font-family: "Glory", sans-serif;
+  font-optical-sizing: auto;
+  // font-weight: bold;
+  // font-weight: 600;
+
+  color: variables.$screen-color;
+
+  &::before,
+  &::after {
+    display: block;
+    will-change: scale;
+  }
   &::after {
     content: "";
-    inset: 5px;
-    position: absolute;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.1) 10%,
-      rgba(255, 255, 255, 0) 80%
-    );
-    pointer-events: none;
+    display: block;
+    width: 1rem;
+    height: 0.25rem;
+    background-color: green;
+    margin-inline: auto;
+    margin-top: 0.25rem;
+    border-radius: 0.25rem;
+    box-shadow: inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+      inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
   }
 
-  &:active {
-    box-shadow: inset 0 0 2px 2px hsl(0, 100%, 0%, 0.5),
-      inset 0 0 2px 2px hsl(0, 100%, 0%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
+  &::before {
+    content: $content;
+    display: block;
+
+    // margin-bottom: 0.5rem;
+    // line-height: 1.25rem;
   }
 
+  &::after {
+    // content: "";
+    // inset: 5px;
+    // position: absolute;
+    // background: linear-gradient(
+    //   to top,
+    //   color.adjust($background, $lightness: 15%, $alpha: -0.6),
+    //   transparent 40%,
+    //   transparent 50%,
+    //   color.adjust($background, $lightness: -30%, $alpha: -0.6)
+    // );
+    // pointer-events: none;
+  }
+
+  // &:active {
+  //   box-shadow: inset 0 0 2px 2px hsl(0, 100%, 0%, 0.5),
+  //     inset 0 0 2px 2px hsl(0, 100%, 0%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
+  // }
+
+  // &.active,
+  // &:has(input:checked) {
+  //   box-shadow: inset 0 0 1px 1px hsl(0, 100%, 0%, 0.5),
+  //     inset 0 0 2px 2px hsl(0, 100%, 100%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
+  //   &::after {
+  //     background: linear-gradient(
+  //       to top,
+  //       rgba(255, 255, 255, 0) 20%,
+  //       rgba(0, 0, 0, 0.1) 80%
+  //     );
+  //   }
+  //   &:active:not(:disabled) {
+  //     text-shadow: none;
+  //     color: black;
+  //     box-shadow: inset 0 0 2px 2px hsl(0, 100%, 0%, 0.5),
+  //       inset 0 0 2px 2px hsl(0, 100%, 0%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
+  //   }
+  // }
+
+  // NEW SHIT 2
+  &:active,
   &.active,
   &:has(input:checked) {
-    box-shadow: inset 0 0 1px 1px hsl(0, 100%, 0%, 0.5),
-      inset 0 0 2px 2px hsl(0, 100%, 100%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
-
-    &:active:not(:disabled) {
-      text-shadow: none;
-      color: black;
-      box-shadow: inset 0 0 2px 2px hsl(0, 100%, 0%, 0.5),
-        inset 0 0 2px 2px hsl(0, 100%, 0%, 0), 0 0 0 0 hsla(0, 0%, 0%, 0.6);
+    background: linear-gradient(
+      to bottom right,
+      desaturate(darken(variables.$monitor-color, 10%), 10%),
+      desaturate(darken(variables.$monitor-color, 20%), 10%)
+    );
+    box-shadow: -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
+      0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
+      inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
+    &::after {
+      box-shadow: 0 0 5px 1px lighten(green, 10%),
+        inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+        inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+      background: linear-gradient(to bottom, green, lighten(green, 20%), green);
+    }
+    &::before,
+    &::after {
+      scale: 0.95;
     }
   }
 }

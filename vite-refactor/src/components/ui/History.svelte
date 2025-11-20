@@ -34,12 +34,12 @@
   </div>
 </div>
 
+<!-- MAYBE ADD FAVORITES / WATCHLIST ? -->
+
 <style lang="scss">
   @use "../../styles/variables";
   @use "../../styles/mixins";
   @use "sass:color";
-  @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
 
   .perspective-container {
     display: flex;
@@ -51,7 +51,7 @@
     flex-direction: column-reverse;
     justify-content: start;
     overflow: hidden;
-    border: var(--border-default);
+    border: variables.$border-default;
     border-left: none;
     // width: 100%;
     flex: 1;
@@ -68,8 +68,9 @@
     border: none;
     text-align: center;
     flex: 1;
+    color: variables.$ui-color-foreground;
     &[data-selected="true"] {
-      border: var(--border-default);
+      border: variables.$border-default;
     }
   }
 

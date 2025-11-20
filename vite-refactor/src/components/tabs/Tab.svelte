@@ -1,47 +1,48 @@
 <script lang="ts">
-    import { getContext } from "svelte";
-    import type { Writable } from "svelte/store";
-    import { activeTab, openDropdown } from "../../lib/stores.ts";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import { activeTab, openDropdown } from "../../lib/stores.ts";
 
-    export let name: string;
+  export let name: string;
 
-    // const activeTab: Writable<string> = getContext("activeTab");
+  // const activeTab: Writable<string> = getContext("activeTab");
 
-    function setActiveTab() {
-        activeTab.set(name);
-        openDropdown.set("");
-    }
+  function setActiveTab() {
+    activeTab.set(name);
+    openDropdown.set("");
+  }
 </script>
 
 {#if name}
-    <button
-        class={`tab ${$activeTab === name && "active"}`}
-        on:click={setActiveTab}>Show {name}</button
-    >
+  <button
+    class={`tab ${$activeTab === name && "active"}`}
+    on:click={setActiveTab}>Show {name}</button
+  >
 {/if}
 
-<style>
-    .tab {
-        flex: 1;
-        border-radius: 0;
-        border: var(--border-default);
-        border-left: none;
-    }
+<style lang="scss">
+  @use "../../styles/variables";
+  .tab {
+    flex: 1;
+    border-radius: 0;
+    border: variables.$border-default;
+    border-left: none;
+  }
 
-    .tab:hover,
-    .tab:focus-visible {
-        cursor: pointer;
-        background-color: var(--color-highlight);
-        color: var(--color-dark);
-        outline: none;
-    }
+  .tab:hover,
+  .tab:focus-visible {
+    cursor: pointer;
+    background-color: variables.$ui-color-foreground;
+    color: var(--color-dark);
+    outline: none;
+  }
 
-    .tab.active {
-        background-color: var(--color-highlight);
-        color: var(--color-dark);
-    }
+  .tab.active {
+    background-color: variables.$ui-color-foreground;
+    color: var(--color-dark);
+  }
 
-    .tab:first-child {
-        border-left: var(--border-default);
-    }
+  .tab:first-child {
+    border-left: variables.$border-default;
+  }
 </style>

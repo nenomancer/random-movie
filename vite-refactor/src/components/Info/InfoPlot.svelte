@@ -9,28 +9,21 @@
     </p>
 </section>
 
-<style>
+<style lang="scss">
+    @use "../../styles/variables";
     .plot {
         display: flex;
         flex-direction: column;
-        font: inherit;
         flex: 1;
         overflow: hidden;
 
-        border: var(--border-default);
-    }
-
-    .title,
-    .content {
-        /* border: var(--border-default); */
+        border: variables.$border-default;
     }
 
     .title {
         border-bottom: none;
         text-align: center;
-        border-bottom: var(--border-default);
-
-        font-weight: bold;
+        border-bottom: variables.$border-default;
     }
 
     .content {

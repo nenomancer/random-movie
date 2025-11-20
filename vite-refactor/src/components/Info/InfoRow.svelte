@@ -34,13 +34,14 @@
 
 <style lang="scss">
     @use '../../styles/mixins';
+    @use '../../styles/variables';
     section {
-        /* border: var(--border-default); */
+        /* border: variables.$border-default; */
         // font-size: 1.25rem;
     }
     .title,
     .cell {
-        /* border: var(--border-default); */
+        /* border: variables.$border-default; */
         padding-inline: 0.5rem;
         padding-block: 0.4rem;
         white-space: nowrap;
@@ -50,13 +51,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        font-weight: bold;
-        border-right: var(--border-default);
+        border-right: variables.$border-default;
     }
     .row:has(.title) {
         display: grid;
         grid-template-columns: 4rem 6fr;
-        border: var(--border-default);
+        border: variables.$border-default;
         &:not(:last-child) {
             border-bottom: none;
         }

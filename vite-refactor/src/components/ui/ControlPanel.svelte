@@ -47,24 +47,23 @@
       class="control-button search"
       on:click={() => fetchMovies()}
       class:active={$activeTab === TAB_NAME.LOADING}
-      disabled={$activeTab === TAB_NAME.LOADING}>Search</button
-    >
+      disabled={$activeTab === TAB_NAME.LOADING}
+    ></button>
     <button
       class="control-button about"
       on:click={() => toggleTab(TAB_NAME.ABOUT)}
       class:active={$activeTab === TAB_NAME.ABOUT}
-      style="display: block;">About</button
-    >
+      style="display: block;"
+    ></button>
   </div>
   <div class="controls-filters">
     <button
       class="control-button set"
       on:click={() => toggleTab(TAB_NAME.FILTERS)}
-      class:active={$activeTab === TAB_NAME.FILTERS}>Set</button
-    >
+      class:active={$activeTab === TAB_NAME.FILTERS}
+    ></button>
     <!-- <FilterEnable /> -->
     <div class="control-button use">
-      <label for="useFilters">Use</label>
       <input
         type="checkbox"
         id="useFilters"
@@ -77,8 +76,8 @@
     <button
       class="control-button reset"
       on:click={resetFilter}
-      style="display: block;">Reset</button
-    >
+      style="display: block;"
+    ></button>
   </div>
 </div>
 
@@ -107,11 +106,10 @@
   .controls-filters {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    border: var(--border-default);
+    border: variables.$border-default;
     border-color: black;
-    padding-block: 1rem;
+    padding: 1rem;
     margin-top: 1.5rem;
-    padding-inline: 0.5rem;
     gap: 0.25rem;
     position: relative;
     flex: 1;
@@ -129,7 +127,7 @@
       translate: -50% 0;
       background-color: variables.$monitor-color;
       color: black;
-      padding-inline: 0.5rem;
+      padding-inline: 1rem;
       line-height: 1rem;
     }
   }
@@ -150,22 +148,22 @@
       padding-block: 1rem;
       // outline: 2px solid black;
       outline-offset: -0.5rem;
-      @include mixins.control-button();
+      @include mixins.control-button($content: "Search");
     }
     &.about {
-      @include mixins.control-button();
+      @include mixins.control-button($content: "About");
     }
 
     &.set {
-      @include mixins.control-button();
+      @include mixins.control-button($content: "Set");
     }
     &.use {
-      @include mixins.control-button();
+      @include mixins.control-button($content: "Enable");
     }
 
     &.reset {
       // background-color: purple;
-      @include mixins.control-button();
+      @include mixins.control-button($content: "Reset");
     }
   }
 </style>

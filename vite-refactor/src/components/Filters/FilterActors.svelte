@@ -117,6 +117,7 @@
 </section>
 
 <style lang="scss">
+    @use "../../styles/variables";
     section {
         border: var(--border-default);
     }
@@ -146,8 +147,8 @@
             cursor: pointer;
 
             &:hover {
-                color: black;
-                background-color: var(--color-highlight);
+                color: variables.$ui-color-background;
+                background-color: variables.$ui-color-foreground;
             }
         }
     }
