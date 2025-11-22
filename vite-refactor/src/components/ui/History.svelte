@@ -53,7 +53,6 @@
     overflow: hidden;
     border: variables.$border-default;
     border-left: none;
-    // width: 100%;
     flex: 1;
   }
 
@@ -61,7 +60,6 @@
     text-orientation: mixed;
     writing-mode: vertical-rl;
     display: flex;
-    // flex-direction: column;
   }
   .tab {
     background-color: transparent;
@@ -69,6 +67,8 @@
     text-align: center;
     flex: 1;
     color: variables.$ui-color-foreground;
+    letter-spacing: -1.2px;
+
     &[data-selected="true"] {
       border: variables.$border-default;
     }
@@ -76,6 +76,8 @@
 
   .note {
     @include mixins.ui-button();
+    letter-spacing: -1.2px;
+
     padding-block: 0;
     width: 100%;
     white-space: nowrap;

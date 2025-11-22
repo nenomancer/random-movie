@@ -9,7 +9,7 @@
   />
 {/if}
 {#if !$currentMovie.poster}
-  <p>Image data corrupted.</p>
+  <p class="error">Image data corrupted.</p>
 {/if}
 
 <style>
@@ -19,5 +19,9 @@
     object-fit: contain;
     mix-blend-mode: lighten;
     filter: brightness(0.75);
+  }
+
+  .error {
+    align-self: center;
   }
 </style>

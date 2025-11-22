@@ -461,7 +461,9 @@
       <TabContent name={TAB_NAME.LOADING}>Loading...</TabContent>
       <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
 
-      <TabContent name={TAB_NAME.ABOUT}>Abouc</TabContent>
+      <TabContent name={TAB_NAME.ABOUT}>
+        <AboutContent isMain={false} />
+      </TabContent>
       <TabContent name={TAB_NAME.FILTERS}>
         <FilterContent />
       </TabContent>
@@ -482,6 +484,11 @@
   <!-- <Extras /> -->
 </main>
 
-<style global>
-  /* @import "./styles/variables.css"; */
+<style global lang="scss">
+  @use "./styles/mixins";
+  .kurac {
+    @include mixins.text-bevel();
+    font-weight: bold;
+    // font-size: 2rem;
+  }
 </style>

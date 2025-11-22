@@ -143,26 +143,23 @@
     }
 
     &.search {
-      // background-color: darkgreen;
       aspect-ratio: unset;
       padding-block: 1rem;
-      // outline: 2px solid black;
       outline-offset: -0.5rem;
       @include mixins.control-button($content: "Search");
     }
     &.about {
-      @include mixins.control-button($content: "About");
+      @include mixins.control-button-lightable($content: "About");
     }
 
     &.set {
-      @include mixins.control-button($content: "Set");
+      @include mixins.control-button-lightable($content: "Set");
     }
     &.use {
-      @include mixins.control-button($content: "Enable");
+      @include mixins.control-button-lightable($content: "Enable");
     }
 
     &.reset {
-      // background-color: purple;
       @include mixins.control-button($content: "Reset");
     }
   }

@@ -1,72 +1,101 @@
-<section>
-  <h2>About</h2>
-  <p>
-    Just hit the big "Search" button and find your next hidden gem. Discover
-    titles dating back from 1878!
-  </p>
+<script lang="ts">
+  export let isMain: Boolean = true;
+</script>
 
-  <h2>Features</h2>
-  <ul>
-    <li>
-      Click on castmembers' names to find another movie with that castmember.
-    </li>
-    <li>
-      Filter by <strong>country</strong>, genre, a range of release years, or
-      rating.
-    </li>
-    <li>Keep track of the last 6 results.</li>
-  </ul>
+{#if isMain}
+  <section>
+    <h2>About</h2>
+    <p>
+      Just hit the big "Search" button and find your next hidden gem. Discover
+      titles dating back from 1878!
+    </p>
 
-  <h2>Disclaimer</h2>
-  <p>
-    This project is still in progress, it might fail at times and some
-    functionalities might not work as expected.
-  </p>
-  <h3>Currently known issues include:</h3>
-  <ul>
-    <li>Many of the listed countries won't produce a result.</li>
-    <li>
-      Sometimes Adult movies might come up disguised as Drama, Romance or
-      Documentary.
-    </li>
-    <li>
-      Rating and year filters will rarely find a result with the exact settings.
-    </li>
-    <li>
-      The repo is a mess, but
-      <a href="https://github.com/nenomancer/random-movie" target="_blank"
-        >take a look</a
+    <h2>Features</h2>
+    <ul>
+      <li>
+        Click on castmembers' names to find another movie with that castmember.
+      </li>
+      <li>
+        Filter by <strong>country</strong>, genre, a range of release years, or
+        rating.
+      </li>
+      <li>Keep track of the last 6 results.</li>
+    </ul>
+
+    <h2>Disclaimer</h2>
+    <p>
+      This project is still in progress, it might fail at times and some
+      functionalities might not work as expected.
+    </p>
+    <h3>Currently known issues include:</h3>
+    <ul>
+      <li>Many of the listed countries won't produce a result.</li>
+      <li>
+        Sometimes Adult movies might come up disguised as Drama, Romance or
+        Documentary.
+      </li>
+      <li>
+        Rating and year filters will rarely find a result with the exact
+        settings.
+      </li>
+      <li>
+        The repo is a mess, but
+        <a href="https://github.com/nenomancer/random-movie" target="_blank"
+          >take a look</a
+        >
+        if you want.
+      </li>
+    </ul>
+
+    <p>
+      This product uses the
+      <a href="https://developer.themoviedb.org/reference/" target="_blank"
+        >TMDB API</a
       >
-      if you want.
-    </li>
-  </ul>
+      but is not endorsed or certified by
+      <a href="https://www.themoviedb.org/" target="_blank"
+        >The Movie Database</a
+      >.
+    </p>
+    <h2>Contact</h2>
+    <p>
+      If you have any feedback or suggestions, reach out to me on my
+      <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
+      <a href="https://www.instagram.com/loopmaster.n/" target="_blank"
+        >Instagram</a
+      >.
+    </p>
+  </section>
+{/if}
+{#if !isMain}
+  <div class="image">About this website.</div>
+  <div class="screen-overlay"></div>
+{/if}
 
-  <p>
-    This product uses the
-    <a href="https://developer.themoviedb.org/reference/" target="_blank"
-      >TMDB API</a
-    >
-    but is not endorsed or certified by
-    <a href="https://www.themoviedb.org/" target="_blank">The Movie Database</a
-    >.
-  </p>
-  <h2>Contact</h2>
-  <p>
-    If you have any feedback or suggestions, reach out to me on my
-    <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
-    <a href="https://www.instagram.com/loopmaster.n/" target="_blank"
-      >Instagram</a
-    >.
-  </p>
-</section>
+<style lang="scss">
+  @use "../../styles/variables";
 
-<style>
-  /* section * {
-    margin: auto;
-    padding: auto;
-  } */
-  * {
-    /* all: unset; */
+  .image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    video {
+      width: 100%;
+      mix-blend-mode: screen;
+    }
+    .screen-overlay {
+      background-color: variables.$ui-color-foreground;
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: multiply;
+    }
+  }
+
+  p {
+    justify-self: center;
+    align-self: center;
   }
 
   h2 {
