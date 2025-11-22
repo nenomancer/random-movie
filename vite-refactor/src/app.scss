@@ -1,0 +1,83 @@
+@use "./styles/variables";
+@import "./styles/reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
+
+:root {
+  // font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  // line-height: 1.5;
+  // font-weight: 400;
+
+  color-scheme: light dark;
+  // color: rgba(255, 255, 255, 0.87);
+  background-color: variables.$screen-color;
+
+  // font-synthesis: none;
+  // text-rendering: optimizeLegibility;
+  // -webkit-font-smoothing: antialiased;
+  // -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#app {
+  max-width: 1280px;
+  min-height: 100vh;
+  margin-inline: auto;
+  place-content: center;
+}
+
+main {
+  margin: auto;
+  max-width: 960px;
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(480px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 240px);
+  grid-template-areas:
+    "poster poster info info info "
+    "poster poster info info info "
+    "tooltip history history controls controls";
+
+  gap: 0.25rem;
+  position: relative;
+
+  // * {
+  //   font: inherit;
+  // }
+}
+
+@media screen and (max-width: 580px) {
+  main {
+    grid-template-rows: repeat(4, 1fr) repeat(2, 0.5fr);
+    grid-template-rows: repeat(6, 240px);
+
+    grid-template-areas:
+      "poster poster poster poster poster "
+      "poster poster poster poster poster "
+      "info info info info info "
+      "info info info info info "
+      "controls controls controls controls controls"
+      "history history history history history";
+  }
+
+  .monitor.tooltip {
+    display: none !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
+
+.custom-border {
+  border: variables.$border-default;
+}

@@ -1,201 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style-experiment.css" />
 
-    <link rel="stylesheet" href="./styles/main.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style-experiment.css" />
 
-    <script src="./scripts/script3.js" defer></script>
-    <title>Nenomancer's Random Movie Generator</title>
-    <meta
-      name="description"
-      content="Use Nenomancer's Random Movie Generator to discover your next favorite film!"
-    />
-    <meta property="og:title" content="Nenomancer's Random Movie Generator" />
-    <meta property="og:description" content="Find your next favorite film!" />
-    <meta
-      property="og:url"
-      content="https://nenomancer.github.io/random-movie/ "
-    />
-  </head>
+  <link rel="stylesheet" href="./styles/main.css" />
 
-  <body>
-    <div id="main-container">
-      <div class="monitor main monitor-outer">
-        <div class="stickynote">
-          <span class="history" data-history></span>
+  <script src="./scripts/script3.js" defer type="module"></script>
+  <title>Nenomancer's Random Movie Generator</title>
+  <meta name="description" content="Use Nenomancer's Random Movie Generator to discover your next favorite film!" />
+  <meta property="og:title" content="Nenomancer's Random Movie Generator" />
+  <meta property="og:description" content="Find your next favorite film!" />
+  <meta property="og:url" content="https://nenomancer.github.io/random-movie/ " />
+</head>
+
+<body>
+  <div id="main-container">
+    <div class="monitor main monitor-outer">
+      <div class="stickynote">
+        <span class="history" data-history></span>
+      </div>
+
+      <div class="main-screen screen monitor-inner" data-tooltip="Now hovering over the Main screen..">
+        <div class="secondary about-us">
+          <h2>About</h2>
+          <p>Just hit the big red button and find your next hidden gem.</p>
+          <p>
+            Click on castmembers' names to find another movie with that
+            castmember.
+          </p>
+          <p>Filter by country, genre, or a range of release years.</p>
+          <p>Keep track of the last 8 results.</p>
+
+          <p>
+            This product uses the
+            <a href="https://developer.themoviedb.org/reference/" target="_blank">TMDB API</a>
+            but is not endorsed or certified by
+            <a href="https://www.themoviedb.org/" target="_blank">The Movie Database</a>.
+          </p>
+          <h2>Contact</h2>
+          <p>
+            If you have any feedback or suggestions, reach out to me on my
+            <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
+            <a href="https://www.instagram.com/loopmaster.n/" target="_blank">Instagram</a>.
+          </p>
         </div>
-
-        <div
-          class="main-screen screen monitor-inner"
-          data-tooltip="Now hovering over the Main screen.."
-        >
-          <div class="secondary about-us">
-            <h2>About</h2>
-            <p>Just hit the big red button and find your next hidden gem.</p>
-            <p>
-              Click on castmembers' names to find another movie with that
-              castmember.
-            </p>
-            <p>Filter by country, genre, or a range of release years.</p>
-            <p>Keep track of the last 8 results.</p>
-
-            <p>
-              This product uses the
-              <a
-                href="https://developer.themoviedb.org/reference/"
-                target="_blank"
-                >TMDB API</a
-              >
-              but is not endorsed or certified by
-              <a href="https://www.themoviedb.org/" target="_blank"
-                >The Movie Database</a
-              >.
-            </p>
-            <h2>Contact</h2>
-            <p>
-              If you have any feedback or suggestions, reach out to me on my
-              <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
-              <a href="https://www.instagram.com/loopmaster.n/" target="_blank"
-                >Instagram</a
-              >.
-            </p>
-          </div>
-          <span class="tabs">
-            <span class="first active" data-tooltip="View movie details."
-              >INFO</span
-            >
-            <span class="second" data-tooltip="View search filters."
-              >FILTERS</span
-            >
-          </span>
-          <div class="content">
-            <div class="info active" data-tab="first">
-              <div class="row title">
-                <span>TTL</span>
-                <span
-                  class="content"
-                  data-tooltip="Title of the movie. Click to view on IMDB."
-                  tabindex="0"
-                ></span>
-              </div>
-              <div class="row subtitle">
-                <!-- <span></span> -->
-                <span class="content"></span>
-              </div>
-              <div class="row genres">
-                <span>GNR</span>
-                <span class="content"> </span>
-              </div>
-              <div class="row directors">
-                <span>DIR</span>
-                <span class="content"> </span>
-              </div>
-              <div class="row actors">
-                <span>ACT</span>
-                <span class="content" tabindex="1"> </span>
-              </div>
-              <div class="row plot">
-                <span>PLT</span>
-                <span
-                  class="content"
-                  lang="en"
-                  data-tooltip="Plot summary for the movie."
-                ></span>
-              </div>
+        <span class="tabs">
+          <span class="first active" data-tooltip="View movie details.">INFO</span>
+          <span class="second" data-tooltip="View search filters.">FILTERS</span>
+        </span>
+        <div class="content">
+          <div class="info active" data-tab="first">
+            <div class="row title">
+              <span>TTL</span>
+              <span class="content" data-tooltip="Title of the movie. Click to view on IMDB." tabindex="0"></span>
             </div>
-            <form name="filters" class="filters" data-tab="second">
-              <span
-                class="row countries"
-                data-tooltip="Filter based on the country of origin to find a movie."
-              >
-                <span class="header">
-                  <span>Country</span>
-                  <span class="value" tabindex="0">Any</span>
-                </span>
-                <span class="content"></span>
+            <div class="row subtitle">
+              <!-- <span></span> -->
+              <span class="content"></span>
+            </div>
+            <div class="row genres">
+              <span>GNR</span>
+              <span class="content"> </span>
+            </div>
+            <div class="row directors">
+              <span>DIR</span>
+              <span class="content"> </span>
+            </div>
+            <div class="row actors">
+              <span>ACT</span>
+              <span class="content" tabindex="1"> </span>
+            </div>
+            <div class="row plot">
+              <span>PLT</span>
+              <span class="content" lang="en" data-tooltip="Plot summary for the movie."></span>
+            </div>
+          </div>
+          <form name="filters" class="filters" data-tab="second">
+            <span class="row countries" data-tooltip="Filter based on the country of origin to find a movie.">
+              <span class="header">
+                <span>Country</span>
+                <span class="value" tabindex="0">Any</span>
               </span>
+              <span class="content"></span>
+            </span>
 
-              <div
-                class="row genres"
-                data-tooltip="Pick one or multiple genres to find a movie."
-                tabindex="1"
-              >
-                <span class="header">
-                  <span class="toggle">Genres</span>
-                  <span class="value" tabindex="0">Any</span>
-                </span>
-                <span class="content"></span>
-              </div>
+            <div class="row genres" data-tooltip="Pick one or multiple genres to find a movie." tabindex="1">
+              <span class="header">
+                <span class="toggle">Genres</span>
+                <span class="value" tabindex="0">Any</span>
+              </span>
+              <span class="content"></span>
+            </div>
 
-              <div
-                class="row release-year"
-                data-tooltip="Filter based on a range of release years."
-                tabindex="1"
-              >
-                <span class="header">
-                  <span>Year</span>
-                  <span class="content">
-                    <input
-                      id="release-from"
-                      type="text"
-                      min="1878"
-                      max="2024"
-                      placeholder="From"
-                      data-tooltip="Earliest release year. Minimum is 1878."
-                    />
-                    <input
-                      id="release-to"
-                      type="text"
-                      min="1878"
-                      max="2024"
-                      placeholder="To"
-                      data-tooltip="Latest release year. Maximum is the current year."
-                    />
-                  </span>
+            <div class="row release-year" data-tooltip="Filter based on a range of release years." tabindex="1">
+              <span class="header">
+                <span>Year</span>
+                <span class="content">
+                  <input id="release-from" type="text" min="1878" max="2024" placeholder="From"
+                    data-tooltip="Earliest release year. Minimum is 1878." />
+                  <input id="release-to" type="text" min="1878" max="2024" placeholder="To"
+                    data-tooltip="Latest release year. Maximum is the current year." />
                 </span>
-              </div>
-            </form>
-          </div>
+              </span>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="poster-screen monitor-outer">
-        <div class="container monitor-inner screen" data-movie-id="">
-          <div class="secondary">
-            <h2>Disclaimer</h2>
-            <p>
-              This project is still in progress, it might fail at times and some
-              functionalities might not work as expected.
-            </p>
-            <ul>
-              Some of the current known issues:
-              <li>Many of the listed countries won't produce a result.</li>
-              <li>
-                Sometimes Adult movies might come up disguised as Drama, Romance
-                or Documentary.
-              </li>
-              <li>
-                The repo is a mess, but
-                <a
-                  href="https://github.com/nenomancer/random-movie"
-                  target="_blank"
-                  >take a look</a
-                >
-                if you want.
-              </li>
-            </ul>
-          </div>
-          <img class="content" src="" alt="" id="poster" />
+    </div>
+    <div class="poster-screen monitor-outer">
+      <div class="container monitor-inner screen" data-movie-id="">
+        <div class="secondary">
+          <h2>Disclaimer</h2>
+          <p>
+            This project is still in progress, it might fail at times and some
+            functionalities might not work as expected.
+          </p>
+          <ul>
+            Some of the current known issues:
+            <li>Many of the listed countries won't produce a result.</li>
+            <li>
+              Sometimes Adult movies might come up disguised as Drama, Romance
+              or Documentary.
+            </li>
+            <li>
+              The repo is a mess, but
+              <a href="https://github.com/nenomancer/random-movie" target="_blank">take a look</a>
+              if you want.
+            </li>
+          </ul>
         </div>
+        <img class="content" src="" alt="" id="poster" />
       </div>
-      <div class="extra-info" section-extra-info>
-        <!-- <div data-rating> -->
-        <!-- <div class="container"></div> -->
-        <!-- <div id="arrow" data-rotation></div> -->
-        <!-- </div> -->
-        <!-- <div class="indents">
+    </div>
+    <div class="extra-info" section-extra-info>
+      <!-- <div data-rating> -->
+      <!-- <div class="container"></div> -->
+      <!-- <div id="arrow" data-rotation></div> -->
+      <!-- </div> -->
+      <!-- <div class="indents">
           <span class="indent"></span>
           <span class="indent"></span>
           <span class="indent"></span>
@@ -203,69 +148,64 @@
           <span class="indent"></span>
           <span class="indent"></span>
         </div> -->
-        <div class="response">
-          <div class="lights" data-tooltip="A display of the search response.">
-            <div class="error"></div>
-            <div class="pending"></div>
-            <div class="success"></div>
-          </div>
-          <button
-            id="about"
-            data-tooltip="View System Information [About Us]"
-          ></button>
+      <div class="response">
+        <div class="lights" data-tooltip="A display of the search response.">
+          <div class="error"></div>
+          <div class="pending"></div>
+          <div class="success"></div>
         </div>
+        <button id="about" data-tooltip="View System Information [About Us]"></button>
+      </div>
 
-        <div class="tooltip">
-          <div class="screen monitor-inner">
-            <div data-tooltip-display>
-              Hover on the controls to see further info.
-            </div>
+      <div class="tooltip">
+        <div class="screen monitor-inner">
+          <div data-tooltip-display>
+            Hover on the controls to see further info.
           </div>
         </div>
       </div>
-      <div class="search">
-        <!-- <span class="">SEARCH SHIE</span> -->
-        <!-- <div class="container"> -->
-        <!-- <span class="symbol"></span> -->
-        <!-- <button id="info"></button> -->
-        <button
-          id="submit"
-          data-tooltip="Click to get a random movie."
-        ></button>
-        <!-- </div> -->
+    </div>
+    <div class="search">
+      <!-- <span class="">SEARCH SHIE</span> -->
+      <!-- <div class="container"> -->
+      <!-- <span class="symbol"></span> -->
+      <!-- <button id="info"></button> -->
+      <button id="submit" data-tooltip="Click to get a random movie."></button>
+      <!-- </div> -->
+    </div>
+    <div class="extra-1">
+      <div class="container">
+        <!-- <div class="tooltip" data-tooltip-display>TOOLTIP:</div> -->
+        <div>Tagline</div>
       </div>
-      <div class="extra-1">
-        <div class="container">
-          <!-- <div class="tooltip" data-tooltip-display>TOOLTIP:</div> -->
-          <div>Tagline</div>
-        </div>
-      </div>
-      <div class="extra-2">
-        <div>Full Release Date</div>
-      </div>
+    </div>
+    <div class="extra-2">
+      <div>Full Release Date</div>
+    </div>
 
-      <div class="extra-3">
-        <div data-votes>votes</div>
-        <div data-popularity>popularity</div>
-        <div data-location>other shiet</div>
-        <div data-runtime>runtime</div>
-        <div class="protif">
-          <div data-revenue data-tooltip="Revenue of the movie">revenue</div>
-          <div data-budget data-tooltip="Budget of the movie">budget</div>
-          <div data-profit data-tooltip="Profit of the movie">profit</div>
-        </div>
-        <div data-themes>
-          <div class="theme-blue">blue</div>
-          <div class="theme-green">green</div>
-          <div class="theme-red">red</div>
-          <div class="theme-orange">orange</div>
-        </div>
+    <div class="extra-3">
+      <div data-votes>votes</div>
+      <div data-popularity>popularity</div>
+      <div data-location>other shiet</div>
+      <div data-runtime>runtime</div>
+      <div class="protif">
+        <div data-revenue data-tooltip="Revenue of the movie">revenue</div>
+        <div data-budget data-tooltip="Budget of the movie">budget</div>
+        <div data-profit data-tooltip="Profit of the movie">profit</div>
       </div>
-      <!-- <div class="rating"> -->
+      <div data-themes>
+        <div class="theme-blue">blue</div>
+        <div class="theme-green">green</div>
+        <div class="theme-red">red</div>
+        <div class="theme-orange">orange</div>
+      </div>
+    </div>
+    <!-- <div class="rating"> -->
 
-      <!-- <div id="container">
+    <!-- <div id="container">
         <div id="results"></div>
       </div> -->
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>

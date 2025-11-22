@@ -1,0 +1,211 @@
+@use "variables";
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100..800;1,100..800&display=swap");
+
+@mixin monitor-edge() {
+  @include edge-bevel(
+    $size: 2px,
+    $blur: 1px,
+    $radius: 12px,
+    $light:
+      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
+    $shadow:
+      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+  );
+}
+
+@mixin screen-inset() {
+  @include edge-inset(
+    $size: 2px,
+    $radius: 0.5rem,
+    $blur: 1px,
+    $shadow-size: 1rem,
+    $light:
+      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
+    $shadow:
+      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+  );
+}
+
+@mixin edge-bevel(
+  $size: 2px,
+  $blur: 1px,
+  $radius: 2px,
+  $opacity: 0.5,
+  $light: white,
+  $shadow: black
+) {
+  box-shadow: inset $size $size $blur $size rgba($light, $opacity),
+    inset $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
+
+  border-radius: $radius;
+}
+
+@mixin edge-inset(
+  $size: 2px,
+  $blur: 1px,
+  $radius: 2px,
+  $shadow-size: 10px,
+  $opacity: 0.5,
+  $light: white,
+  $shadow: black
+) {
+  position: relative;
+  box-shadow: $size $size $blur $size rgba($light, $opacity),
+    $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
+  // box-shadow: inset 0 0 10px 10px black;
+  border-radius: $radius;
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    box-shadow: inset 0 0 $shadow-size * 2 $shadow-size rgba($shadow, 1);
+    pointer-events: none;
+    border-radius: $radius;
+  }
+}
+
+@mixin text-bevel($color: variables.$monitor-color) {
+  color: transparent;
+  text-shadow: 0 0 0.5px $color,
+    0.5px 0.5px 0.5px color.adjust($color, $lightness: -40%),
+    -0.5px -0.5px 0.5px color.adjust($color, $lightness: 30%);
+}
+
+@mixin text-inset($color: variables.$monitor-color) {
+  color: transparent;
+
+  text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px red,
+    -0.5px -0.5px 0.5px darken($color, 40);
+}
+
+@mixin ui-button() {
+  background-color: transparent;
+  color: variables.$ui-color-foreground;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  padding-inline: 0.5rem;
+  padding-block: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    color: variables.$ui-color-background;
+    background-color: variables.$ui-color-foreground;
+    outline: none;
+  }
+
+  &.selected {
+    background-color: variables.$ui-color-foreground;
+    color: variables.$ui-color-background;
+  }
+
+  &.no-border {
+    border: none;
+  }
+}
+
+@mixin control-button-lightable(
+  $content: "Button",
+  $background: variables.$monitor-color,
+  $height: 3px
+) {
+  @include control-button($content, $background, $height);
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    inset-inline: 0;
+    bottom: 1.25rem;
+    width: 1rem;
+    height: 0.25rem;
+    background-color: green;
+    margin-inline: auto;
+    margin-top: 0.25rem;
+    border-radius: 0.25rem;
+    box-shadow: inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+      inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+  }
+}
+
+@mixin control-button(
+  $content: "Button",
+  $background: variables.$monitor-color,
+  $height: 3px
+) {
+  box-shadow: inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
+    inset 1px 1px 1px 1px color.adjust($background, $lightness: 20%),
+    0 $height 1px 0 color.adjust($background, $lightness: -30%);
+
+  background-color: color.adjust(variables.$monitor-color, $lightness: 15%);
+  position: relative;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+  font-family: "Inter";
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+  height: 100%;
+  min-height: 2rem;
+  width: 100%;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
+    0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.7),
+    inset -1px -1px 0.5px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 0.5px lighten(variables.$monitor-color, 5%);
+  background-color: darken(variables.$monitor-color, 5%);
+  background: linear-gradient(
+    to bottom right,
+    desaturate(darken(variables.$monitor-color, 0%), 10%),
+    desaturate(darken(variables.$monitor-color, 10%), 10%)
+  );
+
+  font-family: "Glory", sans-serif;
+  font-optical-sizing: auto;
+
+  color: variables.$screen-color;
+
+  &::before,
+  &::after {
+    display: block;
+    will-change: scale;
+  }
+
+  &::before {
+    content: $content;
+    display: block;
+  }
+
+  &:active,
+  &.active,
+  &:has(input:checked) {
+    background: linear-gradient(
+      to bottom right,
+      desaturate(darken(variables.$monitor-color, 10%), 10%),
+      desaturate(darken(variables.$monitor-color, 20%), 10%)
+    );
+    box-shadow: -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
+      0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
+      inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
+    &::after {
+      box-shadow: 0 0 5px 1px lighten(green, 10%),
+        inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+        inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+      background: linear-gradient(to bottom, green, lighten(green, 20%), green);
+    }
+    &::before,
+    &::after {
+      scale: 0.95;
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<script lang="ts">
+  export let classes: Array<string> = [""];
+  export let padding: number = 2;
+  export let radius: number = 2;
+
+  const default_values = {
+    padding: "2.5rem",
+    radius: "2px",
+  };
+</script>
+
+<div class={`monitor ${classes && classes.join(" ")} data-padding=${padding}`}>
+  <slot />
+</div>
+
+<style lang="scss">
+  @use "../../styles/variables.scss";
+  @use "../../styles/_mixins.scss";
+  @import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+  .monitor {
+    // @include mixins.edge-bevel($size: 2px, $blur: 1px, $radius: 24px);
+    @include mixins.monitor-edge();
+    padding: 2rem;
+    background-color: variables.$monitor-color;
+    display: flex;
+    flex-direction: column;
+    font-family: "Quantico";
+    letter-spacing: -1.2px;
+    font-weight: 350;
+    // font-family: "Handjet";
+    // font-weight: 900;
+    // letter-spacing: 1.9px;
+    // line-height: normal;
+  }
+
+  .main {
+    grid-area: info;
+  }
+
+  .poster {
+    grid-area: poster;
+  }
+
+  .history {
+    grid-area: history;
+  }
+</style>
