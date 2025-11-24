@@ -39,7 +39,7 @@
   } from "./lib/stores";
 
   import { onDestroy, onMount } from "svelte";
-  import AboutContent from "./components/Info/AboutContent.svelte";
+  import AboutContent from "./components/info/AboutContent.svelte";
   import FilterContent from "./components/Filters/FilterContent.svelte";
 
   let allCountries: Country[] = [];
