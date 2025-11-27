@@ -9,6 +9,9 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
   },
+  "dependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.9.2"
+  },
   "devDependencies": {
     "@sveltejs/adapter-netlify": "^5.2.4",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
