@@ -10,7 +10,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
   },
   "dependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.9.2"
+    "rollup": "^4.53.3"
   },
   "devDependencies": {
     "@sveltejs/adapter-netlify": "^5.2.4",
