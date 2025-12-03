@@ -11,6 +11,9 @@
   export let label: string = "";
 
   function handleOnChange() {
+    ratingFrom = Math.min(Math.max(ratingFrom, FILTER_DEFAULTS.RATING_MIN), FILTER_DEFAULTS.RATING_MAX);
+    ratingTo = Math.min(Math.max(ratingTo, FILTER_DEFAULTS.RATING_MIN), FILTER_DEFAULTS.RATING_MAX);
+
     onChange(ratingFrom, ratingTo);
     const percent1 = (ratingFrom / 10) * 100;
     const percent2 = 100 - (ratingTo / 10) * 100;
