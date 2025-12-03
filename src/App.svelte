@@ -57,25 +57,12 @@
       }
     }
   }
-  // const handlePopState = () => {
-  //   const params = window.location.pathname.split("/");
-  //   if (params[1] === "movie" && params[2]) {
-  //     getMovie(Number(params[2]));
-  //   }
-  // };
-
-  function handlePopState() {
+  const handlePopState = () => {
     const params = window.location.pathname.split("/");
-
     if (params[1] === "movie" && params[2]) {
-      if (typeof getMovie === "function") {
-        getMovie(Number(params[2]));
-      } else {
-        console.warn("getMovie not ready, retrying...");
-        setTimeout(handlePopState, 30);
-      }
+      getMovie(Number(params[2]));
     }
-  }
+  };
 
   onMount(() => {
     document.addEventListener("keydown", handleGlobalKeyboard);
@@ -159,6 +146,7 @@
     await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
+        console.log('api: ', `${API.MOVIE}/${movieId}`)
         if (data.backdrop_path) {
           currentMovie.update((movie) => ({
             ...movie,
