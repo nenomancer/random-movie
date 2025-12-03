@@ -57,12 +57,25 @@
       }
     }
   }
-  const handlePopState = () => {
+  // const handlePopState = () => {
+  //   const params = window.location.pathname.split("/");
+  //   if (params[1] === "movie" && params[2]) {
+  //     getMovie(Number(params[2]));
+  //   }
+  // };
+
+  function handlePopState() {
     const params = window.location.pathname.split("/");
+
     if (params[1] === "movie" && params[2]) {
-      getMovie(Number(params[2]));
+      if (typeof getMovie === "function") {
+        getMovie(Number(params[2]));
+      } else {
+        console.warn("getMovie not ready, retrying...");
+        setTimeout(handlePopState, 30);
+      }
     }
-  };
+  }
 
   onMount(() => {
     document.addEventListener("keydown", handleGlobalKeyboard);
