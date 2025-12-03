@@ -146,7 +146,6 @@
     await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
-        console.log('api: ', `${API.MOVIE}/${movieId}`)
         if (data.backdrop_path) {
           currentMovie.update((movie) => ({
             ...movie,
