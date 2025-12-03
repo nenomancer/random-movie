@@ -17,6 +17,8 @@
   }
 
   function handleOnChange() {
+    yearFrom = Math.min(Math.max(yearFrom, FILTER_DEFAULTS.YEAR_MIN), FILTER_DEFAULTS.YEAR_MAX);
+    yearTo = Math.min(Math.max(yearTo, FILTER_DEFAULTS.YEAR_MIN), FILTER_DEFAULTS.YEAR_MAX);
     onChange(yearFrom, yearTo);
     // const percent1 = (yearFrom / 10) * 100;
     const percent1 =
