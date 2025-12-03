@@ -7,7 +7,7 @@
     useFilters,
   } from "../../lib/stores.ts";
 
-  import FilterEnable from "../filters/FilterEnable.svelte";
+  import FilterEnable from "../Filters/FilterEnable.svelte";
 
   export let fetchMovies: () => void;
 

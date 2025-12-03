@@ -12,10 +12,10 @@
   import InfoPlot from "./components/info/InfoPlot.svelte";
   import InfoPoster from "./components/info/InfoPoster.svelte";
 
-  import FilterYears from "./components/filters/FilterYears.svelte";
-  import FilterGenres from "./components/filters/FilterGenres.svelte";
-  import FilterRating from "./components/filters/FilterRating.svelte";
-  import FilterCountries from "./components/filters/FilterCountries.svelte";
+  import FilterYears from "./components/Filters/FilterYears.svelte";
+  import FilterGenres from "./components/Filters/FilterGenres.svelte";
+  import FilterRating from "./components/Filters/FilterRating.svelte";
+  import FilterCountries from "./components/Filters/FilterCountries.svelte";
 
   import { addHistoryLog } from "./lib/useHistory";
 
