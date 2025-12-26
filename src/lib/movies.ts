@@ -148,7 +148,7 @@ export function fetchMovies(uiQueries = "", totalPages = 500) {
 }
 
 function getRandomMovie(data: Array<Movie>) {
-  console.log("ALL LOADING ANIMATINOS HERE");
+  // console.log("ALL LOADING ANIMATINOS HERE");
   // mainRef?.classList?.add("loading-anim");
   activeTab.set(TAB_NAME.LOADING);
 
@@ -234,7 +234,7 @@ async function getMovie(movieId: number) {
         // mainRef?.classList?.remove("loading-anim");
       }, 500);
       setTimeout(() => {
-        console.log("Delayed action");
+        // console.log("Delayed action");
         activeTab.set(TAB_NAME.INFO);
       }, 1000);
     });
