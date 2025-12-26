@@ -1,7 +1,7 @@
 <script lang="ts">
   import { FILTER_DEFAULTS } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
-  import { currentFilters, resetFiltersSignal } from "../../lib/stores.ts";
+  import { currentFilters, resetFiltersSignal } from "../../lib/stores";
   export let label: string = "";
   let yearFrom: number = FILTER_DEFAULTS.YEAR_MIN;
   let yearTo: number = FILTER_DEFAULTS.YEAR_MAX;
@@ -17,8 +17,19 @@
   }
 
   function handleOnChange() {
-    yearFrom = Math.min(Math.max(yearFrom, FILTER_DEFAULTS.YEAR_MIN), FILTER_DEFAULTS.YEAR_MAX);
-    yearTo = Math.min(Math.max(yearTo, FILTER_DEFAULTS.YEAR_MIN), FILTER_DEFAULTS.YEAR_MAX);
+    yearFrom = isNaN(yearFrom)
+      ? FILTER_DEFAULTS.YEAR_MIN
+      : Math.min(
+          Math.max(yearFrom, FILTER_DEFAULTS.YEAR_MIN),
+          FILTER_DEFAULTS.YEAR_MAX,
+        );
+
+    yearTo = isNaN(yearTo)
+      ? FILTER_DEFAULTS.YEAR_MAX
+      : Math.min(
+          Math.max(yearTo, FILTER_DEFAULTS.YEAR_MIN),
+          FILTER_DEFAULTS.YEAR_MAX,
+        );
     onChange(yearFrom, yearTo);
     // const percent1 = (yearFrom / 10) * 100;
     const percent1 =

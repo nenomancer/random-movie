@@ -1,71 +1,50 @@
 <script lang="ts">
+  import { derived } from "svelte/store";
   import { formatRuntime, padNumber } from "../../lib/helpers";
-  import { currentMovie } from "../../lib/stores.ts";
+  import { currentMovie } from "../../lib/stores";
   import Button from "../ui/Button.svelte";
 
-  export let getMoviesByReleaseDate: (currentYear: number) => void;
-  export let getMoviesByCountry: (countryCode: string) => void;
-  export let getMoviesByRating: (rating: number) => void;
-  export let getMoviesByRuntime: (runtime: number) => void;
+  const {
+    getMoviesByReleaseDate,
+    getMoviesByCountry,
+    getMoviesByRating,
+    getMoviesByRuntime,
+  } = $props<{
+    getMoviesByReleaseDate: (currentYear: number) => void;
+    getMoviesByCountry: (countryCode: string) => void;
+    getMoviesByRating: (rating: number) => void;
+    getMoviesByRuntime: (runtime: number) => void;
+  }>();
 
-  function getRuntimeAria() {
-    if ($currentMovie.runtime) {
-      return `Runtime: ${padNumber(Math.floor($currentMovie.runtime / 60), 2)} hours and ${padNumber($currentMovie.runtime % 60, 2)} minutes`;
-    } else {
-      return "Runtime is undefined.";
-    }
-  }
-
-  function getRuntimeDescription() {
-    if ($currentMovie.runtime) {
-      return `Runtime: ${formatRuntime($currentMovie.runtime)}. Click to find another movie with a similar runtime.`;
-    } else {
-      return "Runtime is undefined.";
-    }
-  }
-
-  function getRuntimeLabel() {
-    if ($currentMovie.runtime) {
-      return formatRuntime($currentMovie.runtime);
-    } else {
-      return "-";
-    }
-  }
-
-  function getYearLabel() {
-    if ($currentMovie.year) {
-      return $currentMovie.year.toString();
-    } else {
-      return "-";
-    }
-  }
-
-  function getLabel(property: any) {
-    if (property) {
-      return property.toString();
-    } else {
-      return "-";
-    }
-  }
+  const runtimeLabel = derived(currentMovie, (m) =>
+    m.runtime ? formatRuntime(m.runtime) : "-",
+  );
+  const yearLabel = derived(currentMovie, (m) =>
+    m.year ? m.year.toString() : "-",
+  );
+  const countryLabel = derived(currentMovie, (m) =>
+    m.country ? m.country.code : "-",
+  );
+  const ratingLabel = derived(currentMovie, (m) => m.rating?.toString());
 </script>
 
 <section class="extra-information" aria-label="Extra information">
   <Button
-    label={getYearLabel()}
+    label={$yearLabel}
     onClick={() =>
       $currentMovie.year && getMoviesByReleaseDate($currentMovie.year)}
     ariaLabel={`Release year: ${$currentMovie.year}`}
     description={`This movie's release year. Click to find another movie released in ${$currentMovie.year}.`}
   />
   <Button
-    label={getLabel($currentMovie.country?.code)}
+    label={$countryLabel}
     onClick={() =>
       $currentMovie.country && getMoviesByCountry($currentMovie.country?.code)}
     ariaLabel={`Country: ${$currentMovie.country?.name}.`}
     description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country?.name}`}
   />
   <Button
-    label={getLabel($currentMovie.rating)}
+    label={$ratingLabel}
     onClick={() =>
       $currentMovie.rating && getMoviesByRating($currentMovie.rating)}
     ariaLabel={`TMDB rating: ${$currentMovie.rating}.`}
@@ -73,10 +52,10 @@
     disabled={!$currentMovie.rating}
   />
   <Button
-    label={getRuntimeLabel()}
+    label={$runtimeLabel}
     onClick={() => getMoviesByRuntime($currentMovie.runtime!)}
-    ariaLabel={getRuntimeAria()}
-    description={getRuntimeDescription()}
+    ariaLabel={"getRuntimeAria()"}
+    description={"getRuntimeDescription()"}
   />
 </section>
 
