@@ -7,7 +7,7 @@
     currentFilters,
     useFilters,
     resetFiltersSignal,
-  } from "../../lib/stores.ts";
+  } from "../../lib/stores";
   import Button from "../ui/Button.svelte";
 
   export let label: string;

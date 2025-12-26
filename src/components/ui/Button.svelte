@@ -19,6 +19,8 @@
   on:keydown={onKeydown}
 >
   {label}
+  <slot />
+  
 </button>
 
 <style lang="scss">
