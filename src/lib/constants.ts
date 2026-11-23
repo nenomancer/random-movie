@@ -15,20 +15,23 @@ export const CLASSNAMES = {
 
 
 
-// API endpoints
+// API endpoints. TMDB requests go through our own proxy (/api/tmdb/*) which
+// adds the API key server-side (netlify/functions/tmdb.mjs in prod, the Vite
+// dev proxy locally), so no secret ends up in the client bundle.
+const TMDB_PROXY = "/api/tmdb";
+
 export const API = {
     OPTIONS: {
         method: "GET",
         headers: {
             accept: "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
         },
     },
-    COUNTRIES: "https://api.themoviedb.org/3/configuration/countries",
-    GENRES: "https://api.themoviedb.org/3/genre/movie/list",
-    PERSON: "https://api.themoviedb.org/3/person",
-    MOVIE: "https://api.themoviedb.org/3/movie",
-    DISCOVER_MOVIE: "https://api.themoviedb.org/3/discover/movie",
+    COUNTRIES: `${TMDB_PROXY}/configuration/countries`,
+    GENRES: `${TMDB_PROXY}/genre/movie/list`,
+    PERSON: `${TMDB_PROXY}/person`,
+    MOVIE: `${TMDB_PROXY}/movie`,
+    DISCOVER_MOVIE: `${TMDB_PROXY}/discover/movie`,
     POSTER: "https://image.tmdb.org/t/p/w500",
 }
 
