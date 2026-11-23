@@ -46,6 +46,9 @@
   let allGenres: Genre[] = [];
 
   let mainRef: HTMLElement;
+  // Id of the movie the user most recently asked for. Responses for any other
+  // id are stale (user clicked again before they arrived) and must be ignored.
+  let latestMovieId: number | null = null;
 
   function handleGlobalKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter" && document.activeElement === document.body) {
@@ -142,10 +145,13 @@
   }
 
   async function getMovie(movieId: number) {
+    latestMovieId = movieId;
     currentMovie.set(DEFAULT_MOVIE);
     await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
+        if (movieId !== latestMovieId) return;
+
         if (data.backdrop_path) {
           currentMovie.update((movie) => ({
             ...movie,
@@ -227,6 +233,8 @@
     fetch(`${API.MOVIE}/${movieId}/credits`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
+        if (movieId !== latestMovieId) return;
+
         const directors = data.crew.filter(
           (person: Person) => person.job == "Director"
         );
@@ -249,6 +257,8 @@
     fetch(`${API.MOVIE}/${movieId}/external_ids`, API.OPTIONS)
       .then((response) => response.json())
       .then((data) => {
+        if (movieId !== latestMovieId) return;
+
         currentMovie.update((movie) => ({
           ...movie,
           title: {
