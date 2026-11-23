@@ -1,7 +1,6 @@
 <script lang="ts">
   export let label: string | undefined;
   export let onClick: () => void;
-  export let onKeydown: () => void | null = () => null;
   export let ariaLabel: string;
   export let description: string;
   export let disabled: boolean = false;
@@ -16,7 +15,7 @@
   class={classes.join(" ")}
   {disabled}
   on:click={onClick}
-  on:keydown={onKeydown}
+  on:keydown
 >
   {label}
   <slot />
