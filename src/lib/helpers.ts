@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 import { activeTab, currentFilters, useFilters } from "../lib/stores";
-import { DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, FILTER_DEFAULTS, TAB_NAME } from "./constants";
+import { API, DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, FILTER_DEFAULTS, TAB_NAME } from "./constants";
 import type { Filters } from "./types";
 
 export function buildFilterQuery(filters: Filters) {
@@ -67,4 +67,16 @@ export function checkFilterEnable() {
     } else {
         useFilters.set(true);
     }
+}
+
+/**
+ * GET a TMDB (proxy) URL and parse the JSON body.
+ * Throws on network errors and non-2xx responses so callers can `.catch`.
+ */
+export async function fetchJson<T = any>(url: string): Promise<T> {
+    const response = await fetch(url, API.OPTIONS);
+    if (!response.ok) {
+        throw new Error(`TMDB request failed (${response.status}): ${url}`);
+    }
+    return response.json();
 }
