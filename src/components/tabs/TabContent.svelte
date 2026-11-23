@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeTab } from "../../lib/stores.ts";
+  import { activeTab } from "../../lib/stores";
   export let name: string;
 </script>
 

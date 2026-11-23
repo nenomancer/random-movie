@@ -2,7 +2,7 @@
     import { DEFAULT_COUNTRY, DEFAULT_PERSON } from "../../lib/constants";
     import { checkFilterEnable } from "../../lib/helpers";
     import type { Country, Person } from "../../lib/types";
-    import { openDropdown, currentFilters, useFilters } from "../../lib/stores.ts";
+    import { openDropdown, currentFilters, useFilters } from "../../lib/stores";
 
     export let id: string;
 

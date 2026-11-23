@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import { activeTab, openDropdown } from "../../lib/stores.ts";
+  import { activeTab, openDropdown } from "../../lib/stores";
 
   export let name: string;
 

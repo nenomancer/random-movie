@@ -3,7 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig(({ mode }) => {
   // Load all vars (not just VITE_-prefixed) so the key stays server-side only.
-  const env = loadEnv(mode, process.cwd(), "");
+  const env = loadEnv(mode, ".", "");
   const key = env.TMDB_API_KEY || env.VITE_TMDB_API_KEY;
 
   return {

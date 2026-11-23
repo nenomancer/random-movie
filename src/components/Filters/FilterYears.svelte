@@ -8,7 +8,7 @@
   let sliderTrack: HTMLElement;
   let sliderBg: HTMLElement;
   let minGap = 0;
-  function onChange(from, to) {
+  function onChange(from: number, to: number) {
     currentFilters.update((filters) => ({
       ...filters,
       yearFrom: from,

@@ -5,7 +5,7 @@
     currentFilters,
     resetFiltersSignal,
     useFilters,
-  } from "../../lib/stores.ts";
+  } from "../../lib/stores";
 
   import FilterEnable from "../Filters/FilterEnable.svelte";
 

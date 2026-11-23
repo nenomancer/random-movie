@@ -7,7 +7,7 @@
     currentFilters,
     useFilters,
     resetFiltersSignal,
-  } from "../../lib/stores.ts";
+  } from "../../lib/stores";
 
   export let id: string;
 

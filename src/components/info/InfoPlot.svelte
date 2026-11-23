@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentMovie } from "../../lib/stores.ts";
+    import { currentMovie } from "../../lib/stores";
 </script>
 
 <section class="plot" aria-label="Plot">
