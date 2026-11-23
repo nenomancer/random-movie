@@ -13,7 +13,7 @@
   aria-label={ariaLabel}
   data-info={description}
   data-id={id}
-  class={`${classes.length && classes.join(" ")}`}
+  class={classes.join(" ")}
   {disabled}
   on:click={onClick}
   on:keydown={onKeydown}

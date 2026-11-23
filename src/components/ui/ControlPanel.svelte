@@ -45,12 +45,15 @@
   <div class="controls-main">
     <button
       class="control-button search"
+      aria-label="Find a random movie"
       on:click={() => fetchMovies()}
       class:active={$activeTab === TAB_NAME.LOADING}
       disabled={$activeTab === TAB_NAME.LOADING}
     ></button>
     <button
       class="control-button about"
+      aria-label="About this site"
+      aria-pressed={$activeTab === TAB_NAME.ABOUT}
       on:click={() => toggleTab(TAB_NAME.ABOUT)}
       class:active={$activeTab === TAB_NAME.ABOUT}
       style="display: block;"
@@ -59,6 +62,8 @@
   <div class="controls-filters">
     <button
       class="control-button set"
+      aria-label="Filter settings"
+      aria-pressed={$activeTab === TAB_NAME.FILTERS}
       on:click={() => toggleTab(TAB_NAME.FILTERS)}
       class:active={$activeTab === TAB_NAME.FILTERS}
     ></button>
@@ -67,6 +72,7 @@
       <input
         type="checkbox"
         id="useFilters"
+        aria-label="Use filters"
         on:change={(event) => handleCheck(event)}
         on:keydown={(event) => handleEnter(event)}
         bind:checked={$useFilters}
@@ -75,6 +81,7 @@
 
     <button
       class="control-button reset"
+      aria-label="Reset filters"
       on:click={resetFilter}
       style="display: block;"
     ></button>

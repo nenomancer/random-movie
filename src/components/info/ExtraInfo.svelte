@@ -33,29 +33,49 @@
     label={$yearLabel}
     onClick={() =>
       $currentMovie.year && getMoviesByReleaseDate($currentMovie.year)}
-    ariaLabel={`Release year: ${$currentMovie.year}`}
-    description={`This movie's release year. Click to find another movie released in ${$currentMovie.year}.`}
+    ariaLabel={$currentMovie.year
+      ? `Release year: ${$currentMovie.year}`
+      : "Release year: unknown"}
+    description={$currentMovie.year
+      ? `This movie's release year. Click to find another movie released in ${$currentMovie.year}.`
+      : "Release year unknown."}
+    disabled={!$currentMovie.year}
   />
   <Button
     label={$countryLabel}
     onClick={() =>
       $currentMovie.country && getMoviesByCountry($currentMovie.country?.code)}
-    ariaLabel={`Country: ${$currentMovie.country?.name}.`}
-    description={`This movie's country of origin. Click to find another movie from ${$currentMovie.country?.name}`}
+    ariaLabel={$currentMovie.country
+      ? `Country: ${$currentMovie.country.name}.`
+      : "Country: unknown."}
+    description={$currentMovie.country
+      ? `This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`
+      : "Country of origin unknown."}
+    disabled={!$currentMovie.country}
   />
   <Button
     label={$ratingLabel}
     onClick={() =>
       $currentMovie.rating && getMoviesByRating($currentMovie.rating)}
-    ariaLabel={`TMDB rating: ${$currentMovie.rating}.`}
-    description={`TMDB rating: ${$currentMovie.rating}. Click to find another movie with a similar rating.`}
+    ariaLabel={$currentMovie.rating
+      ? `TMDB rating: ${$currentMovie.rating}.`
+      : "TMDB rating: not available."}
+    description={$currentMovie.rating
+      ? `TMDB rating: ${$currentMovie.rating}. Click to find another movie with a similar rating.`
+      : "TMDB rating not available."}
     disabled={!$currentMovie.rating}
   />
   <Button
     label={$runtimeLabel}
-    onClick={() => getMoviesByRuntime($currentMovie.runtime!)}
-    ariaLabel={"getRuntimeAria()"}
-    description={"getRuntimeDescription()"}
+    onClick={() =>
+      $currentMovie.runtime && getMoviesByRuntime($currentMovie.runtime)}
+    ariaLabel={$currentMovie.runtime
+      ? `Runtime: ${$currentMovie.runtime} minutes.`
+      : "Runtime: unknown."}
+    description={$currentMovie.runtime
+      ? `Runtime: ${$currentMovie.runtime} minutes. Click to find another movie with the same runtime.`
+      : "Runtime unknown."}
+    disabled={!$currentMovie.runtime}
   />
 </section>
 

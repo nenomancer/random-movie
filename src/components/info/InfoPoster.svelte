@@ -5,7 +5,7 @@
 {#if $currentMovie.poster}
   <img
     src={$currentMovie.poster}
-    alt={`Poster for the movie ${$currentMovie.title}`}
+    alt={`Poster for the movie ${$currentMovie.title.name}`}
   />
 {/if}
 {#if !$currentMovie.poster}
