@@ -86,7 +86,6 @@ main {
 // uppercase with a ">" prompt in front. The prompt is decorative; the "/ ''"
 // alt text keeps screen readers from reading it out where supported.
 .sys-msg {
-  text-transform: uppercase;
   text-wrap: balance;
 
   &::before {
