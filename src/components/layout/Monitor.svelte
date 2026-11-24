@@ -1,12 +1,6 @@
 <script lang="ts">
   export let classes: Array<string> = [""];
   export let padding: number = 2;
-  export let radius: number = 2;
-
-  const default_values = {
-    padding: "2.5rem",
-    radius: "2px",
-  };
 </script>
 
 <div class={`monitor ${classes && classes.join(" ")} data-padding=${padding}`}>

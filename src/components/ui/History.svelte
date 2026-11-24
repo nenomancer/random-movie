@@ -27,7 +27,8 @@
   <div class="list">
     {#each $currentHistory as log}
       <button
-        class={`note ${$currentMovie.id == log.id ? "selected" : "kurac"}`}
+        class="note"
+        class:selected={$currentMovie.id == log.id}
         on:click={() => getMovie(log.id)}>{log.name}</button
       >
     {/each}
@@ -75,7 +76,7 @@
   }
 
   .note {
-    @include mixins.ui-button();
+    @include mixins.ui-button($selected: true);
     letter-spacing: -1.2px;
 
     padding-block: 0;

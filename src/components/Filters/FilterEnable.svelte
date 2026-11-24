@@ -39,11 +39,6 @@
             position: absolute;
             inset: 0;
             appearance: none;
-            // left: 0;
-        }
-
-        label {
-            // text-align: center;
         }
     }
 </style>

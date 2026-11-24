@@ -141,21 +141,21 @@
       aspect-ratio: unset;
       padding-block: 1rem;
       outline-offset: -0.5rem;
-      @include mixins.control-button($content: "Search");
+      @include mixins.control-button($content: "Search", $state: "class");
     }
     &.about {
-      @include mixins.control-button-lightable($content: "About");
+      @include mixins.control-button-lightable($content: "About", $state: "class");
     }
 
     &.set {
-      @include mixins.control-button-lightable($content: "Set");
+      @include mixins.control-button-lightable($content: "Set", $state: "class");
     }
     &.use {
-      @include mixins.control-button-lightable($content: "Enable");
+      @include mixins.control-button-lightable($content: "Enable", $state: "checkbox");
     }
 
     &.reset {
-      @include mixins.control-button($content: "Reset");
+      @include mixins.control-button($content: "Reset", $state: "none");
     }
   }
 </style>

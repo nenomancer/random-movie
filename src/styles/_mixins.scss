@@ -79,7 +79,10 @@
     -0.5px -0.5px 0.5px darken($color, 40);
 }
 
-@mixin ui-button() {
+// $selected / $no-border also emit the .selected / .no-border modifier rules.
+// Off by default so components that never use those classes don't get
+// "unused selector" warnings for them.
+@mixin ui-button($selected: false, $no-border: false) {
   background-color: transparent;
   color: variables.$ui-color-foreground;
   border: none;
@@ -99,22 +102,51 @@
     outline: none;
   }
 
-  &.selected {
-    background-color: variables.$ui-color-foreground;
-    color: variables.$ui-color-background;
+  @if $selected {
+    &.selected {
+      background-color: variables.$ui-color-foreground;
+      color: variables.$ui-color-background;
+    }
   }
 
-  &.no-border {
-    border: none;
+  @if $no-border {
+    &.no-border {
+      border: none;
+    }
+  }
+}
+
+// The "pressed in" look shared by every way a control button can be pressed
+@mixin control-button-pressed() {
+  background: linear-gradient(
+    to bottom right,
+    desaturate(darken(variables.$monitor-color, 10%), 10%),
+    desaturate(darken(variables.$monitor-color, 20%), 10%)
+  );
+  box-shadow: -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
+    0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
+
+  &::after {
+    box-shadow: 0 0 5px 1px lighten(green, 10%),
+      inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+      inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+    background: linear-gradient(to bottom, green, lighten(green, 20%), green);
+  }
+
+  &::before,
+  &::after {
+    scale: 0.95;
   }
 }
 
 @mixin control-button-lightable(
   $content: "Button",
   $background: variables.$monitor-color,
-  $height: 3px
+  $height: 3px,
+  $state: "class"
 ) {
-  @include control-button($content, $background, $height);
+  @include control-button($content, $background, $height, $state);
   &::after {
     content: "";
     display: block;
@@ -132,10 +164,17 @@
   }
 }
 
+// What the pressed look follows besides the momentary :active, so components
+// only get the selectors they can match (no "unused selector" warnings):
+//   "class"    - a .active class on the button
+//   "checkbox" - a checked <input> inside it
+//   "both"     - either
+//   "none"     - nothing, :active only
 @mixin control-button(
   $content: "Button",
   $background: variables.$monitor-color,
-  $height: 3px
+  $height: 3px,
+  $state: "both"
 ) {
   box-shadow: inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
     inset 1px 1px 1px 1px color.adjust($background, $lightness: 20%),
@@ -186,26 +225,19 @@
     display: block;
   }
 
-  &:active,
-  &.active,
-  &:has(input:checked) {
-    background: linear-gradient(
-      to bottom right,
-      desaturate(darken(variables.$monitor-color, 10%), 10%),
-      desaturate(darken(variables.$monitor-color, 20%), 10%)
-    );
-    box-shadow: -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
-      0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
-      inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
-    &::after {
-      box-shadow: 0 0 5px 1px lighten(green, 10%),
-        inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
-        inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
-      background: linear-gradient(to bottom, green, lighten(green, 20%), green);
+  &:active {
+    @include control-button-pressed();
+  }
+
+  @if $state == "class" or $state == "both" {
+    &.active {
+      @include control-button-pressed();
     }
-    &::before,
-    &::after {
-      scale: 0.95;
+  }
+
+  @if $state == "checkbox" or $state == "both" {
+    &:has(input:checked) {
+      @include control-button-pressed();
     }
   }
 }

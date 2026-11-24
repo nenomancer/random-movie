@@ -498,12 +498,3 @@
   </Monitor>
   <!-- <Extras /> -->
 </main>
-
-<style global lang="scss">
-  @use "./styles/mixins";
-  .kurac {
-    @include mixins.text-bevel();
-    font-weight: bold;
-    // font-size: 2rem;
-  }
-</style>

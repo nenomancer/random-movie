@@ -29,7 +29,7 @@
   @use "../../styles/mixins";
   @use "../../styles/variables";
   button {
-    @include mixins.ui-button();
+    @include mixins.ui-button($selected: true, $no-border: true);
     border-right: variables.$border-default;
     border-top: variables.$border-default;
     flex: 1;

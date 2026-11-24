@@ -84,8 +84,5 @@
     display: flex;
     justify-content: stretch;
     font-size: 0.75rem;
-    button {
-      padding: 200px;
-    }
   }
 </style>
