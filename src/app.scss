@@ -1,3 +1,4 @@
+@use "sass:string";
 @use "./styles/variables";
 @import "./styles/reset.css";
 
@@ -90,7 +91,7 @@ main {
 
   &::before {
     content: "> ";
-    content: unquote('"> " / ""');
+    content: string.unquote('"> " / ""');
   }
 }
 

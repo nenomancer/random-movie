@@ -79,23 +79,6 @@
   }
 }
 
-@mixin text-bevel($color: variables.$monitor-color) {
-  color: transparent;
-  text-shadow:
-    0 0 0.5px $color,
-    0.5px 0.5px 0.5px color.adjust($color, $lightness: -40%),
-    -0.5px -0.5px 0.5px color.adjust($color, $lightness: 30%);
-}
-
-@mixin text-inset($color: variables.$monitor-color) {
-  color: transparent;
-
-  text-shadow:
-    0 0 0.5px $color,
-    0.5px 0.5px 0.5px red,
-    -0.5px -0.5px 0.5px darken($color, 40);
-}
-
 // $selected / $no-border also emit the .selected / .no-border modifier rules.
 // Off by default so components that never use those classes don't get
 // "unused selector" warnings for them.
@@ -137,21 +120,27 @@
 @mixin control-button-pressed() {
   background: linear-gradient(
     to bottom right,
-    desaturate(darken(variables.$monitor-color, 10%), 10%),
-    desaturate(darken(variables.$monitor-color, 20%), 10%)
+    color.adjust(variables.$monitor-color, $lightness: -10%, $saturation: -10%),
+    color.adjust(variables.$monitor-color, $lightness: -20%, $saturation: -10%)
   );
   box-shadow:
-    -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
+    -0.25px -0.25px 0.5px 0.5px
+      color.adjust(variables.$monitor-color, $lightness: 5%),
     0 0 0 0 rgba(0, 0, 0, 0.7),
     inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
     inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
 
   &::after {
     box-shadow:
-      0 0 5px 1px lighten(green, 10%),
+      0 0 5px 1px color.adjust(green, $lightness: 10%),
       inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
       inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
-    background: linear-gradient(to bottom, green, lighten(green, 20%), green);
+    background: linear-gradient(
+      to bottom,
+      green,
+      color.adjust(green, $lightness: 20%),
+      green
+    );
   }
 
   &::before,
@@ -160,13 +149,8 @@
   }
 }
 
-@mixin control-button-lightable(
-  $content: "Button",
-  $background: variables.$monitor-color,
-  $height: 3px,
-  $state: "class"
-) {
-  @include control-button($content, $background, $height, $state);
+@mixin control-button-lightable($content: "Button", $state: "class") {
+  @include control-button($content, $state);
   &::after {
     content: "";
     display: block;
@@ -191,26 +175,13 @@
 //   "checkbox" - a checked <input> inside it
 //   "both"     - either
 //   "none"     - nothing, :active only
-@mixin control-button(
-  $content: "Button",
-  $background: variables.$monitor-color,
-  $height: 3px,
-  $state: "both"
-) {
-  box-shadow:
-    inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
-    inset 1px 1px 1px 1px color.adjust($background, $lightness: 20%),
-    0 $height 1px 0 color.adjust($background, $lightness: -30%);
-
-  background-color: color.adjust(variables.$monitor-color, $lightness: 15%);
+@mixin control-button($content: "Button", $state: "both") {
   position: relative;
-  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   flex: 1;
-  font-family: "Inter";
   font-weight: bold;
   text-transform: uppercase;
   white-space: nowrap;
@@ -224,12 +195,11 @@
     0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
     0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.7),
     inset -1px -1px 0.5px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 0.5px lighten(variables.$monitor-color, 5%);
-  background-color: darken(variables.$monitor-color, 5%);
+    inset 1px 1px 0.5px color.adjust(variables.$monitor-color, $lightness: 5%);
   background: linear-gradient(
     to bottom right,
-    desaturate(darken(variables.$monitor-color, 0%), 10%),
-    desaturate(darken(variables.$monitor-color, 10%), 10%)
+    color.adjust(variables.$monitor-color, $lightness: -0%, $saturation: -10%),
+    color.adjust(variables.$monitor-color, $lightness: -10%, $saturation: -10%)
   );
 
   font-family: "Glory", sans-serif;
