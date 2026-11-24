@@ -484,14 +484,13 @@
       </TabContent>
     </Screen>
   </Monitor>
-  <!-- <Disk /> -->
   <ControlPanel {fetchMovies} />
   <Monitor classes={["history"]}>
     <Screen>
       <History {getMovie} />
     </Screen>
   </Monitor>
-  <Monitor classes={["tooltip"]} padding={1.5}>
+  <Monitor classes={["tooltip"]}>
     <!-- <Screen>
       <div">Tooltip in progress</div>
     </Screen> -->

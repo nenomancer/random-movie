@@ -1,19 +1,16 @@
 <script lang="ts">
-  export let classes: Array<string> = [""];
-  export let padding: number = 2;
+  export let classes: Array<string> = [];
 </script>
 
-<div class={`monitor ${classes && classes.join(" ")} data-padding=${padding}`}>
+<div class={["monitor", ...classes].join(" ")}>
   <slot />
 </div>
 
 <style lang="scss">
   @use "../../styles/variables.scss";
   @use "../../styles/_mixins.scss";
-  @import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap");
   .monitor {
-    // @include mixins.edge-bevel($size: 2px, $blur: 1px, $radius: 24px);
     @include mixins.monitor-edge();
     padding: 2rem;
     background-color: variables.$monitor-color;
@@ -22,10 +19,6 @@
     font-family: "Quantico";
     letter-spacing: -1.2px;
     font-weight: 350;
-    // font-family: "Handjet";
-    // font-weight: 900;
-    // letter-spacing: 1.9px;
-    // line-height: normal;
   }
 
   .main {

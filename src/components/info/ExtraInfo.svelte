@@ -25,7 +25,9 @@
   const countryLabel = derived(currentMovie, (m) =>
     m.country ? m.country.code : "-",
   );
-  const ratingLabel = derived(currentMovie, (m) => m.rating?.toString());
+  const ratingLabel = derived(currentMovie, (m) =>
+    m.rating ? m.rating.toString() : "-",
+  );
 </script>
 
 <section class="extra-information" aria-label="Extra information">
@@ -44,7 +46,7 @@
   <Button
     label={$countryLabel}
     onClick={() =>
-      $currentMovie.country && getMoviesByCountry($currentMovie.country?.code)}
+      $currentMovie.country && getMoviesByCountry($currentMovie.country.code)}
     ariaLabel={$currentMovie.country
       ? `Country: ${$currentMovie.country.name}.`
       : "Country: unknown."}

@@ -1,22 +1,10 @@
 <script lang="ts">
-  import { currentHistory, currentMovie } from "../../lib/stores.js";
+  import { currentHistory, currentMovie } from "../../lib/stores";
   export let getMovie: (id: number) => void;
   let isFlipped: boolean = false;
-  // ADD "SELECTED" CLASS TO SELECTED HISTORY LOG
-
-  function openFavorites() {
-    isFlipped = true;
-  }
-
-  function openHistory() {
-    isFlipped = false;
-  }
 </script>
 
-<div
-  class={`perspective-container ${isFlipped ? "flipped" : ""}`}
-  data-selected={isFlipped}
->
+<div class="history-container">
   <div class="tabs">
     <button
       class="tab"
@@ -40,9 +28,8 @@
 <style lang="scss">
   @use "../../styles/variables";
   @use "../../styles/mixins";
-  @use "sass:color";
 
-  .perspective-container {
+  .history-container {
     display: flex;
     height: 100%;
   }
@@ -85,22 +72,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     justify-content: flex-start;
-  }
-
-  .note.to-history,
-  .note.to-favorites {
-    margin-block: auto 0;
-    padding-inline: 1rem;
-    padding-bottom: 1rem;
-    text-transform: uppercase;
-  }
-  .note.to-favorites {
-    align-self: flex-end;
-    justify-self: flex-end;
-    text-align: right;
-
-    &::before {
-      content: none;
-    }
   }
 </style>

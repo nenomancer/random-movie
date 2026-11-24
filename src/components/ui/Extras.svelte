@@ -23,7 +23,7 @@
 </script>
 
 <section>
-  <Monitor classes={["extras-info"]} padding={1.5}>
+  <Monitor classes={["extras-info"]}>
     <Screen>
       <p>More information on hover</p>
     </Screen>

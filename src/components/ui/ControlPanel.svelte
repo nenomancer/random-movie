@@ -3,8 +3,6 @@
   import { resetFilters } from "../../lib/helpers";
   import { activeTab, useFilters } from "../../lib/stores";
 
-  import FilterEnable from "../Filters/FilterEnable.svelte";
-
   export let fetchMovies: () => void;
 
   function toggleTab(tabName: string) {
@@ -44,7 +42,6 @@
       aria-pressed={$activeTab === TAB_NAME.ABOUT}
       on:click={() => toggleTab(TAB_NAME.ABOUT)}
       class:active={$activeTab === TAB_NAME.ABOUT}
-      style="display: block;"
     ></button>
   </div>
   <div class="controls-filters">
@@ -55,7 +52,6 @@
       on:click={() => toggleTab(TAB_NAME.FILTERS)}
       class:active={$activeTab === TAB_NAME.FILTERS}
     ></button>
-    <!-- <FilterEnable /> -->
     <div class="control-button use">
       <input
         type="checkbox"
@@ -71,7 +67,6 @@
       class="control-button reset"
       aria-label="Reset filters"
       on:click={resetFilters}
-      style="display: block;"
     ></button>
   </div>
 </div>
@@ -85,8 +80,6 @@
     @include mixins.monitor-edge();
 
     grid-area: controls;
-    display: flex;
-    flex-direction: column;
     display: grid;
     padding: 1.5rem;
     background-color: variables.$monitor-color;

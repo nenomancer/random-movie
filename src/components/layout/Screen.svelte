@@ -1,10 +1,8 @@
 <script lang="ts">
-  // export let name: string;
-  // export let activeScreen: string;
-  export let classes: Array<string> | undefined = undefined;
+  export let classes: Array<string> = [];
 </script>
 
-<section class={`screen ${classes && classes.join(" ")}`}>
+<section class={["screen", ...classes].join(" ")}>
   <div class="scrollable">
     <slot />
   </div>
@@ -24,7 +22,7 @@
     .scrollable {
       padding: 1rem;
       width: 100%;
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 100%;
     }
   }
