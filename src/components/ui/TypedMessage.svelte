@@ -11,6 +11,8 @@
   //  decorative  - hidden from screen readers (duplicate of another message)
   export let mode: "alert" | "status" | "plain" | "decorative" = "alert";
   export let speed: number = TYPING_MS_PER_CHAR;
+  // Keep a blinking cursor at the end once typing is done (solid while typing)
+  export let blink: boolean = true;
 
   let shown = 0;
   let frame = 0;
@@ -55,10 +57,13 @@
     <span class="sr-only">{text}</span>
   {/if}
   <span class="stack" aria-hidden="true">
-    <!-- Invisible full text reserves the final height so nothing jumps -->
-    <span class="sizer">{text}</span>
+    <!-- Invisible full text (and cursor) reserves the final size so nothing jumps -->
+    <span class="sizer">{text}<span class="cursor"></span></span>
     <span class="live"
-      >{typed}{#if typing}<span class="cursor"></span>{/if}</span
+      >{typed}{#if typing || blink}<span
+          class="cursor"
+          class:idle={!typing}
+        ></span>{/if}</span
     >
   </span>
 </p>
@@ -93,7 +98,7 @@
     visibility: hidden;
   }
 
-  /* Solid block, only present while typing. The messages are uppercase, so
+  /* Solid block while typing, blinking once the line is done. The messages are uppercase, so
      the block is cap-height and sits on the baseline (an empty inline-block's
      baseline is its bottom edge). Tweak --cap-height if the font changes. */
   .cursor {
@@ -104,5 +109,26 @@
     margin-left: 0.1em;
     vertical-align: baseline;
     background-color: currentColor;
+  }
+
+  /* Fades 0 -> 1 -> 0 instead of snapping on and off */
+  .cursor.idle {
+    animation: cursor-fade 0.5s linear infinite;
+  }
+
+  @keyframes cursor-fade {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor.idle {
+      animation: none;
+    }
   }
 </style>

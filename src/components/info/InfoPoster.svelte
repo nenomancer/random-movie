@@ -13,7 +13,7 @@
 {#if !$currentMovie.poster && $activeTab === TAB_NAME.INFO}
   <!-- Only mounted while visible, so it types out each time it appears -->
   <div class="error">
-    <TypedMessage text="No image data on file." mode="plain" />
+    <TypedMessage text="No image data on file" mode="plain" />
   </div>
 {/if}
 

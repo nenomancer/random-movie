@@ -96,13 +96,13 @@ export const DEFAULT_PERSON: Person = {
 // .sys-msg class (app.scss) uppercases them and adds the terminal prompt.
 export const ERROR_MESSAGES = {
     // The search worked but nothing matched the chosen filters
-    NO_MATCH: "Archive scan complete: no matches. Recalibrate filters and scan again.",
+    NO_MATCH: "Archive scan complete: no matches; recalibrate filters and scan again",
     // A lookup (cast, director, country) came back with nothing to pick from
-    NO_RELATED: "No cross-references in archive. Try a different signal.",
+    NO_RELATED: "No cross-references in archive; try a different signal",
     // Network error, TMDB down, rate limit...
-    FAILED: "Uplink failure. The archive is unreachable. Retry transmission.",
+    FAILED: "Uplink failure: archive unreachable; retry transmission",
     // Direct link to a movie id that doesn't exist (HTTP 404)
-    NOT_FOUND: "File not in archive. It may have been corrupted or never existed.",
+    NOT_FOUND: "File not in archive; it may have been corrupted or never existed",
 }
 
 // Typewriter effect for the error screen: milliseconds per character
