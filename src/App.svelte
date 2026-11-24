@@ -20,12 +20,11 @@
   import { addHistoryLog } from "./lib/useHistory";
 
   import {
-    buildActiveFilterQuery,
-    buildFilterQuery,
+    buildSearchQuery,
     fetchJson,
     showResultError,
   } from "./lib/helpers";
-  import type { Country, Genre, Movie, Person } from "./lib/types";
+  import type { Country, Filters, Genre, Movie, Person } from "./lib/types";
   import {
     API,
     DEFAULT_FILTER,
@@ -96,18 +95,21 @@
     mainRef?.classList.remove("loading-anim");
   }
 
-  function fetchMovies(uiQueries = "", totalPages = 500) {
+  // `overrides` (a tab's country, year, ...) replace the matching filter for
+  // this search only; every other active filter still applies.
+  function fetchMovies(overrides: Filters = {}, totalPages = 500) {
     activeTab.set(TAB_NAME.LOADING);
     mainRef?.classList.add("loading-anim");
 
-    const filterQueries = $useFilters
-      ? buildActiveFilterQuery($currentFilters)
-      : "";
+    const filterQueries = buildSearchQuery(
+      $useFilters ? $currentFilters : undefined,
+      overrides
+    );
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
     fetchJson(
-      `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`
+      `${API.DISCOVER_MOVIE}?page=${pageNumber}${filterQueries}`
     )
       .then((response) => {
         const hasResults = response.results?.length > 0;
@@ -118,7 +120,7 @@
           return showResultError();
         }
         if (!hasResults && hasPages) {
-          return fetchMovies(uiQueries, Math.min(500, response.total_pages));
+          return fetchMovies(overrides, Math.min(500, response.total_pages));
         }
         if (hasResults) {
           return getRandomMovie(response.results);
@@ -325,34 +327,25 @@
   }
 
   export function getMoviesByReleaseDate(year: number) {
-    fetchMovies(buildFilterQuery({ yearFrom: year, yearTo: year }));
+    fetchMovies({ yearFrom: year, yearTo: year });
   }
 
   export function getMoviesByRuntime(runtime: number) {
-    fetchMovies(buildFilterQuery({ runtimeFrom: runtime, runtimeTo: runtime }));
+    fetchMovies({ runtimeFrom: runtime, runtimeTo: runtime });
   }
 
   // Fuzzy search, votes are not too reliable and the API allows only averages
   export function getMoviesByRating(rating: number) {
     const range = 0.25;
-    fetchMovies(
-      buildFilterQuery({
-        ratingFrom: rating - range,
-        ratingTo: rating + range,
-      })
-    );
+    fetchMovies({ ratingFrom: rating - range, ratingTo: rating + range });
   }
 
   export function getMoviesByCountry(countryCode: string) {
-    fetchJson(`${API.DISCOVER_MOVIE}?with_origin_country=${countryCode}`)
-      .then((response) => {
-        getRandomMovie(response.results);
-      })
-      .catch(handleLoadError);
+    fetchMovies({ country: countryCode });
   }
 
   function getMoviesByGenre(genreId: number) {
-    fetchMovies(`&with_genres=${genreId}`);
+    fetchMovies({ genres: [String(genreId)] });
   }
 
   function initApp() {

@@ -97,15 +97,30 @@ export function showResultError(message: string = ERROR_MESSAGES.NO_MATCH) {
  * country) are left out: TMDB's date bounds also drop titles with no or future
  * release dates, which would quietly shrink the pool.
  */
-export function buildActiveFilterQuery(filters: Filters) {
-    return buildFilterQuery({
+// The filters that differ from their defaults. Default year/rating bounds are
+// left out: they would silently drop titles with no or future release dates.
+function activeFilters(filters: Filters): Filters {
+    return {
         country: filters.country,
         genres: filters.genres,
         yearFrom: filters.yearFrom !== DEFAULT_FILTER.yearFrom ? filters.yearFrom : undefined,
         yearTo: filters.yearTo !== DEFAULT_FILTER.yearTo ? filters.yearTo : undefined,
         ratingFrom: filters.ratingFrom !== DEFAULT_FILTER.ratingFrom ? filters.ratingFrom : undefined,
         ratingTo: filters.ratingTo !== DEFAULT_FILTER.ratingTo ? filters.ratingTo : undefined,
-    });
+    };
+}
+
+export function buildActiveFilterQuery(filters: Filters) {
+    return buildFilterQuery(activeFilters(filters));
+}
+
+/**
+ * Query for one search: the user's filters (when given) with the values in
+ * `overrides` taking precedence, e.g. a country picked from a tab replaces the
+ * country filter for that search only. Each parameter is sent once.
+ */
+export function buildSearchQuery(filters: Filters | undefined, overrides: Filters = {}) {
+    return buildFilterQuery({ ...(filters ? activeFilters(filters) : {}), ...overrides });
 }
 
 // JSON.stringify with object keys sorted, so the same values compare equal

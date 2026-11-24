@@ -10,6 +10,7 @@ import {
 import {
   buildActiveFilterQuery,
   buildFilterQuery,
+  buildSearchQuery,
   checkFilterEnable,
   fetchJson,
   formatRuntime,
@@ -494,5 +495,42 @@ describe("query edge cases", () => {
 
   it("buildActiveFilterQuery copes with a completely empty filter object", () => {
     expect(buildActiveFilterQuery({})).toBe("");
+  });
+});
+
+describe("buildSearchQuery", () => {
+  const withFilters = (patch: object) => ({ ...DEFAULT_FILTER, ...patch });
+
+  it("uses only the overrides when filters are not in use", () => {
+    expect(buildSearchQuery(undefined, { country: "FR" })).toBe(
+      "&with_origin_country=FR",
+    );
+  });
+
+  it("is empty with no filters and no overrides", () => {
+    expect(buildSearchQuery(undefined)).toBe("");
+  });
+
+  it("keeps the active filters when there are no overrides", () => {
+    expect(buildSearchQuery(withFilters({ genres: ["28"] }))).toBe(
+      "&with_genres=28",
+    );
+  });
+
+  it("keeps the other filters and replaces the country for this search", () => {
+    const filters = withFilters({ country: "US", genres: ["28"], ratingFrom: 7 });
+    const query = buildSearchQuery(filters, { country: "FR" });
+    expect(query).toContain("with_origin_country=FR");
+    expect(query).not.toContain("US");
+    expect(query).toContain("with_genres=28");
+    expect(query).toContain("vote_average.gte=7");
+  });
+
+  it("replaces the year range instead of sending the bounds twice", () => {
+    const filters = withFilters({ yearFrom: 1990, yearTo: 1999 });
+    const query = buildSearchQuery(filters, { yearFrom: 1995, yearTo: 1995 });
+    expect(query).toBe(
+      "&primary_release_date.gte=1995-01-01&primary_release_date.lte=1995-12-31",
+    );
   });
 });
