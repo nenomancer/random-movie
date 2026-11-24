@@ -9,7 +9,7 @@
   />
 {/if}
 {#if !$currentMovie.poster}
-  <p class="error">Image data corrupted.</p>
+  <p class="error sys-msg">No image data on file.</p>
 {/if}
 
 <style>

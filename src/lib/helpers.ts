@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
-import { activeTab, currentFilters, useFilters } from "../lib/stores";
-import { API, DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, FILTER_DEFAULTS, TAB_NAME } from "./constants";
+import { activeTab, currentFilters, errorMessage, useFilters } from "../lib/stores";
+import { API, DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, ERROR_MESSAGES, FILTER_DEFAULTS, TAB_NAME } from "./constants";
 import type { Filters } from "./types";
 
 export function buildFilterQuery(filters: Filters) {
@@ -59,10 +59,9 @@ export function formatRuntime(runtime: number) {
     return `${padNumber(Math.floor(runtime / 60), 2)}:${padNumber(runtime % 60, 2)}`;
 }
 
-export function showResultError() {
-    console.error(
-        "A result with the filtered parameters cannot be found! Try changing some of them, if the error persists, please reach out.",
-    );
+export function showResultError(message: string = ERROR_MESSAGES.NO_MATCH) {
+    console.error(message);
+    errorMessage.set(message);
     activeTab.set(TAB_NAME.ERROR);
 }
 
@@ -81,7 +80,10 @@ export function checkFilterEnable() {
 export async function fetchJson<T = any>(url: string): Promise<T> {
     const response = await fetch(url, API.OPTIONS);
     if (!response.ok) {
-        throw new Error(`TMDB request failed (${response.status}): ${url}`);
+        throw Object.assign(
+            new Error(`TMDB request failed (${response.status}): ${url}`),
+            { status: response.status },
+        );
     }
     return response.json();
 }

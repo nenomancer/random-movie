@@ -26,6 +26,7 @@
     DEFAULT_FILTER,
     DEFAULT_MOVIE,
     DOCUMENT_TITLE,
+    ERROR_MESSAGES,
     LOCAL_SESSION_HISTORY_KEY,
     TAB_NAME,
   } from "./lib/constants";
@@ -36,6 +37,7 @@
     currentMovie,
     useFilters,
     activeTab,
+    errorMessage,
   } from "./lib/stores";
 
   import { onDestroy, onMount } from "svelte";
@@ -81,7 +83,10 @@
   // tab and stop the loading animation.
   function handleLoadError(err: unknown) {
     console.error(err);
-    showResultError();
+    const status = (err as { status?: number } | null)?.status;
+    showResultError(
+      status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED
+    );
     mainRef?.classList.remove("loading-anim");
   }
 
@@ -140,7 +145,7 @@
     mainRef?.classList?.add("loading-anim");
     activeTab.set(TAB_NAME.LOADING);
 
-    if (!data?.length) return showResultError();
+    if (!data?.length) return showResultError(ERROR_MESSAGES.NO_RELATED);
 
     const randomIndex = Math.floor(Math.random() * data.length);
 
@@ -455,12 +460,10 @@
         />
       </TabContent>
       <TabContent name={TAB_NAME.LOADING}
-        ><p role="status">Loading...</p></TabContent
+        ><p class="sys-msg" role="status">Accessing archive...</p></TabContent
       >
       <TabContent name={TAB_NAME.ERROR}
-        ><p role="alert">
-          Something went wrong finding a movie. Try again or change your filters.
-        </p></TabContent
+        ><p class="sys-msg" role="alert">{$errorMessage}</p></TabContent
       >
       <TabContent name={TAB_NAME.ABOUT}>
         <AboutContent />
@@ -472,10 +475,13 @@
       <TabContent name={TAB_NAME.INFO}>
         <InfoPoster />
       </TabContent>
+      <!-- Decorative: the info monitor already announces loading / errors -->
       <TabContent name={TAB_NAME.LOADING}
-        ><p role="status">Loading...</p></TabContent
+        ><p class="sys-msg" aria-hidden="true">Receiving signal...</p></TabContent
       >
-      <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
+      <TabContent name={TAB_NAME.ERROR}
+        ><p class="sys-msg" aria-hidden="true">Signal lost</p></TabContent
+      >
 
       <TabContent name={TAB_NAME.ABOUT}>
         <AboutContent isMain={false} />

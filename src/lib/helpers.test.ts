@@ -1,11 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { API, FILTER_DEFAULTS } from "./constants";
+import { get } from "svelte/store";
+import { API, ERROR_MESSAGES, FILTER_DEFAULTS, TAB_NAME } from "./constants";
 import {
   buildFilterQuery,
   fetchJson,
   formatRuntime,
   padNumber,
+  showResultError,
 } from "./helpers";
+import { activeTab, errorMessage } from "./stores";
 
 describe("buildFilterQuery", () => {
   it("returns an empty string when no filters are set", () => {
@@ -119,6 +122,17 @@ describe("fetchJson", () => {
     await expect(fetchJson(`${API.MOVIE}/0`)).rejects.toThrow("404");
   });
 
+  it("exposes the HTTP status on the error", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
+    );
+
+    await expect(fetchJson(`${API.MOVIE}/0`)).rejects.toMatchObject({
+      status: 404,
+    });
+  });
+
   it("does not parse the body of a failed response", async () => {
     const json = vi.fn();
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 500, json }));
@@ -131,5 +145,30 @@ describe("fetchJson", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
 
     await expect(fetchJson(`${API.MOVIE}/1`)).rejects.toThrow("offline");
+  });
+});
+
+describe("showResultError", () => {
+  afterEach(() => {
+    activeTab.set(TAB_NAME.INFO);
+    vi.restoreAllMocks();
+  });
+
+  it("shows the error tab with the 'no match' message by default", () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    showResultError();
+    expect(get(activeTab)).toBe(TAB_NAME.ERROR);
+    expect(get(errorMessage)).toBe(ERROR_MESSAGES.NO_MATCH);
+  });
+
+  it("shows a custom message when given one", () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    showResultError(ERROR_MESSAGES.FAILED);
+    expect(get(errorMessage)).toBe(ERROR_MESSAGES.FAILED);
+  });
+
+  it("has a distinct message for each situation", () => {
+    const messages = Object.values(ERROR_MESSAGES);
+    expect(new Set(messages).size).toBe(messages.length);
   });
 });
