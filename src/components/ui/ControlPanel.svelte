@@ -31,7 +31,7 @@
   <div class="controls-main">
     <button
       class="control-button search"
-      aria-label="Find a random movie"
+      aria-label="Search for a random movie"
       on:click={() => fetchMovies()}
       class:active={$activeTab === TAB_NAME.LOADING}
       disabled={$activeTab === TAB_NAME.LOADING}
@@ -47,7 +47,7 @@
   <div class="controls-filters">
     <button
       class="control-button set"
-      aria-label="Filter settings"
+      aria-label="Set filters"
       aria-pressed={$activeTab === TAB_NAME.FILTERS}
       on:click={() => toggleTab(TAB_NAME.FILTERS)}
       class:active={$activeTab === TAB_NAME.FILTERS}
@@ -56,7 +56,7 @@
       <input
         type="checkbox"
         id="useFilters"
-        aria-label="Use filters"
+        aria-label="Enable filters"
         on:change={(event) => handleCheck(event)}
         on:keydown={(event) => handleEnter(event)}
         bind:checked={$useFilters}

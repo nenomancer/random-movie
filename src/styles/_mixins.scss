@@ -102,6 +102,10 @@
     outline: none;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+  }
+
   @if $selected {
     &.selected {
       background-color: variables.$ui-color-foreground;
@@ -206,6 +210,10 @@
   font-optical-sizing: auto;
 
   color: variables.$screen-color;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 
   &::before,
   &::after {

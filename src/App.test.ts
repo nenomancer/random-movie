@@ -162,7 +162,7 @@ const tabCases: Record<string, { button: RegExp; params: Params }> = {
     params: { "vote_average.gte": "7.75", "vote_average.lte": "8.25" },
   },
   runtime: {
-    button: /^Runtime: 122 minutes/,
+    button: /^Runtime: 02:02/,
     params: { "with_runtime.gte": "122", "with_runtime.lte": "122" },
   },
   genre: { button: /^Genre: Comedy/, params: { with_genres: "35" } },

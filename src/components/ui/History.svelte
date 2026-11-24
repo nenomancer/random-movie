@@ -19,6 +19,7 @@
       <button
         class="note"
         class:selected={$currentMovie.id == log.id}
+        aria-current={$currentMovie.id == log.id ? "true" : undefined}
         on:click={() => getMovie(log.id)}
       >
         {log.name}

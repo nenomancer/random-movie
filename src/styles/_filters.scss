@@ -149,6 +149,36 @@
     .range-track {
       background-color: variables.$ui-color-foreground;
     }
+
+    // The native sliders are invisible, so keyboard focus is shown on the
+    // highlighted range instead: a handle at the end the focused slider
+    // controls (the first slider is the left end, the second the right).
+    .range-track::before,
+    .range-track::after {
+      content: "";
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0.6rem;
+      background-color: variables.$ui-color-background;
+      border: variables.$border-default;
+    }
+
+    .range-track::before {
+      left: 0;
+    }
+
+    .range-track::after {
+      right: 0;
+    }
+
+    &:has(input[type="range"]:nth-of-type(1):focus-visible)
+      .range-track::before,
+    &:has(input[type="range"]:nth-of-type(2):focus-visible)
+      .range-track::after {
+      display: block;
+    }
   }
 
   // The native sliders sit invisibly on top of the custom track;
