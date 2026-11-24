@@ -66,10 +66,6 @@
         return id;
       }
     });
-    console.log("open? ", open);
-    if (open) {
-      console.log("hee...");
-    }
   };
   $: openDropdown.subscribe((activeId) => {
     if (activeId !== id) {

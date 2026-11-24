@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { DEFAULT_FILTER, TAB_NAME } from "../../lib/constants";
-  import {
-    activeTab,
-    currentFilters,
-    resetFiltersSignal,
-    useFilters,
-  } from "../../lib/stores";
+  import { TAB_NAME } from "../../lib/constants";
+  import { resetFilters } from "../../lib/helpers";
+  import { activeTab, useFilters } from "../../lib/stores";
 
   import FilterEnable from "../Filters/FilterEnable.svelte";
 
@@ -17,14 +13,6 @@
     } else {
       activeTab.set(TAB_NAME.INFO);
     }
-  }
-
-  function resetFilter() {
-    // TODO: UI doesn't update
-    currentFilters.set(DEFAULT_FILTER);
-    useFilters.set(false);
-    resetFiltersSignal.set(true);
-    setTimeout(() => resetFiltersSignal.set(false));
   }
 
   function handleCheck(event: Event) {
@@ -82,7 +70,7 @@
     <button
       class="control-button reset"
       aria-label="Reset filters"
-      on:click={resetFilter}
+      on:click={resetFilters}
       style="display: block;"
     ></button>
   </div>

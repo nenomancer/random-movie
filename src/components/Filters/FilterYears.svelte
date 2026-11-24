@@ -1,6 +1,6 @@
 <script lang="ts">
   import { FILTER_DEFAULTS } from "../../lib/constants";
-  import { checkFilterEnable } from "../../lib/helpers";
+  import { checkFilterEnable, resolveYearInput } from "../../lib/helpers";
   import { currentFilters, resetFiltersSignal } from "../../lib/stores";
   export let label: string = "";
   let yearFrom: number = FILTER_DEFAULTS.YEAR_MIN;
@@ -48,8 +48,25 @@
     checkFilterEnable();
   }
 
-  function slideOne(e: any) {
-    const value = parseFloat(e.target.value);
+  // Number boxes: let people type freely, clamp when the year is complete
+  // (4 digits) or on blur / Enter. See resolveYearInput.
+  function typeYear(side: "from" | "to", e: Event, commit: boolean) {
+    const input = e.target as HTMLInputElement;
+    const fallback =
+      side === "from" ? FILTER_DEFAULTS.YEAR_MIN : FILTER_DEFAULTS.YEAR_MAX;
+    const year = resolveYearInput(input.value, fallback, commit);
+    if (year === null) return; // still typing
+
+    if (side === "from") {
+      setFrom(year);
+      input.value = String(yearFrom);
+    } else {
+      setTo(year);
+      input.value = String(yearTo);
+    }
+  }
+
+  function setFrom(value: number) {
     if (value > yearTo - minGap) {
       yearFrom = yearTo - minGap;
     } else {
@@ -59,14 +76,21 @@
     handleOnChange();
   }
 
-  function slideTwo(e: any) {
-    const value = parseFloat(e.target.value);
+  function slideOne(e: any) {
+    setFrom(parseFloat(e.target.value));
+  }
+
+  function setTo(value: number) {
     if (value < yearFrom + minGap) {
       yearTo = yearFrom + minGap;
     } else {
       yearTo = value;
     }
     handleOnChange();
+  }
+
+  function slideTwo(e: any) {
+    setTo(parseFloat(e.target.value));
   }
 
   $: resetFiltersSignal.subscribe(() => {
@@ -92,18 +116,18 @@
         min={FILTER_DEFAULTS.YEAR_MIN}
         max={FILTER_DEFAULTS.YEAR_MAX}
         type="number"
-        maxlength={4}
-        bind:value={yearFrom}
-        on:input={slideOne}
+        value={yearFrom}
+        on:input={(e) => typeYear("from", e, false)}
+        on:change={(e) => typeYear("from", e, true)}
       />
 
       <input
         min={FILTER_DEFAULTS.YEAR_MIN}
         max={FILTER_DEFAULTS.YEAR_MAX}
         type="number"
-        maxlength={4}
-        bind:value={yearTo}
-        on:input={slideTwo}
+        value={yearTo}
+        on:input={(e) => typeYear("to", e, false)}
+        on:change={(e) => typeYear("to", e, true)}
       />
     </div>
   </div>
@@ -111,7 +135,7 @@
     <div class="range-track-bg" bind:this={sliderTrack}></div>
     <div class="range-track" bind:this={sliderBg}></div>
     <input
-      id="ratingFrom"
+      id="yearFrom"
       type="range"
       min={FILTER_DEFAULTS.YEAR_MIN}
       max={FILTER_DEFAULTS.YEAR_MAX}
@@ -119,7 +143,7 @@
       on:input={slideOne}
     />
     <input
-      id="ratingTo"
+      id="yearTo"
       type="range"
       min={FILTER_DEFAULTS.YEAR_MIN}
       max={FILTER_DEFAULTS.YEAR_MAX}

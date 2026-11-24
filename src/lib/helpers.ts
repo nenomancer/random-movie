@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { activeTab, currentFilters, errorMessage, useFilters } from "../lib/stores";
+import { activeTab, currentFilters, errorMessage, resetFiltersSignal, useFilters } from "../lib/stores";
 import { API, DEFAULT_DROPDOWN_VALUE, DEFAULT_FILTER, ERROR_MESSAGES, FILTER_DEFAULTS, TAB_NAME } from "./constants";
 import type { Filters } from "./types";
 
@@ -46,6 +46,32 @@ export function buildFilterQuery(filters: Filters) {
     return queries.length ? '&' + queries.join('&') : '';
 }
 
+/**
+ * Interprets what a user has typed into a year box.
+ *
+ * Returns the year to apply (clamped to the supported range), or `null` when
+ * the box should be left alone because the user is still typing.
+ *
+ * - While typing, only a complete 4+ digit number is acted on, so "1", "19"
+ *   and "199" on the way to "1990" are not snapped to the minimum. Typing
+ *   "1542" is clamped to the minimum as soon as the 4th digit arrives.
+ * - On commit (blur / Enter), anything is resolved: incomplete years are
+ *   clamped and empty or invalid text falls back to `fallback`.
+ */
+export function resolveYearInput(raw: string, fallback: number, commit = false): number | null {
+    const text = raw.trim();
+
+    if (!commit) {
+        return /^\d{4,}$/.test(text) ? clampYearValue(Number(text)) : null;
+    }
+
+    const value = Number(text);
+    if (text === "" || !Number.isFinite(value)) {
+        return fallback;
+    }
+    return clampYearValue(Math.round(value));
+}
+
 function clampYearValue(input: number) {
     return Math.max(Math.min(input, FILTER_DEFAULTS.YEAR_MAX), FILTER_DEFAULTS.YEAR_MIN)
 }
@@ -65,12 +91,51 @@ export function showResultError(message: string = ERROR_MESSAGES.NO_MATCH) {
     activeTab.set(TAB_NAME.ERROR);
 }
 
+/**
+ * Turns the current filter state into a query string, sending only values the
+ * user actually changed. Defaults (the full year range, ratings 0-10, "Any"
+ * country) are left out: TMDB's date bounds also drop titles with no or future
+ * release dates, which would quietly shrink the pool.
+ */
+export function buildActiveFilterQuery(filters: Filters) {
+    return buildFilterQuery({
+        country: filters.country,
+        genres: filters.genres,
+        yearFrom: filters.yearFrom !== DEFAULT_FILTER.yearFrom ? filters.yearFrom : undefined,
+        yearTo: filters.yearTo !== DEFAULT_FILTER.yearTo ? filters.yearTo : undefined,
+        ratingFrom: filters.ratingFrom !== DEFAULT_FILTER.ratingFrom ? filters.ratingFrom : undefined,
+        ratingTo: filters.ratingTo !== DEFAULT_FILTER.ratingTo ? filters.ratingTo : undefined,
+    });
+}
+
+// JSON.stringify with object keys sorted, so the same values compare equal
+// whatever order the keys were added in.
+function stableStringify(value: unknown) {
+    return JSON.stringify(value, (_key, v) =>
+        v && typeof v === "object" && !Array.isArray(v)
+            ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b)))
+            : v,
+    );
+}
+
 export function checkFilterEnable() {
-    if (JSON.stringify(get(currentFilters)) == JSON.stringify(DEFAULT_FILTER)) {
+    if (stableStringify(get(currentFilters)) == stableStringify(DEFAULT_FILTER)) {
         useFilters.set(false);
     } else {
         useFilters.set(true);
     }
+}
+
+/**
+ * Puts every filter back to its default and switches "use filters" off.
+ * The filter components keep their own slider/dropdown state, so they listen to
+ * `resetFiltersSignal`, which is raised briefly here.
+ */
+export function resetFilters() {
+    currentFilters.set(DEFAULT_FILTER);
+    useFilters.set(false);
+    resetFiltersSignal.set(true);
+    setTimeout(() => resetFiltersSignal.set(false));
 }
 
 /**

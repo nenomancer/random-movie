@@ -19,7 +19,12 @@
 
   import { addHistoryLog } from "./lib/useHistory";
 
-  import { buildFilterQuery, fetchJson, showResultError } from "./lib/helpers";
+  import {
+    buildActiveFilterQuery,
+    buildFilterQuery,
+    fetchJson,
+    showResultError,
+  } from "./lib/helpers";
   import type { Country, Genre, Movie, Person } from "./lib/types";
   import {
     API,
@@ -95,26 +100,9 @@
     activeTab.set(TAB_NAME.LOADING);
     mainRef?.classList.add("loading-anim");
 
-    let filterQueries = "";
-
-    if ($useFilters) {
-      filterQueries = buildFilterQuery({
-        country: `${$currentFilters.country ? $currentFilters.country : ""}`,
-        genres: $currentFilters.genres?.length
-          ? [$currentFilters.genres.join(",")]
-          : undefined,
-        yearFrom: $currentFilters.yearFrom
-          ? $currentFilters.yearFrom
-          : undefined,
-        yearTo: $currentFilters.yearTo ? $currentFilters.yearTo : undefined,
-        ratingFrom:
-          $currentFilters.ratingFrom! > 0
-            ? $currentFilters.ratingFrom
-            : undefined,
-        ratingTo:
-          $currentFilters.ratingTo! < 10 ? $currentFilters.ratingTo : undefined,
-      });
-    }
+    const filterQueries = $useFilters
+      ? buildActiveFilterQuery($currentFilters)
+      : "";
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
@@ -142,7 +130,6 @@
   }
 
   function getRandomMovie(data: Array<Movie>) {
-    console.log("ALL LOADING ANIMATINOS HERE");
     mainRef?.classList?.add("loading-anim");
     activeTab.set(TAB_NAME.LOADING);
 
