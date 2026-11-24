@@ -4,8 +4,12 @@
   import { charsVisible } from "../../lib/typewriter";
 
   export let text: string;
-  // false = purely decorative copy (hidden from screen readers entirely)
-  export let announce: boolean = true;
+  // How assistive tech treats the message:
+  //  alert       - interrupts and is read out at once (errors)
+  //  status      - polite live region (loading)
+  //  plain       - ordinary text, no live announcement
+  //  decorative  - hidden from screen readers (duplicate of another message)
+  export let mode: "alert" | "status" | "plain" | "decorative" = "alert";
   export let speed: number = TYPING_MS_PER_CHAR;
 
   let shown = 0;
@@ -43,10 +47,10 @@
 
 <p
   class="sys-msg typed"
-  role={announce ? "alert" : undefined}
-  aria-hidden={announce ? undefined : "true"}
+  role={mode === "alert" || mode === "status" ? mode : undefined}
+  aria-hidden={mode === "decorative" ? "true" : undefined}
 >
-  {#if announce}
+  {#if mode !== "decorative"}
     <!-- Screen readers get the whole message at once, not letter by letter -->
     <span class="sr-only">{text}</span>
   {/if}

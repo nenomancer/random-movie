@@ -460,9 +460,11 @@
             }))}
         />
       </TabContent>
-      <TabContent name={TAB_NAME.LOADING}
-        ><p class="sys-msg" role="status">Accessing archive...</p></TabContent
-      >
+      <TabContent name={TAB_NAME.LOADING}>
+        {#if $activeTab === TAB_NAME.LOADING}
+          <TypedMessage text="Accessing archive..." mode="status" />
+        {/if}
+      </TabContent>
       <TabContent name={TAB_NAME.ERROR}>
         <!-- Only mounted while visible, so it types out afresh on every error -->
         {#if $activeTab === TAB_NAME.ERROR}
@@ -480,12 +482,14 @@
         <InfoPoster />
       </TabContent>
       <!-- Decorative: the info monitor already announces loading / errors -->
-      <TabContent name={TAB_NAME.LOADING}
-        ><p class="sys-msg" aria-hidden="true">Receiving signal...</p></TabContent
-      >
+      <TabContent name={TAB_NAME.LOADING}>
+        {#if $activeTab === TAB_NAME.LOADING}
+          <TypedMessage text="Receiving signal..." mode="decorative" />
+        {/if}
+      </TabContent>
       <TabContent name={TAB_NAME.ERROR}>
         {#if $activeTab === TAB_NAME.ERROR}
-          <TypedMessage text="Signal lost" announce={false} />
+          <TypedMessage text="Signal lost" mode="decorative" />
         {/if}
       </TabContent>
 
