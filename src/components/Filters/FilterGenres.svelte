@@ -5,7 +5,6 @@
   import {
     openDropdown,
     currentFilters,
-    useFilters,
     resetFiltersSignal,
   } from "../../lib/stores";
   import Button from "../ui/Button.svelte";
@@ -21,7 +20,7 @@
   let selected: Genre[] = [];
   let open: boolean = false;
 
-  let genreListElement: HTMLUListElement;
+  let genreListElement: HTMLDivElement;
 
   // ADD BUTTONS FOR EACH GENRE, INSTEAD OF JUST ONE
   // BUTTON WITH A DYNAMIC LABEL
@@ -79,16 +78,10 @@
       selected = [];
     }
   });
-
-  // $: currentFilters.subscribe(() => {
-  //     if ($currentFilters.genres?.includes(id)) {
-  //         console.log("eyo its here! ", label);
-  //     }
-  // });
 </script>
 
 <section data-open={open}>
-  <div class="header" >
+  <div class="header">
     <h3 class="title">{label}</h3>
     <button
       class="value"
@@ -103,7 +96,12 @@
         : DEFAULT_DROPDOWN_VALUE}</button
     >
   </div>
-  <ul class="options" bind:this={genreListElement} >
+  <div
+    class="options"
+    role="group"
+    aria-label={label}
+    bind:this={genreListElement}
+  >
     {#each options as option}
       <Button
         classes={["option", "no-border"]}
@@ -119,13 +117,13 @@
         onClick={() => selectOption(option)}
       />
     {/each}
-  </ul>
-  <!-- {#if open}{/if} -->
+  </div>
 </section>
 
 <style lang="scss">
-  @use "../../styles/mixins";
+  @use "../../styles/filters";
   @use "../../styles/variables";
+
   section {
     border: variables.$border-default;
 
@@ -138,40 +136,25 @@
       }
     }
   }
+
   .header {
-    // display: flex;
-    display: grid;
-    grid-template-columns: 1fr 6fr;
+    @include filters.filter-header();
     border-bottom: variables.$border-default;
   }
+
   .title {
-    @include mixins.ui-button();
-    pointer-events: none;
-    border-right: variables.$border-default;
-    font-weight: bold;
+    @include filters.filter-title();
   }
 
   .options {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
-    &[data-open="false"] {
-      display: none;
-      .header {
-        border: none;
-      }
-    }
-
-    button {
-      background-color: red;
-    }
   }
 
   .value {
-    @include mixins.ui-button();
-    justify-content: flex-start;
+    @include filters.filter-value();
     flex: 1;
     white-space: nowrap;
-    overflow: scroll;
+    overflow: auto;
   }
 </style>

@@ -31,7 +31,7 @@
     border-top: variables.$border-default;
     flex: 1;
     white-space: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
   button:last-child {

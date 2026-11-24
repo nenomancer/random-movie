@@ -1,0 +1,187 @@
+// Shared styles for the filter components (src/components/Filters).
+// Include the mixins at the top level of a component's <style lang="scss">.
+@use "variables";
+@use "mixins";
+
+// Label + value row at the top of every filter
+@mixin filter-header() {
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+}
+
+// Non-interactive label cell ("Genre", "Years", ...)
+@mixin filter-title() {
+  @include mixins.ui-button();
+  pointer-events: none;
+  border-right: variables.$border-default;
+  font-weight: bold;
+}
+
+// Button showing the current value, left aligned
+@mixin filter-value() {
+  @include mixins.ui-button();
+  justify-content: flex-start;
+}
+
+// Searchable single-select dropdown (countries, actors)
+@mixin search-dropdown() {
+  .header {
+    @include filter-header();
+    border: variables.$border-default;
+  }
+
+  .title {
+    @include filter-title();
+  }
+
+  .value {
+    @include filter-value();
+  }
+
+  .input-container {
+    position: relative;
+
+    input {
+      width: 100%;
+      @include mixins.ui-button();
+    }
+
+    input:focus + .button-close {
+      color: variables.$ui-color-background;
+    }
+
+    .button-close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      border: none;
+      height: 100%;
+      width: 20%;
+      background-color: transparent;
+      color: variables.$ui-color-foreground;
+      cursor: pointer;
+
+      &:hover,
+      &:focus-visible,
+      &:active {
+        outline: none;
+        color: variables.$ui-color-background;
+        background-color: variables.$ui-color-foreground;
+      }
+    }
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow: auto;
+    border: variables.$border-default;
+    border-top: none;
+  }
+
+  .option {
+    @include mixins.ui-button();
+    border-bottom: variables.$border-default;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// Dual-handle range filter: number boxes + slider (years, rating)
+@mixin range-filter() {
+  section {
+    position: relative;
+    display: grid;
+  }
+
+  .header {
+    @include filter-header();
+    place-content: center;
+    place-items: center;
+    border: variables.$border-default;
+  }
+
+  .title {
+    @include filter-title();
+    width: 100%;
+  }
+
+  .values {
+    display: flex;
+    width: 100%;
+
+    input[type="number"] {
+      @include mixins.ui-button();
+      flex: 1;
+      text-align: center;
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+      }
+
+      &:first-child {
+        border-right: variables.$border-default;
+      }
+    }
+  }
+
+  .ranges {
+    position: relative;
+    display: subgrid;
+    height: 1.5rem;
+
+    .range-track,
+    .range-track-bg {
+      inset-inline: 0;
+      border: variables.$border-default;
+      border-top: 0;
+      height: 100%;
+      position: absolute;
+    }
+
+    .range-track {
+      background-color: variables.$ui-color-foreground;
+    }
+  }
+
+  // The native sliders sit invisibly on top of the custom track;
+  // only the thumbs take pointer events.
+  input[type="range"] {
+    position: absolute;
+    top: -3.5px;
+    margin: auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    outline: none;
+    background-color: transparent;
+    pointer-events: none;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track,
+  input[type="range"]::-moz-range-track,
+  input[type="range"]::-ms-track {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  input[type="range"]::-moz-range-thumb,
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    appearance: none;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 0;
+    background-color: transparent;
+  }
+}

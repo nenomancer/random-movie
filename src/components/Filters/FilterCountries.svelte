@@ -5,7 +5,6 @@
   import {
     openDropdown,
     currentFilters,
-    useFilters,
     resetFiltersSignal,
   } from "../../lib/stores";
 
@@ -15,7 +14,6 @@
   export let options: Country[];
   export let onChange: (option: Country) => void;
   export const closeDropdown = () => (open = false);
-  let country;
 
   let selected: Country;
   let open: boolean = false;
@@ -100,7 +98,7 @@
     {/if}
   </div>
   {#if open}
-    <ul class="options" tabindex="-1">
+    <div class="options" role="group" aria-label={label}>
       {#each filteredCountries as option}
         <button
           class="option"
@@ -116,86 +114,12 @@
           {option.name}
         </button>
       {/each}
-    </ul>
+    </div>
   {/if}
 </section>
 
 <style lang="scss">
-  @use "../../styles/variables";
-  @use "../../styles/mixins";
-  section {
-    // border: variables.$border-default;
-  }
-  .header {
-    display: grid;
-    grid-template-columns: 1fr 6fr;
-    border: variables.$border-default;
-  }
+  @use "../../styles/filters";
 
-  .value {
-    @include mixins.ui-button();
-    // text-align: left;
-    justify-content: flex-start;
-  }
-
-  .input-container {
-    position: relative;
-    // width: 100%;
-    input {
-      width: 100%;
-      @include mixins.ui-button();
-      // text-align: center;
-    }
-
-    input:focus + .button-close {
-      color: variables.$ui-color-background;
-    }
-
-    .button-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      border: none;
-      height: 100%;
-      width: 20%;
-      background-color: transparent;
-      color: variables.$ui-color-foreground;
-      cursor: pointer;
-
-      &:hover &:focus,
-      &:focus-visible,
-      &:active {
-        outline: none;
-        color: variables.$ui-color-background;
-        background-color: variables.$ui-color-foreground;
-      }
-    }
-  }
-
-  .title {
-    @include mixins.ui-button();
-    pointer-events: none;
-
-    border-right: variables.$border-default;
-    // text-align: center;
-    font-weight: bold;
-  }
-
-  .options {
-    display: flex;
-    flex-direction: column;
-    /* display: none; */
-    max-height: 200px;
-    overflow: scroll;
-    border: variables.$border-default;
-    border-top: none;
-  }
-
-  .option {
-    @include mixins.ui-button();
-    border-bottom: variables.$border-default;
-    &:last-child {
-      border-bottom: none;
-    }
-  }
+  @include filters.search-dropdown();
 </style>
