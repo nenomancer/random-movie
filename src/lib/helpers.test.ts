@@ -12,6 +12,15 @@ import {
   buildFilterQuery,
   buildSearchQuery,
   clampToRange,
+  directorsOf,
+  formatMovieTitle,
+  imdbUrl,
+  loadErrorMessage,
+  mapCountries,
+  mapCredits,
+  mapMovieDetails,
+  parseMoviePath,
+  pickRandom,
   rangePercent,
   checkFilterEnable,
   fetchJson,
@@ -586,5 +595,183 @@ describe("rangePercent", () => {
 
   it("does not divide by zero for an empty span", () => {
     expect(rangePercent(5, 5, 5, 5)).toEqual({ left: 0, right: 0 });
+  });
+});
+
+describe("formatMovieTitle", () => {
+  it("keeps the original title for English-language films", () => {
+    expect(formatMovieTitle("Heat", "Heat", "en")).toBe("Heat");
+  });
+
+  it("adds the English title for foreign-language films", () => {
+    expect(formatMovieTitle("Parasite", "Parasite", "ko")).toBe("Parasite");
+    expect(formatMovieTitle("Amélie", "Amelie", "fr")).toBe("Amélie (Amelie)");
+  });
+
+  it("does not repeat an English title that is the same", () => {
+    expect(formatMovieTitle("Roma", "Roma", "es")).toBe("Roma");
+  });
+});
+
+describe("mapMovieDetails", () => {
+  const countries = [
+    { code: "FR", name: "France", native: "France" },
+    { code: "US", name: "United States", native: "United States" },
+  ];
+  const details = {
+    id: 5,
+    title: "Amelie",
+    original_title: "Amélie",
+    original_language: "fr",
+    release_date: "2001-04-25",
+    vote_average: 7.9876,
+    runtime: 122,
+    origin_country: ["FR"],
+    genres: [{ id: 35, name: "Comedy" }],
+    overview: "A shy waitress...",
+    poster_path: "/poster.jpg",
+    backdrop_path: "/backdrop.jpg",
+  };
+
+  it("maps the basic fields", () => {
+    const movie = mapMovieDetails(details, countries);
+    expect(movie.id).toBe(5);
+    expect(movie.title).toEqual({ imdb: "", name: "Amélie (Amelie)" });
+    expect(movie.year).toBe(2001);
+    expect(movie.rating).toBe(8);
+    expect(movie.runtime).toBe(122);
+    expect(movie.country).toEqual(countries[0]);
+    expect(movie.genres).toEqual(details.genres);
+    expect(movie.plot).toBe("A shy waitress...");
+  });
+
+  it("builds image urls from the paths", () => {
+    const movie = mapMovieDetails(details, countries);
+    expect(movie.poster).toBe(`${API.POSTER}/${details.poster_path}`);
+    expect(movie.backdrop).toBe(`${API.POSTER}/${details.backdrop_path}`);
+  });
+
+  it("leaves image fields out when TMDB has none", () => {
+    const movie = mapMovieDetails(
+      { ...details, poster_path: null, backdrop_path: undefined },
+      countries,
+    );
+    expect("poster" in movie).toBe(false);
+    expect("backdrop" in movie).toBe(false);
+  });
+
+  it("treats a zero rating, zero runtime or missing date as unknown", () => {
+    const movie = mapMovieDetails(
+      { ...details, vote_average: 0, runtime: 0, release_date: "" },
+      countries,
+    );
+    expect(movie.rating).toBeUndefined();
+    expect(movie.runtime).toBeUndefined();
+    expect(movie.year).toBeUndefined();
+  });
+
+  it("has no country when the origin is unknown or missing", () => {
+    expect(
+      mapMovieDetails({ ...details, origin_country: ["ZZ"] }, countries)
+        .country,
+    ).toBeUndefined();
+    expect(
+      mapMovieDetails({ ...details, origin_country: undefined }, countries)
+        .country,
+    ).toBeUndefined();
+  });
+});
+
+describe("credits helpers", () => {
+  const crew = [
+    { id: 1, name: "A", job: "Director" },
+    { id: 2, name: "B", job: "Writer" },
+    { id: 3, name: "C", job: "Director" },
+  ];
+
+  it("directorsOf keeps only directors", () => {
+    expect(directorsOf(crew).map((p) => p.id)).toEqual([1, 3]);
+  });
+
+  it("mapCredits returns directors and the first five actors", () => {
+    const cast = Array.from({ length: 8 }, (_, i) => ({
+      id: 10 + i,
+      name: `Actor ${i}`,
+      character: "x",
+    }));
+    const credits = mapCredits({ crew, cast });
+    expect(credits.directors).toEqual([
+      { id: 1, name: "A" },
+      { id: 3, name: "C" },
+    ]);
+    expect(credits.actors).toHaveLength(5);
+    expect(credits.actors[0]).toEqual({ id: 10, name: "Actor 0" });
+  });
+});
+
+describe("mapCountries", () => {
+  it("renames TMDB's fields", () => {
+    expect(
+      mapCountries([
+        {
+          iso_3166_1: "MK",
+          english_name: "North Macedonia",
+          native_name: "Македонија",
+        },
+      ]),
+    ).toEqual([{ code: "MK", name: "North Macedonia", native: "Македонија" }]);
+  });
+});
+
+describe("imdbUrl", () => {
+  it("builds the title link", () => {
+    expect(imdbUrl("tt0211915")).toBe("https://www.imdb.com/title/tt0211915/");
+  });
+
+  it("is empty when TMDB has no IMDb id", () => {
+    expect(imdbUrl(null)).toBe("");
+    expect(imdbUrl(undefined)).toBe("");
+    expect(imdbUrl("")).toBe("");
+  });
+});
+
+describe("pickRandom", () => {
+  it("returns undefined for an empty or missing list", () => {
+    expect(pickRandom([])).toBeUndefined();
+    expect(pickRandom(undefined)).toBeUndefined();
+  });
+
+  it("picks by the random value, including both ends of the list", () => {
+    const items = ["a", "b", "c"];
+    expect(pickRandom(items, () => 0)).toBe("a");
+    expect(pickRandom(items, () => 0.5)).toBe("b");
+    expect(pickRandom(items, () => 0.999)).toBe("c");
+  });
+});
+
+describe("parseMoviePath", () => {
+  it("reads the id from a movie path", () => {
+    expect(parseMoviePath("/movie/603")).toBe(603);
+    expect(parseMoviePath("/movie/603/")).toBe(603);
+  });
+
+  it("returns null for anything else", () => {
+    expect(parseMoviePath("/")).toBeNull();
+    expect(parseMoviePath("/movie")).toBeNull();
+    expect(parseMoviePath("/movie/abc")).toBeNull();
+    expect(parseMoviePath("/movie/12abc")).toBeNull();
+    expect(parseMoviePath("/other/12")).toBeNull();
+  });
+});
+
+describe("loadErrorMessage", () => {
+  it("says not found for a 404", () => {
+    expect(loadErrorMessage({ status: 404 })).toBe(ERROR_MESSAGES.NOT_FOUND);
+  });
+
+  it("says failed for other errors, including non-objects", () => {
+    expect(loadErrorMessage({ status: 500 })).toBe(ERROR_MESSAGES.FAILED);
+    expect(loadErrorMessage(new Error("network"))).toBe(ERROR_MESSAGES.FAILED);
+    expect(loadErrorMessage(null)).toBe(ERROR_MESSAGES.FAILED);
   });
 });

@@ -14,7 +14,15 @@ import {
   FILTER_DEFAULTS,
   TAB_NAME,
 } from "./constants";
-import type { Filters } from "./types";
+import type {
+  Country,
+  Filters,
+  Movie,
+  Person,
+  TmdbCountry,
+  TmdbCredits,
+  TmdbMovie,
+} from "./types";
 
 export function buildFilterQuery(filters: Filters) {
   const queries: string[] = [];
@@ -147,12 +155,6 @@ export function showResultError(message: string = ERROR_MESSAGES.NO_MATCH) {
   activeTab.set(TAB_NAME.ERROR);
 }
 
-/**
- * Turns the current filter state into a query string, sending only values the
- * user actually changed. Defaults (the full year range, ratings 0-10, "Any"
- * country) are left out: TMDB's date bounds also drop titles with no or future
- * release dates, which would quietly shrink the pool.
- */
 // The filters that differ from their defaults. Default year/rating bounds are
 // left out: they would silently drop titles with no or future release dates.
 function activeFilters(filters: Filters): Filters {
@@ -176,6 +178,12 @@ function activeFilters(filters: Filters): Filters {
   };
 }
 
+/**
+ * Turns the current filter state into a query string, sending only values the
+ * user actually changed. Defaults (the full year range, ratings 0-10, "Any"
+ * country) are left out: TMDB's date bounds also drop titles with no or future
+ * release dates, which would quietly shrink the pool.
+ */
 export function buildActiveFilterQuery(filters: Filters) {
   return buildFilterQuery(activeFilters(filters));
 }
@@ -240,4 +248,101 @@ export async function fetchJson<T = any>(url: string): Promise<T> {
     );
   }
   return response.json();
+}
+
+// --- Turning TMDB responses into our own types ---
+
+/** "Original (English)" for foreign-language films, else just the original. */
+export function formatMovieTitle(
+  originalTitle: string,
+  englishTitle: string,
+  originalLanguage: string,
+) {
+  if (originalLanguage !== "en" && originalTitle != englishTitle) {
+    return `${originalTitle} (${englishTitle})`;
+  }
+  return originalTitle;
+}
+
+/**
+ * The movie fields that come from TMDB's main details response. Image fields
+ * are left out when TMDB has none, so they keep their defaults. `country` is
+ * undefined when the origin isn't in `countries`; the UI shows "-" for that.
+ */
+export function mapMovieDetails(
+  data: TmdbMovie,
+  countries: Country[],
+): Partial<Movie> {
+  return {
+    ...(data.backdrop_path && {
+      backdrop: `${API.POSTER}/${data.backdrop_path}`,
+    }),
+    ...(data.poster_path && { poster: `${API.POSTER}/${data.poster_path}` }),
+    id: data.id,
+    title: {
+      imdb: "",
+      name: formatMovieTitle(
+        data.original_title,
+        data.title,
+        data.original_language,
+      ),
+    },
+    year: data.release_date
+      ? new Date(data.release_date).getFullYear()
+      : undefined,
+    rating:
+      data.vote_average > 0
+        ? Math.round(data.vote_average * 10) / 10
+        : undefined,
+    runtime: data.runtime > 0 ? data.runtime : undefined,
+    country: countries.find(
+      (country) => country.code === data.origin_country?.[0],
+    ) as Country,
+    genres: data.genres,
+    plot: data.overview,
+  };
+}
+
+/** The crew entries whose job is Director. */
+export function directorsOf<T extends Pick<Person, "job">>(crew: T[]) {
+  return crew.filter((person) => person.job === "Director");
+}
+
+/** Directors, and the first five cast members, from a credits response. */
+export function mapCredits(data: TmdbCredits) {
+  return {
+    directors: directorsOf(data.crew).map(({ id, name }) => ({ id, name })),
+    actors: data.cast.slice(0, 5).map(({ id, name }) => ({ id, name })),
+  };
+}
+
+export function mapCountries(response: TmdbCountry[]): Country[] {
+  return response.map((country) => ({
+    code: country.iso_3166_1,
+    name: country.english_name,
+    native: country.native_name,
+  }));
+}
+
+/** IMDb link for an id from TMDB, or "" when TMDB has no IMDb id. */
+export function imdbUrl(imdbId: string | null | undefined) {
+  return imdbId ? `https://www.imdb.com/title/${imdbId}/` : "";
+}
+
+/** One random item, or undefined for an empty or missing list. */
+export function pickRandom<T>(items: T[] | undefined, random = Math.random) {
+  if (!items?.length) return undefined;
+  return items[Math.floor(random() * items.length)];
+}
+
+/** The movie id in a deep link path (/movie/123), or null for any other path. */
+export function parseMoviePath(pathname: string) {
+  const match = pathname.match(/^\/movie\/(\d+)\/?$/);
+  return match ? Number(match[1]) : null;
+}
+
+/** Message for a failed load: a 404 is "not found", anything else is a failure. */
+export function loadErrorMessage(err: unknown) {
+  const status = (err as { status?: number } | null)?.status;
+  return status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED;
 }

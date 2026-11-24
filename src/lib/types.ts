@@ -29,7 +29,7 @@ export interface Genre {
 export interface Person {
   id: number;
   name: string;
-  job: string;
+  job?: string;
 }
 
 export interface Country {
@@ -54,4 +54,31 @@ export interface Filters {
   ratingTo?: number;
   runtimeFrom?: number;
   runtimeTo?: number;
+}
+
+// The parts of TMDB's responses we read (not the full API shapes)
+export interface TmdbMovie {
+  id: number;
+  title: string;
+  original_title: string;
+  original_language: string;
+  release_date?: string;
+  vote_average: number;
+  runtime: number;
+  origin_country?: string[];
+  genres: Genre[];
+  overview?: string;
+  poster_path?: string | null;
+  backdrop_path?: string | null;
+}
+
+export interface TmdbCredits {
+  cast: Person[];
+  crew: Person[];
+}
+
+export interface TmdbCountry {
+  iso_3166_1: string;
+  english_name: string;
+  native_name: string;
 }

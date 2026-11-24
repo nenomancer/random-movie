@@ -19,8 +19,20 @@
 
   import { addHistoryLog } from "./lib/useHistory";
 
-  import { buildSearchQuery, fetchJson, showResultError } from "./lib/helpers";
-  import type { Country, Filters, Genre, Movie, Person } from "./lib/types";
+  import {
+    buildSearchQuery,
+    directorsOf,
+    fetchJson,
+    imdbUrl,
+    loadErrorMessage,
+    mapCountries,
+    mapCredits,
+    mapMovieDetails,
+    parseMoviePath,
+    pickRandom,
+    showResultError,
+  } from "./lib/helpers";
+  import type { Country, Filters, Genre } from "./lib/types";
   import {
     API,
     DEFAULT_FILTER,
@@ -64,9 +76,9 @@
     }
   }
   const handlePopState = () => {
-    const params = window.location.pathname.split("/");
-    if (params[1] === "movie" && params[2]) {
-      getMovie(Number(params[2]));
+    const movieId = parseMoviePath(window.location.pathname);
+    if (movieId !== null) {
+      getMovie(movieId);
     }
   };
 
@@ -84,10 +96,7 @@
   // tab and stop the loading animation.
   function handleLoadError(err: unknown) {
     console.error(err);
-    const status = (err as { status?: number } | null)?.status;
-    showResultError(
-      status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED,
-    );
+    showResultError(loadErrorMessage(err));
     mainRef?.classList.remove("loading-anim");
   }
 
@@ -125,20 +134,14 @@
       .catch(handleLoadError);
   }
 
-  function getRandomMovie(data: Array<Movie>) {
+  function getRandomMovie(data: Array<{ id: number }>) {
     mainRef?.classList?.add("loading-anim");
     activeTab.set(TAB_NAME.LOADING);
 
-    if (!data?.length) return showResultError(ERROR_MESSAGES.NO_RELATED);
+    const movie = pickRandom(data);
+    if (!movie) return showResultError(ERROR_MESSAGES.NO_RELATED);
 
-    const randomIndex = Math.floor(Math.random() * data.length);
-
-    for (const [index, movie] of data.entries()) {
-      if (index === randomIndex) {
-        getMovie(movie.id);
-        break;
-      }
-    }
+    getMovie(movie.id);
   }
 
   async function getMovie(movieId: number) {
@@ -149,54 +152,9 @@
       .then((data) => {
         if (movieId !== latestMovieId) return;
 
-        if (data.backdrop_path) {
-          currentMovie.update((movie) => ({
-            ...movie,
-            backdrop: `${API.POSTER}/${data.backdrop_path}`,
-          }));
-        }
-        if (data.poster_path) {
-          currentMovie.update((movie) => ({
-            ...movie,
-            poster: `${API.POSTER}/${data.poster_path}`,
-          }));
-        }
-
-        function generateTitle(
-          originalTitle: string,
-          englishTitle: string,
-        ): string {
-          if (
-            data.original_language !== "en" &&
-            originalTitle != englishTitle
-          ) {
-            return `${originalTitle} (${englishTitle})`;
-          }
-
-          return originalTitle;
-        }
-
         currentMovie.update((movie) => ({
           ...movie,
-          id: movieId,
-          title: {
-            imdb: "",
-            name: generateTitle(data.original_title, data.title),
-          },
-          year: data.release_date
-            ? new Date(data.release_date).getFullYear()
-            : undefined,
-
-          rating:
-            data.vote_average > 0
-              ? Math.round(data.vote_average * 10) / 10
-              : undefined,
-          runtime: data.runtime > 0 ? data.runtime : undefined,
-          country: allCountries.find(
-            (country) => country.code === data.origin_country[0],
-          )!,
-          genres: data.genres,
-          plot: data.overview,
+          ...mapMovieDetails(data, allCountries),
         }));
 
         document.title = `${$currentMovie.title.name} | ${DOCUMENT_TITLE}`;
@@ -238,21 +196,7 @@
       .then((data) => {
         if (movieId !== latestMovieId) return;
 
-        const directors = data.crew.filter(
-          (person: Person) => person.job == "Director",
-        );
-
-        currentMovie.update((movie) => ({
-          ...movie,
-          directors: directors.map((director: Person) => ({
-            name: director.name,
-            id: director.id,
-          })),
-          actors: data.cast.slice(0, 5).map((actor: Person) => ({
-            id: actor.id,
-            name: actor.name,
-          })),
-        }));
+        currentMovie.update((movie) => ({ ...movie, ...mapCredits(data) }));
       })
       // Credits are optional extras; log but keep showing the movie
       .catch((err) => console.error(err));
@@ -266,7 +210,7 @@
         currentMovie.update((movie) => ({
           ...movie,
           title: {
-            imdb: `https://www.imdb.com/title/${data.imdb_id}/`,
+            imdb: imdbUrl(data.imdb_id),
             name: $currentMovie.title.name,
           },
         }));
@@ -288,11 +232,7 @@
   async function generateCountries() {
     return fetchJson(API.COUNTRIES)
       .then((response) => {
-        allCountries = response.map((country: any) => ({
-          code: country.iso_3166_1,
-          name: country.english_name,
-          native: country.native_name,
-        }));
+        allCountries = mapCountries(response);
       })
       .catch((err) => {
         console.error(err);
@@ -312,10 +252,11 @@
   function getMoviesByDirector(directorId: number) {
     fetchJson(`${API.PERSON}/${directorId}?append_to_response=movie_credits`)
       .then((response) => {
-        const temp = response.movie_credits.crew.filter(
-          (credit: any) => credit.job === "Director",
+        return getRandomMovie(
+          directorsOf<{ id: number; job?: string }>(
+            response.movie_credits.crew,
+          ),
         );
-        return getRandomMovie(temp);
       })
       .catch(handleLoadError);
   }
