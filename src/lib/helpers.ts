@@ -16,13 +16,13 @@ export function buildFilterQuery(filters: Filters) {
     }
 
     if (filters.yearFrom) {
-        const clamped = clampYearValue(filters.yearFrom, FILTER_DEFAULTS.YEAR_MIN);
+        const clamped = clampYearValue(filters.yearFrom);
         const from = `${clamped}-01-01`
         queries.push(`primary_release_date.gte=${from}`)
     }
 
     if (filters.yearTo) {
-        const clamped = clampYearValue(filters.yearTo, FILTER_DEFAULTS.YEAR_MAX);
+        const clamped = clampYearValue(filters.yearTo);
         const to = `${clamped}-12-31`
         queries.push(`primary_release_date.lte=${to}`)
     }
@@ -35,13 +35,18 @@ export function buildFilterQuery(filters: Filters) {
         queries.push(`vote_average.lte=${filters.ratingTo}`)
     }
 
+    if (filters.runtimeFrom) {
+        queries.push(`with_runtime.gte=${filters.runtimeFrom}`)
+    }
+
+    if (filters.runtimeTo) {
+        queries.push(`with_runtime.lte=${filters.runtimeTo}`)
+    }
+
     return queries.length ? '&' + queries.join('&') : '';
 }
 
-function clampYearValue(input: number, fallback: number) {
-    if (isNaN(input)) {
-        return fallback;
-    }
+function clampYearValue(input: number) {
     return Math.max(Math.min(input, FILTER_DEFAULTS.YEAR_MAX), FILTER_DEFAULTS.YEAR_MIN)
 }
 
