@@ -19,11 +19,7 @@
 
   import { addHistoryLog } from "./lib/useHistory";
 
-  import {
-    buildSearchQuery,
-    fetchJson,
-    showResultError,
-  } from "./lib/helpers";
+  import { buildSearchQuery, fetchJson, showResultError } from "./lib/helpers";
   import type { Country, Filters, Genre, Movie, Person } from "./lib/types";
   import {
     API,
@@ -90,7 +86,7 @@
     console.error(err);
     const status = (err as { status?: number } | null)?.status;
     showResultError(
-      status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED
+      status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED,
     );
     mainRef?.classList.remove("loading-anim");
   }
@@ -103,14 +99,12 @@
 
     const filterQueries = buildSearchQuery(
       $useFilters ? $currentFilters : undefined,
-      overrides
+      overrides,
     );
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
-    fetchJson(
-      `${API.DISCOVER_MOVIE}?page=${pageNumber}${filterQueries}`
-    )
+    fetchJson(`${API.DISCOVER_MOVIE}?page=${pageNumber}${filterQueries}`)
       .then((response) => {
         const hasResults = response.results?.length > 0;
         const hasPages = response.total_pages > 0;
@@ -170,7 +164,7 @@
 
         function generateTitle(
           originalTitle: string,
-          englishTitle: string
+          englishTitle: string,
         ): string {
           if (
             data.original_language !== "en" &&
@@ -199,7 +193,7 @@
               : undefined,
           runtime: data.runtime > 0 ? data.runtime : undefined,
           country: allCountries.find(
-            (country) => country.code === data.origin_country[0]
+            (country) => country.code === data.origin_country[0],
           )!,
           genres: data.genres,
           plot: data.overview,
@@ -245,7 +239,7 @@
         if (movieId !== latestMovieId) return;
 
         const directors = data.crew.filter(
-          (person: Person) => person.job == "Director"
+          (person: Person) => person.job == "Director",
         );
 
         currentMovie.update((movie) => ({
@@ -319,7 +313,7 @@
     fetchJson(`${API.PERSON}/${directorId}?append_to_response=movie_credits`)
       .then((response) => {
         const temp = response.movie_credits.crew.filter(
-          (credit: any) => credit.job === "Director"
+          (credit: any) => credit.job === "Director",
         );
         return getRandomMovie(temp);
       })

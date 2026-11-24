@@ -22,7 +22,6 @@
 >
   {label}
   <slot />
-  
 </button>
 
 <style lang="scss">

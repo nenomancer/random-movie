@@ -7,6 +7,7 @@ Svelte 5 + Vite SPA that shows a random movie from TMDB, with filters. Deployed 
 - `npm test` — Vitest (logic tests in `src/lib/*.test.ts`)
 - `npm run check` — svelte-check + tsc; should report 0 errors (warnings are known)
 - `npx vite build` — production build
+- `npm run format` — Prettier (config in `.prettierrc`); run it before committing
 Run test, check and build before calling a change done.
 
 ## Architecture

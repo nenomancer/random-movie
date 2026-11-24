@@ -7,10 +7,16 @@
     $size: 2px,
     $blur: 1px,
     $radius: 12px,
-    $light:
-      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
-    $shadow:
-      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+    $light: color.adjust(
+        variables.$monitor-color,
+        $lightness: 40%,
+        $saturation: -20%
+      ),
+    $shadow: color.adjust(
+        variables.$monitor-color,
+        $lightness: -60%,
+        $saturation: 10%
+      )
   );
 }
 
@@ -20,10 +26,16 @@
     $radius: 0.5rem,
     $blur: 1px,
     $shadow-size: 1rem,
-    $light:
-      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
-    $shadow:
-      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+    $light: color.adjust(
+        variables.$monitor-color,
+        $lightness: 40%,
+        $saturation: -20%
+      ),
+    $shadow: color.adjust(
+        variables.$monitor-color,
+        $lightness: -60%,
+        $saturation: 10%
+      )
   );
 }
 
@@ -35,7 +47,8 @@
   $light: white,
   $shadow: black
 ) {
-  box-shadow: inset $size $size $blur $size rgba($light, $opacity),
+  box-shadow:
+    inset $size $size $blur $size rgba($light, $opacity),
     inset $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
 
   border-radius: $radius;
@@ -51,7 +64,8 @@
   $shadow: black
 ) {
   position: relative;
-  box-shadow: $size $size $blur $size rgba($light, $opacity),
+  box-shadow:
+    $size $size $blur $size rgba($light, $opacity),
     $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
   // box-shadow: inset 0 0 10px 10px black;
   border-radius: $radius;
@@ -67,7 +81,8 @@
 
 @mixin text-bevel($color: variables.$monitor-color) {
   color: transparent;
-  text-shadow: 0 0 0.5px $color,
+  text-shadow:
+    0 0 0.5px $color,
     0.5px 0.5px 0.5px color.adjust($color, $lightness: -40%),
     -0.5px -0.5px 0.5px color.adjust($color, $lightness: 30%);
 }
@@ -75,7 +90,9 @@
 @mixin text-inset($color: variables.$monitor-color) {
   color: transparent;
 
-  text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px red,
+  text-shadow:
+    0 0 0.5px $color,
+    0.5px 0.5px 0.5px red,
     -0.5px -0.5px 0.5px darken($color, 40);
 }
 
@@ -123,12 +140,15 @@
     desaturate(darken(variables.$monitor-color, 10%), 10%),
     desaturate(darken(variables.$monitor-color, 20%), 10%)
   );
-  box-shadow: -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
-    0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
+  box-shadow:
+    -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
+    0 0 0 0 rgba(0, 0, 0, 0.7),
+    inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
     inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
 
   &::after {
-    box-shadow: 0 0 5px 1px lighten(green, 10%),
+    box-shadow:
+      0 0 5px 1px lighten(green, 10%),
       inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
       inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
     background: linear-gradient(to bottom, green, lighten(green, 20%), green);
@@ -159,7 +179,8 @@
     margin-inline: auto;
     margin-top: 0.25rem;
     border-radius: 0.25rem;
-    box-shadow: inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+    box-shadow:
+      inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
       inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
   }
 }
@@ -176,7 +197,8 @@
   $height: 3px,
   $state: "both"
 ) {
-  box-shadow: inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
+  box-shadow:
+    inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
     inset 1px 1px 1px 1px color.adjust($background, $lightness: 20%),
     0 $height 1px 0 color.adjust($background, $lightness: -30%);
 
@@ -198,7 +220,8 @@
   border: none;
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
-  box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
     0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.7),
     inset -1px -1px 0.5px rgba(0, 0, 0, 0.4),
     inset 1px 1px 0.5px lighten(variables.$monitor-color, 5%);

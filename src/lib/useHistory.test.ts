@@ -46,7 +46,9 @@ describe("addHistoryLog", () => {
   it("saves the list to localStorage", () => {
     addHistoryLog(1, "Alien");
     addHistoryLog(2, "Brazil");
-    expect(JSON.parse(localStorage.getItem(LOCAL_SESSION_HISTORY_KEY)!)).toEqual([
+    expect(
+      JSON.parse(localStorage.getItem(LOCAL_SESSION_HISTORY_KEY)!),
+    ).toEqual([
       { id: 1, name: "Alien" },
       { id: 2, name: "Brazil" },
     ]);
@@ -55,7 +57,9 @@ describe("addHistoryLog", () => {
   it("saves the trimmed list, not the overflowing one", () => {
     for (let id = 1; id <= 7; id++) addHistoryLog(id, `Movie ${id}`);
     const saved = JSON.parse(localStorage.getItem(LOCAL_SESSION_HISTORY_KEY)!);
-    expect(saved.map((entry: { id: number }) => entry.id)).toEqual([2, 3, 4, 5, 6, 7]);
+    expect(saved.map((entry: { id: number }) => entry.id)).toEqual([
+      2, 3, 4, 5, 6, 7,
+    ]);
   });
 
   // Today a re-added movie keeps its old slot (only its name is refreshed), so

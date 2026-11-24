@@ -40,30 +40,30 @@
       </li>
       <li>
         The repo is a mess, but
-        <a href="https://github.com/nenomancer/random-movie" target="_blank"
-          >take a look</a
-        >
+        <a href="https://github.com/nenomancer/random-movie" target="_blank">
+          take a look
+        </a>
         if you want.
       </li>
     </ul>
 
     <p>
       This product uses the
-      <a href="https://developer.themoviedb.org/reference/" target="_blank"
-        >TMDB API</a
-      >
+      <a href="https://developer.themoviedb.org/reference/" target="_blank">
+        TMDB API
+      </a>
       but is not endorsed or certified by
-      <a href="https://www.themoviedb.org/" target="_blank"
-        >The Movie Database</a
-      >.
+      <a href="https://www.themoviedb.org/" target="_blank">
+        The Movie Database
+      </a>.
     </p>
     <h2>Contact</h2>
     <p>
       If you have any feedback or suggestions, reach out to me on my
       <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
-      <a href="https://www.instagram.com/loopmaster.n/" target="_blank"
-        >Instagram</a
-      >.
+      <a href="https://www.instagram.com/loopmaster.n/" target="_blank">
+        Instagram
+      </a>.
     </p>
   </section>
 {/if}

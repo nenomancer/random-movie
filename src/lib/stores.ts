@@ -1,7 +1,13 @@
 import { writable } from "svelte/store";
-import { DEFAULT_COUNTRY, DEFAULT_FILTER, DEFAULT_MOVIE, ERROR_MESSAGES, LOCAL_SESSION_HISTORY_KEY, TAB_NAME } from "../lib/constants";
+import {
+  DEFAULT_COUNTRY,
+  DEFAULT_FILTER,
+  DEFAULT_MOVIE,
+  ERROR_MESSAGES,
+  LOCAL_SESSION_HISTORY_KEY,
+  TAB_NAME,
+} from "../lib/constants";
 import type { Country, Filters, Movie, HistoryLog } from "../lib/types";
-
 
 export const currentMovie = writable<Movie>(DEFAULT_MOVIE);
 export const useFilters = writable<boolean>(false);
@@ -11,11 +17,10 @@ export const resetFiltersSignal = writable<boolean>(false);
 
 const storedHistory = localStorage.getItem(LOCAL_SESSION_HISTORY_KEY);
 export const currentHistory = writable<HistoryLog[]>(
-    storedHistory ? JSON.parse(storedHistory) : [],
+  storedHistory ? JSON.parse(storedHistory) : [],
 );
 
-
-export const openDropdown = writable<string | null>(null)
+export const openDropdown = writable<string | null>(null);
 export const activeTab = writable<string>(TAB_NAME.INFO);
 // What the error screen shows; set via showResultError()
 export const errorMessage = writable<string>(ERROR_MESSAGES.FAILED);

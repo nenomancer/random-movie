@@ -34,7 +34,8 @@ export default async (req) => {
   return new Response(upstream.body, {
     status: upstream.status,
     headers: {
-      "content-type": upstream.headers.get("content-type") ?? "application/json",
+      "content-type":
+        upstream.headers.get("content-type") ?? "application/json",
     },
   });
 };

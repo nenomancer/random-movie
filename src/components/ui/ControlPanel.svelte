@@ -137,14 +137,23 @@
       @include mixins.control-button($content: "Search", $state: "class");
     }
     &.about {
-      @include mixins.control-button-lightable($content: "About", $state: "class");
+      @include mixins.control-button-lightable(
+        $content: "About",
+        $state: "class"
+      );
     }
 
     &.set {
-      @include mixins.control-button-lightable($content: "Set", $state: "class");
+      @include mixins.control-button-lightable(
+        $content: "Set",
+        $state: "class"
+      );
     }
     &.use {
-      @include mixins.control-button-lightable($content: "Enable", $state: "checkbox");
+      @include mixins.control-button-lightable(
+        $content: "Enable",
+        $state: "checkbox"
+      );
     }
 
     &.reset {

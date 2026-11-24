@@ -1,3 +1,3 @@
 <div class="info-rows">
-    <slot />
+  <slot />
 </div>

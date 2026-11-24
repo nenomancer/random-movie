@@ -9,16 +9,20 @@
     <button
       class="tab"
       on:click={() => (isFlipped = false)}
-      data-selected={!isFlipped}>History</button
+      data-selected={!isFlipped}
     >
+      History
+    </button>
   </div>
   <div class="list">
     {#each $currentHistory as log}
       <button
         class="note"
         class:selected={$currentMovie.id == log.id}
-        on:click={() => getMovie(log.id)}>{log.name}</button
+        on:click={() => getMovie(log.id)}
       >
+        {log.name}
+      </button>
     {/each}
   </div>
 </div>

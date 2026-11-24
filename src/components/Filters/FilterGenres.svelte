@@ -80,10 +80,9 @@
           toggleDropdown();
         }
       }}
-      >{genreNames.length
-        ? genreNames.join(", ")
-        : DEFAULT_DROPDOWN_VALUE}</button
     >
+      {genreNames.length ? genreNames.join(", ") : DEFAULT_DROPDOWN_VALUE}
+    </button>
   </div>
   <div class="options" role="group" aria-label={fullName}>
     {#each options as option}

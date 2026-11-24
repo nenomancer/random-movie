@@ -60,7 +60,7 @@
   $: if (open && inputRef) inputRef.focus();
 
   $: filteredCountries = options.filter((option) =>
-    option.name.toLowerCase().includes(searchTerm.toLowerCase())
+    option.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   $: if ($resetFiltersSignal) selected = DEFAULT_COUNTRY;
@@ -75,8 +75,9 @@
         aria-expanded={open}
         aria-label={`${fullName}: ${selected ? selected.name : $currentFilters.country}`}
         on:click={() => toggleDropdown(false)}
-        >{selected ? selected.name : $currentFilters.country}</button
       >
+        {selected ? selected.name : $currentFilters.country}
+      </button>
     {/if}
     {#if open}
       <div class="input-container">
@@ -95,8 +96,10 @@
         <button
           class="button-close"
           aria-label={`Close ${fullName.toLowerCase()} list`}
-          on:click={() => toggleDropdown(false)}>X</button
+          on:click={() => toggleDropdown(false)}
         >
+          X
+        </button>
       </div>
     {/if}
   </div>

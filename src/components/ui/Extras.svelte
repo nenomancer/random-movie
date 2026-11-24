@@ -12,13 +12,13 @@
     $currentFilters?.yearFrom ?? YEAR_MIN,
     $currentFilters?.yearTo ?? YEAR_MAX,
     YEAR_MIN,
-    YEAR_MAX
+    YEAR_MAX,
   );
   $: ratingRange = rangePercent(
     $currentFilters?.ratingFrom ?? RATING_MIN,
     $currentFilters?.ratingTo ?? RATING_MAX,
     RATING_MIN,
-    RATING_MAX
+    RATING_MAX,
   );
 </script>
 

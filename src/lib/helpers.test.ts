@@ -135,7 +135,9 @@ describe("fetchJson", () => {
   it("throws on a non-2xx response", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
     );
 
     await expect(fetchJson(`${API.MOVIE}/0`)).rejects.toThrow("404");
@@ -144,7 +146,9 @@ describe("fetchJson", () => {
   it("exposes the HTTP status on the error", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
     );
 
     await expect(fetchJson(`${API.MOVIE}/0`)).rejects.toMatchObject({
@@ -154,7 +158,10 @@ describe("fetchJson", () => {
 
   it("does not parse the body of a failed response", async () => {
     const json = vi.fn();
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 500, json }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 500, json }),
+    );
 
     await expect(fetchJson(`${API.MOVIE}/1`)).rejects.toThrow();
     expect(json).not.toHaveBeenCalled();
@@ -520,7 +527,11 @@ describe("buildSearchQuery", () => {
   });
 
   it("keeps the other filters and replaces the country for this search", () => {
-    const filters = withFilters({ country: "US", genres: ["28"], ratingFrom: 7 });
+    const filters = withFilters({
+      country: "US",
+      genres: ["28"],
+      ratingFrom: 7,
+    });
     const query = buildSearchQuery(filters, { country: "FR" });
     expect(query).toContain("with_origin_country=FR");
     expect(query).not.toContain("US");
@@ -567,7 +578,10 @@ describe("rangePercent", () => {
   });
 
   it("handles a range that does not start at zero", () => {
-    expect(rangePercent(1950, 2000, 1900, 2000)).toEqual({ left: 50, right: 0 });
+    expect(rangePercent(1950, 2000, 1900, 2000)).toEqual({
+      left: 50,
+      right: 0,
+    });
   });
 
   it("does not divide by zero for an empty span", () => {
