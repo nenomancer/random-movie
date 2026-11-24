@@ -20,22 +20,8 @@
   let selected: Genre[] = [];
   let open: boolean = false;
 
-  let genreListElement: HTMLDivElement;
-
   // ADD BUTTONS FOR EACH GENRE, INSTEAD OF JUST ONE
   // BUTTON WITH A DYNAMIC LABEL
-
-  const checkSelectedGenres = () => {
-    const genres = genreListElement?.querySelectorAll(".option");
-    genres?.forEach((child) => {
-      const genre = child.getAttribute("data-id")!;
-      if ($currentFilters?.genres?.includes(genre)) {
-        child.classList.add("selected");
-      } else if (!$currentFilters?.genres?.includes(genre)) {
-        child.classList.remove("selected");
-      }
-    });
-  };
 
   const selectOption = (option: Genre) => {
     if (selected.includes(option)) {
@@ -49,12 +35,9 @@
     genreNames = selected.map((genre) => genre.name);
     onChange?.(genreIds);
     checkFilterEnable();
-    checkSelectedGenres();
   };
 
   const toggleDropdown = () => {
-    checkSelectedGenres();
-
     openDropdown.update((current) => {
       if (current === id) {
         open = false;
@@ -82,7 +65,7 @@
 
 <section data-open={open}>
   <div class="header">
-    <h3 class="title">{label}</h3>
+    <span class="title">{label}</span>
     <button
       class="value"
       on:click={() => toggleDropdown()}
@@ -96,15 +79,16 @@
         : DEFAULT_DROPDOWN_VALUE}</button
     >
   </div>
-  <div
-    class="options"
-    role="group"
-    aria-label={label}
-    bind:this={genreListElement}
-  >
+  <div class="options" role="group" aria-label={label}>
     {#each options as option}
       <Button
-        classes={["option", "no-border"]}
+        classes={[
+          "option",
+          "no-border",
+          ...($currentFilters?.genres?.includes(String(option.id))
+            ? ["selected"]
+            : []),
+        ]}
         ariaLabel={option.name}
         id={option.id}
         on:keydown={(event) => {

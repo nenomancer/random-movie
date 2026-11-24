@@ -2,7 +2,6 @@
     export let label: string;
     export let title: string;
     export let items: { id: number; name: string }[];
-    export const link: string = "";
     export let onClick: (id: number) => void;
     export let getDescription: (name: string) => string;
 </script>
@@ -12,7 +11,7 @@
     aria-label={`${label}s`}
     data-info={`This movies ${label.toLowerCase()}s`}
 >
-    <h2 class="title">{title}</h2>
+    <span class="title">{title}</span>
     <div class="content" tabindex="-1">
         {#if items}
             {#each items as item}
@@ -35,13 +34,8 @@
 <style lang="scss">
     @use '../../styles/mixins';
     @use '../../styles/variables';
-    section {
-        /* border: variables.$border-default; */
-        // font-size: 1.25rem;
-    }
     .title,
     .cell {
-        /* border: variables.$border-default; */
         padding-inline: 0.5rem;
         padding-block: 0.4rem;
         white-space: nowrap;
@@ -60,14 +54,11 @@
         &:not(:last-child) {
             border-bottom: none;
         }
-
-        /* grid-template-rows: var(--height-row); */
     }
 
     .content {
         display: flex;
-        overflow: hidden;
-        overflow-x: scroll;
+        overflow-x: auto;
         scrollbar-width: none;
     }
 

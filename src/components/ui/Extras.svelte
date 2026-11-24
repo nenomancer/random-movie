@@ -59,10 +59,10 @@
   </Monitor>
   <div class="extras-filters">
     <div class="screen">
-      <h4>{$currentFilters?.country}</h4>
+      <p>{$currentFilters?.country}</p>
       <div class="genres">
         <span>[</span>
-        <h4 class="genres-list">{$currentFilters?.genres}</h4>
+        <p class="genres-list">{$currentFilters?.genres}</p>
         <span>]</span>
       </div>
       <div class="year-bar">

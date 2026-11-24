@@ -72,7 +72,7 @@
 
 <section>
   <div class="header">
-    <h3 class="title">{label}</h3>
+    <span class="title">{label}</span>
     {#if !open}
       <button class="value" on:click={() => toggleDropdown(false)}
         >{selected ? selected.name : $currentFilters.country}</button

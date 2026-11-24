@@ -1,5 +1,5 @@
 
-import type { Country, Filters, Movie, Person } from "./types";
+import type { Country, Filters, Movie } from "./types";
 
 // Document's title
 export const DOCUMENT_TITLE = "Nenomancer's Random Movie Generator"
@@ -86,10 +86,6 @@ export const DEFAULT_FILTER: Filters = {
 
 export const DEFAULT_COUNTRY: Country = {
     code: "Any", name: DEFAULT_DROPDOWN_VALUE, native: "Any"
-}
-
-export const DEFAULT_PERSON: Person = {
-    name: '', id: 0, job: '',
 }
 
 // Messages for the error / empty-state screen. Written in normal case; the

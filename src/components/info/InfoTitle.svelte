@@ -24,11 +24,9 @@
   @use "../../styles/mixins";
   .title {
     display: flex;
-    overflow-x: scroll;
-
+    overflow-x: auto;
     justify-content: start;
     align-items: stretch;
-    display: flex;
     font-size: 2rem;
     font-weight: 400;
   }

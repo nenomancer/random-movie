@@ -3,7 +3,7 @@
 </script>
 
 <section class="plot" aria-label="Plot">
-    <h2 class="title">PLT</h2>
+    <span class="title">PLT</span>
     <p class="content">
         {$currentMovie.plot ? $currentMovie.plot : "[Plot data encrypted]"}
     </p>
@@ -21,14 +21,14 @@
     }
 
     .title {
-        border-bottom: none;
+        display: block;
         text-align: center;
         border-bottom: variables.$border-default;
     }
 
     .content {
         display: -webkit-box;
-        overflow-y: scroll;
+        overflow-y: auto;
         height: 8rem;
         padding: 0.25rem 0.5rem;
         flex: 1;

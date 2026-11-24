@@ -76,7 +76,7 @@
 <section>
   <!-- rating filter  -->
   <div class="header">
-    <h3 class="title">{label}</h3>
+    <span class="title">{label}</span>
 
     <div class="values">
       <input
