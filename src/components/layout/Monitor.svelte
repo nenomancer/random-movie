@@ -9,7 +9,6 @@
 <style lang="scss">
   @use "../../styles/variables.scss";
   @use "../../styles/_mixins.scss";
-  @import url("https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap");
   .monitor {
     @include mixins.monitor-edge();
     padding: 2rem;

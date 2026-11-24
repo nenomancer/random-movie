@@ -83,28 +83,15 @@
 {/if}
 {#if !isMain}
   <div class="image">About this website.</div>
-  <div class="screen-overlay"></div>
 {/if}
 
 <style lang="scss">
-  @use "../../styles/variables";
-
   .image {
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     height: 100%;
-    video {
-      width: 100%;
-      mix-blend-mode: screen;
-    }
-    .screen-overlay {
-      background-color: variables.$ui-color-foreground;
-      position: absolute;
-      inset: 0;
-      mix-blend-mode: multiply;
-    }
   }
 
   p {
