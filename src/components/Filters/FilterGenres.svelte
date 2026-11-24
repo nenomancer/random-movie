@@ -1,6 +1,7 @@
 <script lang="ts">
   import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
+  import { clickOutside } from "../../lib/actions";
   import type { Genre } from "../../lib/types";
   import {
     openDropdown,
@@ -9,10 +10,11 @@
   } from "../../lib/stores";
   import Button from "../ui/Button.svelte";
 
+  // Short on-screen label ("GNR") and the full name read out by screen readers
   export let label: string;
+  export let name: string = "";
   export let options: Genre[] = [];
   export let onChange: (option: string[]) => void;
-  export const closeDropdown = () => (open = false);
   export let id: string;
   let genreIds: string[] = [];
   let genreNames: string[] = [DEFAULT_DROPDOWN_VALUE];
@@ -49,25 +51,29 @@
       }
     });
   };
-  $: openDropdown.subscribe((activeId) => {
-    if (activeId !== id) {
-      open = false;
-    }
-  });
 
-  $: resetFiltersSignal.subscribe(() => {
-    if ($resetFiltersSignal == true) {
-      genreNames = [DEFAULT_DROPDOWN_VALUE];
-      selected = [];
-    }
-  });
+  const closeDropdown = () => {
+    if (open) toggleDropdown();
+  };
+
+  $: fullName = name || label;
+
+  // Opening another dropdown closes this one
+  $: if ($openDropdown !== id) open = false;
+
+  $: if ($resetFiltersSignal) {
+    genreNames = [DEFAULT_DROPDOWN_VALUE];
+    selected = [];
+  }
 </script>
 
-<section data-open={open}>
+<section data-open={open} use:clickOutside={closeDropdown}>
   <div class="header">
     <span class="title">{label}</span>
     <button
       class="value"
+      aria-expanded={open}
+      aria-label={`${fullName}: ${genreNames.length ? genreNames.join(", ") : DEFAULT_DROPDOWN_VALUE}`}
       on:click={() => toggleDropdown()}
       on:keydown={(event) => {
         if (event.key === "Escape") {
@@ -79,7 +85,7 @@
         : DEFAULT_DROPDOWN_VALUE}</button
     >
   </div>
-  <div class="options" role="group" aria-label={label}>
+  <div class="options" role="group" aria-label={fullName}>
     {#each options as option}
       <Button
         classes={[
@@ -90,6 +96,7 @@
             : []),
         ]}
         ariaLabel={option.name}
+        pressed={$currentFilters?.genres?.includes(String(option.id)) ?? false}
         id={option.id}
         on:keydown={(event) => {
           if (event.key === "Escape") {

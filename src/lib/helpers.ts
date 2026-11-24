@@ -73,7 +73,33 @@ export function resolveYearInput(raw: string, fallback: number, commit = false):
 }
 
 function clampYearValue(input: number) {
-    return Math.max(Math.min(input, FILTER_DEFAULTS.YEAR_MAX), FILTER_DEFAULTS.YEAR_MIN)
+    return clampToRange(input, FILTER_DEFAULTS.YEAR_MIN, FILTER_DEFAULTS.YEAR_MAX)
+}
+
+/**
+ * Clamps `value` into [min, max]. Anything that is not a finite number (NaN,
+ * or the null a cleared number input gives) becomes `fallback` instead.
+ */
+export function clampToRange(value: number, min: number, max: number, fallback = min) {
+    if (!Number.isFinite(value)) {
+        return fallback;
+    }
+    return Math.max(Math.min(value, max), min);
+}
+
+/**
+ * Where the highlighted part of a dual-handle slider sits, as percentages of
+ * the track measured from its left and right edges.
+ */
+export function rangePercent(from: number, to: number, min: number, max: number) {
+    const span = max - min;
+    if (span <= 0) {
+        return { left: 0, right: 0 };
+    }
+    return {
+        left: ((from - min) / span) * 100,
+        right: ((max - to) / span) * 100,
+    };
 }
 
 export function padNumber(number: number, size = 10) {

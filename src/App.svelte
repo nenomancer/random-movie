@@ -412,6 +412,7 @@
         <FilterCountries
           id="country"
           label={"CTR"}
+          name="Country"
           options={allCountries}
           onChange={(countryCode) =>
             currentFilters.update((filters) => ({
@@ -422,6 +423,7 @@
         <FilterGenres
           id="genre"
           label={"GNR"}
+          name="Genre"
           options={allGenres}
           onChange={(genreCodes) =>
             currentFilters.update((filters) => ({
@@ -429,9 +431,10 @@
               genres: genreCodes,
             }))}
         />
-        <FilterYears label={"YRS"} />
+        <FilterYears label={"YRS"} name="Release year" />
         <FilterRating
           label={"RTG"}
+          name="Rating"
           onChange={(fromValue, toValue) =>
             currentFilters.update((filters) => ({
               ...filters,

@@ -1,54 +1,25 @@
 <script lang="ts">
   import { FILTER_DEFAULTS } from "../../lib/constants";
-  import type { Filters } from "../../lib/types";
+  import { rangePercent } from "../../lib/helpers";
   import { currentFilters } from "../../lib/stores";
   import Monitor from "../layout/Monitor.svelte";
   import Screen from "../layout/Screen.svelte";
 
-  let yearBar: HTMLElement;
-  let ratingBar: HTMLElement;
+  const { YEAR_MIN, YEAR_MAX, RATING_MIN, RATING_MAX } = FILTER_DEFAULTS;
 
-  const minYear = FILTER_DEFAULTS.YEAR_MIN;
-  const maxYear = FILTER_DEFAULTS.YEAR_MAX;
-  const totalYearSpan = maxYear - minYear;
-
-  const minRating = FILTER_DEFAULTS.RATING_MIN;
-  const maxRating = FILTER_DEFAULTS.RATING_MAX;
-  const totalRatingSpan = maxRating - minRating;
-
-  function calculateRatingPercentage(filters: Filters) {
-    const minCalc = filters?.ratingFrom
-      ? filters.ratingFrom - minRating
-      : minRating;
-    const maxCalc = filters?.ratingTo ? filters.ratingTo : maxRating;
-    const fromPercent = (minCalc / totalRatingSpan) * 100;
-
-    const toPercent = ((maxRating - maxCalc) / totalRatingSpan) * 100;
-
-    if (ratingBar) {
-      ratingBar.style.left = fromPercent + "%";
-      ratingBar.style.right = toPercent + "%";
-    }
-  }
-
-  function calculateYearPercentage(filters: Filters) {
-    const minCalc = filters?.yearFrom ? filters.yearFrom - minYear : minYear;
-    const maxCalc = filters?.yearTo ? filters.yearTo : maxYear;
-    const fromPercent = (minCalc / totalYearSpan) * 100;
-
-    const toPercent = ((maxYear - maxCalc) / totalYearSpan) * 100;
-
-    if (yearBar) {
-      yearBar.style.left = fromPercent + "%";
-      yearBar.style.right = toPercent + "%";
-    }
-  }
-
-  $: {
-    const filters = $currentFilters; // auto-subscribe with $
-    calculateYearPercentage(filters);
-    calculateRatingPercentage(filters);
-  }
+  // Position of the highlighted part of each bar
+  $: yearRange = rangePercent(
+    $currentFilters?.yearFrom ?? YEAR_MIN,
+    $currentFilters?.yearTo ?? YEAR_MAX,
+    YEAR_MIN,
+    YEAR_MAX
+  );
+  $: ratingRange = rangePercent(
+    $currentFilters?.ratingFrom ?? RATING_MIN,
+    $currentFilters?.ratingTo ?? RATING_MAX,
+    RATING_MIN,
+    RATING_MAX
+  );
 </script>
 
 <section>
@@ -66,10 +37,18 @@
         <span>]</span>
       </div>
       <div class="year-bar">
-        <div class="year-range" bind:this={yearBar}></div>
+        <div
+          class="year-range"
+          style:left="{yearRange.left}%"
+          style:right="{yearRange.right}%"
+        ></div>
       </div>
       <div class="rating-bar">
-        <div class="rating-range" bind:this={ratingBar}></div>
+        <div
+          class="rating-range"
+          style:left="{ratingRange.left}%"
+          style:right="{ratingRange.right}%"
+        ></div>
       </div>
     </div>
     <div class="status-lights">STATUS LIGHTS</div>

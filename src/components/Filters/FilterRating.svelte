@@ -1,122 +1,105 @@
 <script lang="ts">
   import { FILTER_DEFAULTS } from "../../lib/constants";
-  import { checkFilterEnable } from "../../lib/helpers";
-  import { currentFilters, resetFiltersSignal } from "../../lib/stores";
+  import {
+    checkFilterEnable,
+    clampToRange,
+    rangePercent,
+  } from "../../lib/helpers";
+  import { resetFiltersSignal } from "../../lib/stores";
 
-  let ratingFrom: number = 0.0;
-  let ratingTo: number = 10.0;
-  let sliderTrack: HTMLElement;
-  let sliderBg: HTMLElement;
-  export let onChange: (from: number, to: number) => void;
+  const { RATING_MIN, RATING_MAX } = FILTER_DEFAULTS;
+
+  // Short on-screen label ("RTG") and the full name read out by screen readers
   export let label: string = "";
+  export let name: string = "";
+  export let onChange: (from: number, to: number) => void;
+  let ratingFrom: number = RATING_MIN;
+  let ratingTo: number = RATING_MAX;
 
-  function handleOnChange() {
-    ratingFrom = isNaN(ratingFrom)
-      ? FILTER_DEFAULTS.RATING_MIN
-      : Math.min(
-          Math.max(ratingFrom, FILTER_DEFAULTS.RATING_MIN),
-          FILTER_DEFAULTS.RATING_MAX,
-        );
+  $: fullName = name || label;
+  // Position of the highlighted part of the track
+  $: highlight = rangePercent(ratingFrom, ratingTo, RATING_MIN, RATING_MAX);
 
-    ratingTo = isNaN(ratingTo)
-      ? FILTER_DEFAULTS.RATING_MAX
-      : Math.min(
-          Math.max(ratingTo, FILTER_DEFAULTS.RATING_MIN),
-          FILTER_DEFAULTS.RATING_MAX,
-        );
+  function commit() {
+    ratingFrom = clampToRange(ratingFrom, RATING_MIN, RATING_MAX);
+    ratingTo = clampToRange(ratingTo, RATING_MIN, RATING_MAX, RATING_MAX);
 
     onChange(ratingFrom, ratingTo);
-    const percent1 = (ratingFrom / 10) * 100;
-    const percent2 = 100 - (ratingTo / 10) * 100;
-
-    // TODO: make sure colors use variables
-    sliderBg.style.left = `${percent1}%`;
-    sliderBg.style.right = `${percent2}%`;
     checkFilterEnable();
   }
 
-  const minGap = 0;
-
-  function slideOne(e: any) {
-    const value = parseFloat(e.target.value);
-    if (value > ratingTo - minGap) {
-      ratingFrom = ratingTo - minGap;
-    } else {
-      ratingFrom = value;
-    }
-
-    handleOnChange();
+  // The handles can touch but not cross
+  function setFrom(value: number) {
+    ratingFrom = Math.min(value, ratingTo);
+    commit();
   }
 
-  function slideTwo(e: any) {
-    const value = parseFloat(e.target.value);
-    if (value < ratingFrom + minGap) {
-      ratingTo = ratingFrom + minGap;
-    } else {
-      ratingTo = value;
-    }
-    handleOnChange();
+  function setTo(value: number) {
+    ratingTo = Math.max(value, ratingFrom);
+    commit();
   }
 
-  $: resetFiltersSignal.subscribe(() => {
-    if (
-      ratingFrom == FILTER_DEFAULTS.RATING_MIN &&
-      ratingTo == FILTER_DEFAULTS.RATING_MAX
-    ) {
-      return;
-    }
-    if ($resetFiltersSignal == true) {
-      ratingFrom = FILTER_DEFAULTS.RATING_MIN;
-      ratingTo = FILTER_DEFAULTS.RATING_MAX;
-      handleOnChange();
-    }
-  });
+  function reset() {
+    if (ratingFrom === RATING_MIN && ratingTo === RATING_MAX) return;
+    ratingFrom = RATING_MIN;
+    ratingTo = RATING_MAX;
+    commit();
+  }
+
+  $: if ($resetFiltersSignal) reset();
 </script>
 
 <section>
-  <!-- rating filter  -->
   <div class="header">
     <span class="title">{label}</span>
 
     <div class="values">
       <input
         type="number"
-        min={0}
-        max={10.0}
-        bind:value={ratingFrom}
-        on:input={slideOne}
+        aria-label={`${fullName} from`}
+        min={RATING_MIN}
+        max={RATING_MAX}
         step="0.1"
+        bind:value={ratingFrom}
+        on:input={() => setFrom(ratingFrom)}
       />
       <input
         type="number"
-        min={0}
-        max={10.0}
-        bind:value={ratingTo}
-        on:input={slideTwo}
+        aria-label={`${fullName} to`}
+        min={RATING_MIN}
+        max={RATING_MAX}
         step="0.1"
+        bind:value={ratingTo}
+        on:input={() => setTo(ratingTo)}
       />
     </div>
   </div>
   <div class="ranges">
-    <div class="range-track-bg" bind:this={sliderTrack}></div>
-    <div class="range-track" bind:this={sliderBg}></div>
+    <div class="range-track-bg"></div>
+    <div
+      class="range-track"
+      style:left="{highlight.left}%"
+      style:right="{highlight.right}%"
+    ></div>
     <input
       id="ratingFrom"
       type="range"
-      min="0"
-      max="10"
+      aria-label={`${fullName} from`}
+      min={RATING_MIN}
+      max={RATING_MAX}
       step="0.1"
       bind:value={ratingFrom}
-      on:input={slideOne}
+      on:input={() => setFrom(ratingFrom)}
     />
     <input
       id="ratingTo"
       type="range"
-      min="0"
-      max="10"
+      aria-label={`${fullName} to`}
+      min={RATING_MIN}
+      max={RATING_MAX}
       step="0.1"
       bind:value={ratingTo}
-      on:input={slideTwo}
+      on:input={() => setTo(ratingTo)}
     />
   </div>
 </section>

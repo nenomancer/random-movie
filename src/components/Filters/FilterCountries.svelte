@@ -1,6 +1,7 @@
 <script lang="ts">
   import { DEFAULT_COUNTRY } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
+  import { clickOutside } from "../../lib/actions";
   import type { Country } from "../../lib/types";
   import {
     openDropdown,
@@ -10,17 +11,17 @@
 
   export let id: string;
 
+  // Short on-screen label ("CTR") and the full name read out by screen readers
   export let label: string;
+  export let name: string = "";
   export let options: Country[];
   export let onChange: (option: Country) => void;
-  export const closeDropdown = () => (open = false);
 
   let selected: Country;
   let open: boolean = false;
   let searchTerm: string = "";
   let inputRef: HTMLInputElement;
 
-  // TO-DO: CLOSE DROPDOWN ON CLICK ANYWHERE ELSE
   const toggleDropdown = (close: boolean = false) => {
     openDropdown.update((current) => {
       if (close) {
@@ -50,31 +51,30 @@
     checkFilterEnable();
   };
 
-  $: openDropdown.subscribe((activeId) => {
-    if (activeId !== id) {
-      open = false;
-    }
-    if (open) {
-      inputRef?.focus();
-    }
-  });
+  $: fullName = name || label;
+
+  // Opening another dropdown closes this one
+  $: if ($openDropdown !== id) open = false;
+
+  // The input only exists once the dropdown has rendered open
+  $: if (open && inputRef) inputRef.focus();
 
   $: filteredCountries = options.filter((option) =>
     option.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  $: resetFiltersSignal.subscribe(() => {
-    if ($resetFiltersSignal == true) {
-      selected = DEFAULT_COUNTRY;
-    }
-  });
+  $: if ($resetFiltersSignal) selected = DEFAULT_COUNTRY;
 </script>
 
-<section>
+<section use:clickOutside={() => open && toggleDropdown(true)}>
   <div class="header">
     <span class="title">{label}</span>
     {#if !open}
-      <button class="value" on:click={() => toggleDropdown(false)}
+      <button
+        class="value"
+        aria-expanded={open}
+        aria-label={`${fullName}: ${selected ? selected.name : $currentFilters.country}`}
+        on:click={() => toggleDropdown(false)}
         >{selected ? selected.name : $currentFilters.country}</button
       >
     {/if}
@@ -82,6 +82,7 @@
       <div class="input-container">
         <input
           type="text"
+          aria-label={`Search ${fullName.toLowerCase()}`}
           bind:value={searchTerm}
           placeholder={selected ? selected.name : DEFAULT_COUNTRY.name}
           bind:this={inputRef}
@@ -91,18 +92,20 @@
             }
           }}
         />
-        <button on:click={() => toggleDropdown(false)} class="button-close"
-          >X</button
+        <button
+          class="button-close"
+          aria-label={`Close ${fullName.toLowerCase()} list`}
+          on:click={() => toggleDropdown(false)}>X</button
         >
       </div>
     {/if}
   </div>
   {#if open}
-    <div class="options" role="group" aria-label={label}>
+    <div class="options" role="group" aria-label={fullName}>
       {#each filteredCountries as option}
         <button
           class="option"
-          aria-label={`Filter ${label.toLowerCase()}: ${option.name}`}
+          aria-label={`Filter ${fullName.toLowerCase()}: ${option.name}`}
           data-info={`Pick to find movies from  ${option.name}`}
           on:click={() => selectOption(option)}
           on:keydown={(event) => {

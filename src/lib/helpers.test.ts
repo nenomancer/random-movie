@@ -11,6 +11,8 @@ import {
   buildActiveFilterQuery,
   buildFilterQuery,
   buildSearchQuery,
+  clampToRange,
+  rangePercent,
   checkFilterEnable,
   fetchJson,
   formatRuntime,
@@ -532,5 +534,43 @@ describe("buildSearchQuery", () => {
     expect(query).toBe(
       "&primary_release_date.gte=1995-01-01&primary_release_date.lte=1995-12-31",
     );
+  });
+});
+
+describe("clampToRange", () => {
+  it("leaves a value inside the range alone", () => {
+    expect(clampToRange(5, 0, 10)).toBe(5);
+  });
+
+  it("clamps to the nearest bound", () => {
+    expect(clampToRange(-3, 0, 10)).toBe(0);
+    expect(clampToRange(42, 0, 10)).toBe(10);
+  });
+
+  it("uses the fallback for NaN and for a cleared input (null)", () => {
+    expect(clampToRange(NaN, 0, 10, 10)).toBe(10);
+    expect(clampToRange(null as unknown as number, 0, 10, 10)).toBe(10);
+  });
+
+  it("falls back to min when no fallback is given", () => {
+    expect(clampToRange(NaN, 2, 10)).toBe(2);
+  });
+});
+
+describe("rangePercent", () => {
+  it("covers the whole track for the full range", () => {
+    expect(rangePercent(0, 10, 0, 10)).toEqual({ left: 0, right: 0 });
+  });
+
+  it("measures each edge from its own side", () => {
+    expect(rangePercent(2.5, 7.5, 0, 10)).toEqual({ left: 25, right: 25 });
+  });
+
+  it("handles a range that does not start at zero", () => {
+    expect(rangePercent(1950, 2000, 1900, 2000)).toEqual({ left: 50, right: 0 });
+  });
+
+  it("does not divide by zero for an empty span", () => {
+    expect(rangePercent(5, 5, 5, 5)).toEqual({ left: 0, right: 0 });
   });
 });
