@@ -28,6 +28,11 @@
     mapCountries,
     mapCredits,
     mapMovieDetails,
+    overridesForCountry,
+    overridesForGenre,
+    overridesForRating,
+    overridesForRuntime,
+    overridesForYear,
     parseMoviePath,
     pickRandom,
     showResultError,
@@ -239,8 +244,10 @@
       });
   }
 
+  // Actor and director clicks pick from that person's whole filmography
+  // (/person/:id) on purpose: the active filters do not apply to them, unlike
+  // the year, country, rating, runtime and genre clicks (see fetchMovies).
   function getMoviesByActor(actorId: number) {
-    // resetFilter();
     fetchJson(`${API.PERSON}/${actorId}?append_to_response=movie_credits`)
       .then((response) => {
         const temp = response.movie_credits.cast;
@@ -262,25 +269,23 @@
   }
 
   export function getMoviesByReleaseDate(year: number) {
-    fetchMovies({ yearFrom: year, yearTo: year });
+    fetchMovies(overridesForYear(year));
   }
 
   export function getMoviesByRuntime(runtime: number) {
-    fetchMovies({ runtimeFrom: runtime, runtimeTo: runtime });
+    fetchMovies(overridesForRuntime(runtime));
   }
 
-  // Fuzzy search, votes are not too reliable and the API allows only averages
   export function getMoviesByRating(rating: number) {
-    const range = 0.25;
-    fetchMovies({ ratingFrom: rating - range, ratingTo: rating + range });
+    fetchMovies(overridesForRating(rating));
   }
 
   export function getMoviesByCountry(countryCode: string) {
-    fetchMovies({ country: countryCode });
+    fetchMovies(overridesForCountry(countryCode));
   }
 
   function getMoviesByGenre(genreId: number) {
-    fetchMovies({ genres: [String(genreId)] });
+    fetchMovies(overridesForGenre(genreId));
   }
 
   function initApp() {

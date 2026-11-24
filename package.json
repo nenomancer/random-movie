@@ -17,7 +17,9 @@
   "devDependencies": {
     "@sveltejs/adapter-netlify": "^5.2.4",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.4",
+    "jsdom": "^31.0.1",
     "prettier": "^3.10.1",
     "prettier-plugin-svelte": "^4.2.0",
     "sass": "^1.90.0",

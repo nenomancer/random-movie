@@ -19,6 +19,11 @@ import {
   mapCountries,
   mapCredits,
   mapMovieDetails,
+  overridesForCountry,
+  overridesForGenre,
+  overridesForRating,
+  overridesForRuntime,
+  overridesForYear,
   parseMoviePath,
   pickRandom,
   rangePercent,
@@ -773,5 +778,137 @@ describe("loadErrorMessage", () => {
     expect(loadErrorMessage({ status: 500 })).toBe(ERROR_MESSAGES.FAILED);
     expect(loadErrorMessage(new Error("network"))).toBe(ERROR_MESSAGES.FAILED);
     expect(loadErrorMessage(null)).toBe(ERROR_MESSAGES.FAILED);
+  });
+});
+
+// Every filter set in the Filters tab, combined with every info-tab click.
+// Expected values are spelled out here rather than computed with the code under
+// test: a tab's value must replace the matching filter, every other filter must
+// survive, and no parameter may be sent twice.
+describe("filters combined with an info-tab click", () => {
+  type Params = Record<string, string>;
+
+  // Query parameters each active filter produces
+  const filterCases: Record<string, { filters: object; params: Params }> = {
+    country: {
+      filters: { country: "US" },
+      params: { with_origin_country: "US" },
+    },
+    genres: {
+      filters: { genres: ["28", "12"] },
+      params: { with_genres: "28,12" },
+    },
+    years: {
+      filters: { yearFrom: 1990, yearTo: 1999 },
+      params: {
+        "primary_release_date.gte": "1990-01-01",
+        "primary_release_date.lte": "1999-12-31",
+      },
+    },
+    rating: {
+      filters: { ratingFrom: 6, ratingTo: 8 },
+      params: { "vote_average.gte": "6", "vote_average.lte": "8" },
+    },
+    "all filters": {
+      filters: {
+        country: "US",
+        genres: ["28", "12"],
+        yearFrom: 1990,
+        yearTo: 1999,
+        ratingFrom: 6,
+        ratingTo: 8,
+      },
+      params: {
+        with_origin_country: "US",
+        with_genres: "28,12",
+        "primary_release_date.gte": "1990-01-01",
+        "primary_release_date.lte": "1999-12-31",
+        "vote_average.gte": "6",
+        "vote_average.lte": "8",
+      },
+    },
+    "no filters": { filters: {}, params: {} },
+  };
+
+  // What each tab click searches for, and the parameters it should send
+  const tabCases: Record<string, { overrides: object; params: Params }> = {
+    country: {
+      overrides: overridesForCountry("FR"),
+      params: { with_origin_country: "FR" },
+    },
+    year: {
+      overrides: overridesForYear(2005),
+      params: {
+        "primary_release_date.gte": "2005-01-01",
+        "primary_release_date.lte": "2005-12-31",
+      },
+    },
+    rating: {
+      overrides: overridesForRating(7.5),
+      params: { "vote_average.gte": "7.25", "vote_average.lte": "7.75" },
+    },
+    runtime: {
+      overrides: overridesForRuntime(120),
+      params: { "with_runtime.gte": "120", "with_runtime.lte": "120" },
+    },
+    genre: {
+      overrides: overridesForGenre(18),
+      params: { with_genres: "18" },
+    },
+  };
+
+  const parse = (query: string) => [...new URLSearchParams(query)];
+
+  for (const [filterName, filterCase] of Object.entries(filterCases)) {
+    describe(`with ${filterName} set`, () => {
+      for (const [tabName, tabCase] of Object.entries(tabCases)) {
+        it(`${tabName} tab click replaces its own filter and keeps the rest`, () => {
+          const query = buildSearchQuery(
+            { ...DEFAULT_FILTER, ...filterCase.filters },
+            tabCase.overrides,
+          );
+          const pairs = parse(query);
+
+          // No parameter appears twice
+          const keys = pairs.map(([key]) => key);
+          expect(new Set(keys).size).toBe(keys.length);
+
+          expect(Object.fromEntries(pairs)).toEqual({
+            ...filterCase.params,
+            ...tabCase.params,
+          });
+        });
+      }
+    });
+  }
+
+  it("ignores the filters when they are not in use", () => {
+    for (const [tabName, tabCase] of Object.entries(tabCases)) {
+      expect(
+        Object.fromEntries(
+          parse(buildSearchQuery(undefined, tabCase.overrides)),
+        ),
+        tabName,
+      ).toEqual(tabCase.params);
+    }
+  });
+});
+
+describe("tab override helpers", () => {
+  it("search the exact year or runtime", () => {
+    expect(overridesForYear(1999)).toEqual({ yearFrom: 1999, yearTo: 1999 });
+    expect(overridesForRuntime(90)).toEqual({
+      runtimeFrom: 90,
+      runtimeTo: 90,
+    });
+  });
+
+  it("search a small range around a rating", () => {
+    expect(overridesForRating(8)).toEqual({ ratingFrom: 7.75, ratingTo: 8.25 });
+  });
+
+  it("search one country or one genre", () => {
+    expect(overridesForCountry("MK")).toEqual({ country: "MK" });
+    expect(overridesForGenre(28)).toEqual({ genres: ["28"] });
   });
 });

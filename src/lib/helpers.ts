@@ -250,6 +250,35 @@ export async function fetchJson<T = any>(url: string): Promise<T> {
   return response.json();
 }
 
+// --- What each info-tab click searches for ---
+// Passed to buildSearchQuery as overrides: each replaces the matching filter
+// for that one search.
+
+export const overridesForYear = (year: number): Filters => ({
+  yearFrom: year,
+  yearTo: year,
+});
+
+export const overridesForRuntime = (runtime: number): Filters => ({
+  runtimeFrom: runtime,
+  runtimeTo: runtime,
+});
+
+// Fuzzy search, votes are not too reliable and the API allows only averages
+export const RATING_SEARCH_RANGE = 0.25;
+export const overridesForRating = (rating: number): Filters => ({
+  ratingFrom: rating - RATING_SEARCH_RANGE,
+  ratingTo: rating + RATING_SEARCH_RANGE,
+});
+
+export const overridesForCountry = (countryCode: string): Filters => ({
+  country: countryCode,
+});
+
+export const overridesForGenre = (genreId: number): Filters => ({
+  genres: [String(genreId)],
+});
+
 // --- Turning TMDB responses into our own types ---
 
 /** "Original (English)" for foreign-language films, else just the original. */
