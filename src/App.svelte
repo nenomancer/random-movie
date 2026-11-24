@@ -42,6 +42,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import AboutContent from "./components/info/AboutContent.svelte";
+  import TypedMessage from "./components/ui/TypedMessage.svelte";
   import FilterContent from "./components/Filters/FilterContent.svelte";
 
   let allCountries: Country[] = [];
@@ -462,9 +463,12 @@
       <TabContent name={TAB_NAME.LOADING}
         ><p class="sys-msg" role="status">Accessing archive...</p></TabContent
       >
-      <TabContent name={TAB_NAME.ERROR}
-        ><p class="sys-msg" role="alert">{$errorMessage}</p></TabContent
-      >
+      <TabContent name={TAB_NAME.ERROR}>
+        <!-- Only mounted while visible, so it types out afresh on every error -->
+        {#if $activeTab === TAB_NAME.ERROR}
+          <TypedMessage text={$errorMessage} />
+        {/if}
+      </TabContent>
       <TabContent name={TAB_NAME.ABOUT}>
         <AboutContent />
       </TabContent>
@@ -479,9 +483,11 @@
       <TabContent name={TAB_NAME.LOADING}
         ><p class="sys-msg" aria-hidden="true">Receiving signal...</p></TabContent
       >
-      <TabContent name={TAB_NAME.ERROR}
-        ><p class="sys-msg" aria-hidden="true">Signal lost</p></TabContent
-      >
+      <TabContent name={TAB_NAME.ERROR}>
+        {#if $activeTab === TAB_NAME.ERROR}
+          <TypedMessage text="Signal lost" announce={false} />
+        {/if}
+      </TabContent>
 
       <TabContent name={TAB_NAME.ABOUT}>
         <AboutContent isMain={false} />

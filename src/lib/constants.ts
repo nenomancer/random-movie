@@ -104,3 +104,6 @@ export const ERROR_MESSAGES = {
     // Direct link to a movie id that doesn't exist (HTTP 404)
     NOT_FOUND: "File not in archive. It may have been corrupted or never existed.",
 }
+
+// Typewriter effect for the error screen: milliseconds per character
+export const TYPING_MS_PER_CHAR = 25;
