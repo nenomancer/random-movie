@@ -17,7 +17,7 @@ export function addHistoryLog(movieId: number, movieTitle: string) {
         if (uniqueHistory.length > maxHistory) {
             uniqueHistory.shift();
         }
-        window.localStorage.setItem(
+        localStorage.setItem(
             LOCAL_SESSION_HISTORY_KEY,
             JSON.stringify(uniqueHistory),
         );

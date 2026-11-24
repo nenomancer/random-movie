@@ -81,3 +81,29 @@ main {
 .custom-border {
   border: variables.$border-default;
 }
+
+// Terminal-style system messages (loading, errors, empty states):
+// uppercase with a ">" prompt in front. The prompt is decorative; the "/ ''"
+// alt text keeps screen readers from reading it out where supported.
+.sys-msg {
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  &::before {
+    content: "> ";
+    content: unquote('"> " / ""');
+  }
+}
+
+// Visually hidden but still read by screen readers
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

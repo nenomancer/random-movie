@@ -1,15 +1,20 @@
 <script lang="ts">
-  import { currentMovie } from "../../lib/stores.ts";
+  import { activeTab, currentMovie } from "../../lib/stores";
+  import { TAB_NAME } from "../../lib/constants";
+  import TypedMessage from "../ui/TypedMessage.svelte";
 </script>
 
 {#if $currentMovie.poster}
   <img
     src={$currentMovie.poster}
-    alt={`Poster for the movie ${$currentMovie.title}`}
+    alt={`Poster for the movie ${$currentMovie.title.name}`}
   />
 {/if}
-{#if !$currentMovie.poster}
-  <p class="error">Image data corrupted.</p>
+{#if !$currentMovie.poster && $activeTab === TAB_NAME.INFO}
+  <!-- Only mounted while visible, so it types out each time it appears -->
+  <div class="error">
+    <TypedMessage text="No image data on file" mode="plain" />
+  </div>
 {/if}
 
 <style>

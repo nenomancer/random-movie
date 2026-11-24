@@ -19,13 +19,19 @@
 
   import { addHistoryLog } from "./lib/useHistory";
 
-  import { buildFilterQuery, showResultError } from "./lib/helpers";
+  import {
+    buildActiveFilterQuery,
+    buildFilterQuery,
+    fetchJson,
+    showResultError,
+  } from "./lib/helpers";
   import type { Country, Genre, Movie, Person } from "./lib/types";
   import {
     API,
     DEFAULT_FILTER,
     DEFAULT_MOVIE,
     DOCUMENT_TITLE,
+    ERROR_MESSAGES,
     LOCAL_SESSION_HISTORY_KEY,
     TAB_NAME,
   } from "./lib/constants";
@@ -36,16 +42,21 @@
     currentMovie,
     useFilters,
     activeTab,
+    errorMessage,
   } from "./lib/stores";
 
   import { onDestroy, onMount } from "svelte";
   import AboutContent from "./components/info/AboutContent.svelte";
+  import TypedMessage from "./components/ui/TypedMessage.svelte";
   import FilterContent from "./components/Filters/FilterContent.svelte";
 
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
 
   let mainRef: HTMLElement;
+  // Id of the movie the user most recently asked for. Responses for any other
+  // id are stale (user clicked again before they arrived) and must be ignored.
+  let latestMovieId: number | null = null;
 
   function handleGlobalKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter" && document.activeElement === document.body) {
@@ -74,38 +85,30 @@
     window.removeEventListener("popstate", handlePopState);
   });
 
+  // Shared failure path for anything that loads a movie: log, show the error
+  // tab and stop the loading animation.
+  function handleLoadError(err: unknown) {
+    console.error(err);
+    const status = (err as { status?: number } | null)?.status;
+    showResultError(
+      status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED
+    );
+    mainRef?.classList.remove("loading-anim");
+  }
+
   function fetchMovies(uiQueries = "", totalPages = 500) {
     activeTab.set(TAB_NAME.LOADING);
     mainRef?.classList.add("loading-anim");
 
-    let filterQueries = "";
-
-    if ($useFilters) {
-      filterQueries = buildFilterQuery({
-        country: `${$currentFilters.country ? $currentFilters.country : ""}`,
-        genres: $currentFilters.genres?.length
-          ? [$currentFilters.genres.join(",")]
-          : undefined,
-        yearFrom: $currentFilters.yearFrom
-          ? $currentFilters.yearFrom
-          : undefined,
-        yearTo: $currentFilters.yearTo ? $currentFilters.yearTo : undefined,
-        ratingFrom:
-          $currentFilters.ratingFrom! > 0
-            ? $currentFilters.ratingFrom
-            : undefined,
-        ratingTo:
-          $currentFilters.ratingTo! < 10 ? $currentFilters.ratingTo : undefined,
-      });
-    }
+    const filterQueries = $useFilters
+      ? buildActiveFilterQuery($currentFilters)
+      : "";
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
-    fetch(
-      `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`,
-      API.OPTIONS
+    fetchJson(
+      `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`
     )
-      .then((response) => response.json())
       .then((response) => {
         const hasResults = response.results?.length > 0;
         const hasPages = response.total_pages > 0;
@@ -122,17 +125,18 @@
         }
 
         return showResultError();
-      });
+      })
+      .catch(handleLoadError);
   }
 
   function getRandomMovie(data: Array<Movie>) {
-    console.log("ALL LOADING ANIMATINOS HERE");
     mainRef?.classList?.add("loading-anim");
     activeTab.set(TAB_NAME.LOADING);
 
+    if (!data?.length) return showResultError(ERROR_MESSAGES.NO_RELATED);
+
     const randomIndex = Math.floor(Math.random() * data.length);
 
-    if (!data) return;
     for (const [index, movie] of data.entries()) {
       if (index === randomIndex) {
         getMovie(movie.id);
@@ -142,10 +146,13 @@
   }
 
   async function getMovie(movieId: number) {
+    latestMovieId = movieId;
+    let failed = false;
     currentMovie.set(DEFAULT_MOVIE);
-    await fetch(`${API.MOVIE}/${movieId}`, API.OPTIONS)
-      .then((response) => response.json())
+    await fetchJson(`${API.MOVIE}/${movieId}`)
       .then((data) => {
+        if (movieId !== latestMovieId) return;
+
         if (data.backdrop_path) {
           currentMovie.update((movie) => ({
             ...movie,
@@ -208,25 +215,33 @@
         // setTimeout(() =>, 1500);
       })
       .catch((err) => {
-        showResultError();
+        if (movieId !== latestMovieId) return; // superseded, not our error
+        failed = true;
+        handleLoadError(err);
       })
       .finally(() => {
+        // A newer request owns the screen now, don't touch it.
+        if (movieId !== latestMovieId) return;
+
         // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
 
         setTimeout(() => {
           mainRef?.classList?.remove("loading-anim");
         }, 500);
         setTimeout(() => {
-          console.log("Delayed action");
-          activeTab.set(TAB_NAME.INFO);
+          // Never replace the error screen, or a newer movie's loading screen
+          if (!failed && movieId === latestMovieId) {
+            activeTab.set(TAB_NAME.INFO);
+          }
         }, 1000);
       });
   }
 
   function getMovieCredits(movieId: number) {
-    fetch(`${API.MOVIE}/${movieId}/credits`, API.OPTIONS)
-      .then((response) => response.json())
+    fetchJson(`${API.MOVIE}/${movieId}/credits`)
       .then((data) => {
+        if (movieId !== latestMovieId) return;
+
         const directors = data.crew.filter(
           (person: Person) => person.job == "Director"
         );
@@ -242,13 +257,16 @@
             name: actor.name,
           })),
         }));
-      });
+      })
+      // Credits are optional extras; log but keep showing the movie
+      .catch((err) => console.error(err));
   }
 
   function getImdbUrl(movieId: number) {
-    fetch(`${API.MOVIE}/${movieId}/external_ids`, API.OPTIONS)
-      .then((response) => response.json())
+    fetchJson(`${API.MOVIE}/${movieId}/external_ids`)
       .then((data) => {
+        if (movieId !== latestMovieId) return;
+
         currentMovie.update((movie) => ({
           ...movie,
           title: {
@@ -261,8 +279,7 @@
   }
 
   async function generateGenres() {
-    return fetch(API.GENRES, API.OPTIONS)
-      .then((response) => response.json())
+    return fetchJson(API.GENRES)
       .then((response) => {
         allGenres = response.genres;
         return;
@@ -273,8 +290,7 @@
   }
 
   async function generateCountries() {
-    return fetch(API.COUNTRIES, API.OPTIONS)
-      .then((response) => response.json())
+    return fetchJson(API.COUNTRIES)
       .then((response) => {
         allCountries = response.map((country: any) => ({
           code: country.iso_3166_1,
@@ -289,35 +305,23 @@
 
   function getMoviesByActor(actorId: number) {
     // resetFilter();
-    fetch(
-      `${API.PERSON}/${actorId}?append_to_response=movie_credits`,
-      API.OPTIONS
-    )
-      .then((response) => response.json())
+    fetchJson(`${API.PERSON}/${actorId}?append_to_response=movie_credits`)
       .then((response) => {
         const temp = response.movie_credits.cast;
         return getRandomMovie(temp);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(handleLoadError);
   }
 
   function getMoviesByDirector(directorId: number) {
-    fetch(
-      `${API.PERSON}/${directorId}?append_to_response=movie_credits`,
-      API.OPTIONS
-    )
-      .then((response) => response.json())
+    fetchJson(`${API.PERSON}/${directorId}?append_to_response=movie_credits`)
       .then((response) => {
         const temp = response.movie_credits.crew.filter(
           (credit: any) => credit.job === "Director"
         );
         return getRandomMovie(temp);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(handleLoadError);
   }
 
   export function getMoviesByReleaseDate(year: number) {
@@ -340,14 +344,11 @@
   }
 
   export function getMoviesByCountry(countryCode: string) {
-    fetch(
-      `${API.DISCOVER_MOVIE}?with_origin_country=${countryCode}`,
-      API.OPTIONS
-    )
-      .then((response) => response.json())
+    fetchJson(`${API.DISCOVER_MOVIE}?with_origin_country=${countryCode}`)
       .then((response) => {
         getRandomMovie(response.results);
-      });
+      })
+      .catch(handleLoadError);
   }
 
   function getMoviesByGenre(genreId: number) {
@@ -446,8 +447,17 @@
             }))}
         />
       </TabContent>
-      <TabContent name={TAB_NAME.LOADING}>Loading....</TabContent>
-      <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
+      <TabContent name={TAB_NAME.LOADING}>
+        {#if $activeTab === TAB_NAME.LOADING}
+          <TypedMessage text="Accessing archive..." mode="status" />
+        {/if}
+      </TabContent>
+      <TabContent name={TAB_NAME.ERROR}>
+        <!-- Only mounted while visible, so it types out afresh on every error -->
+        {#if $activeTab === TAB_NAME.ERROR}
+          <TypedMessage text={$errorMessage} />
+        {/if}
+      </TabContent>
       <TabContent name={TAB_NAME.ABOUT}>
         <AboutContent />
       </TabContent>
@@ -458,8 +468,17 @@
       <TabContent name={TAB_NAME.INFO}>
         <InfoPoster />
       </TabContent>
-      <TabContent name={TAB_NAME.LOADING}>Loading...</TabContent>
-      <TabContent name={TAB_NAME.ERROR}>Error!!!</TabContent>
+      <!-- Decorative: the info monitor already announces loading / errors -->
+      <TabContent name={TAB_NAME.LOADING}>
+        {#if $activeTab === TAB_NAME.LOADING}
+          <TypedMessage text="Receiving signal..." mode="decorative" />
+        {/if}
+      </TabContent>
+      <TabContent name={TAB_NAME.ERROR}>
+        {#if $activeTab === TAB_NAME.ERROR}
+          <TypedMessage text="Signal lost" mode="decorative" />
+        {/if}
+      </TabContent>
 
       <TabContent name={TAB_NAME.ABOUT}>
         <AboutContent isMain={false} />

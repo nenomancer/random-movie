@@ -91,3 +91,19 @@ export const DEFAULT_COUNTRY: Country = {
 export const DEFAULT_PERSON: Person = {
     name: '', id: 0, job: '',
 }
+
+// Messages for the error / empty-state screen. Written in normal case; the
+// .sys-msg class (app.scss) uppercases them and adds the terminal prompt.
+export const ERROR_MESSAGES = {
+    // The search worked but nothing matched the chosen filters
+    NO_MATCH: "Archive scan complete: no matches; recalibrate filters and scan again",
+    // A lookup (cast, director, country) came back with nothing to pick from
+    NO_RELATED: "No cross-references in archive; try a different signal",
+    // Network error, TMDB down, rate limit...
+    FAILED: "Uplink failure: archive unreachable; retry transmission",
+    // Direct link to a movie id that doesn't exist (HTTP 404)
+    NOT_FOUND: "File not in archive; it may have been corrupted or never existed",
+}
+
+// Typewriter effect for the error screen: milliseconds per character
+export const TYPING_MS_PER_CHAR = 25;

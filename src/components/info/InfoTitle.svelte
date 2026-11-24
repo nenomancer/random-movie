@@ -3,16 +3,20 @@
 </script>
 
 <section aria-labelledby="title" class="row">
-  <h1 class="title">
-    <a
-      href={$currentMovie.title.imdb}
-      data-info={``}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Open IMDb page for ${$currentMovie.title.name} in a new tab`}
-    >
+  <h1 class="title" id="title">
+    {#if $currentMovie.title.imdb}
+      <a
+        href={$currentMovie.title.imdb}
+        data-info={``}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Open IMDb page for ${$currentMovie.title.name} in a new tab`}
+      >
+        {$currentMovie.title.name}
+      </a>
+    {:else}
       {$currentMovie.title.name}
-    </a>
+    {/if}
   </h1>
 </section>
 

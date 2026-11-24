@@ -7,7 +7,7 @@
     currentFilters,
     useFilters,
     resetFiltersSignal,
-  } from "../../lib/stores.ts";
+  } from "../../lib/stores";
 
   export let id: string;
 
@@ -73,7 +73,7 @@
 </script>
 
 <section>
-  <div class="header" aria-label="Filter movies from a certain country">
+  <div class="header">
     <h3 class="title">{label}</h3>
     {#if !open}
       <button class="value" on:click={() => toggleDropdown(false)}

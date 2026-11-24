@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { DEFAULT_FILTER, TAB_NAME } from "../../lib/constants";
-  import {
-    activeTab,
-    currentFilters,
-    resetFiltersSignal,
-    useFilters,
-  } from "../../lib/stores.ts";
+  import { TAB_NAME } from "../../lib/constants";
+  import { resetFilters } from "../../lib/helpers";
+  import { activeTab, useFilters } from "../../lib/stores";
 
   import FilterEnable from "../Filters/FilterEnable.svelte";
 
@@ -17,14 +13,6 @@
     } else {
       activeTab.set(TAB_NAME.INFO);
     }
-  }
-
-  function resetFilter() {
-    // TODO: UI doesn't update
-    currentFilters.set(DEFAULT_FILTER);
-    useFilters.set(false);
-    resetFiltersSignal.set(true);
-    setTimeout(() => resetFiltersSignal.set(false));
   }
 
   function handleCheck(event: Event) {
@@ -45,12 +33,15 @@
   <div class="controls-main">
     <button
       class="control-button search"
+      aria-label="Find a random movie"
       on:click={() => fetchMovies()}
       class:active={$activeTab === TAB_NAME.LOADING}
       disabled={$activeTab === TAB_NAME.LOADING}
     ></button>
     <button
       class="control-button about"
+      aria-label="About this site"
+      aria-pressed={$activeTab === TAB_NAME.ABOUT}
       on:click={() => toggleTab(TAB_NAME.ABOUT)}
       class:active={$activeTab === TAB_NAME.ABOUT}
       style="display: block;"
@@ -59,6 +50,8 @@
   <div class="controls-filters">
     <button
       class="control-button set"
+      aria-label="Filter settings"
+      aria-pressed={$activeTab === TAB_NAME.FILTERS}
       on:click={() => toggleTab(TAB_NAME.FILTERS)}
       class:active={$activeTab === TAB_NAME.FILTERS}
     ></button>
@@ -67,6 +60,7 @@
       <input
         type="checkbox"
         id="useFilters"
+        aria-label="Use filters"
         on:change={(event) => handleCheck(event)}
         on:keydown={(event) => handleEnter(event)}
         bind:checked={$useFilters}
@@ -75,7 +69,8 @@
 
     <button
       class="control-button reset"
-      on:click={resetFilter}
+      aria-label="Reset filters"
+      on:click={resetFilters}
       style="display: block;"
     ></button>
   </div>
