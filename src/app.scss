@@ -1,6 +1,6 @@
+@use "sass:string";
 @use "./styles/variables";
 @import "./styles/reset.css";
-@import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
 
 :root {
   // font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -47,6 +47,8 @@ main {
   gap: 0.25rem;
   position: relative;
 
+  box-shadow: 0 0 100px 120px rgba(black, 0.4);
+
   // * {
   //   font: inherit;
   // }
@@ -86,12 +88,11 @@ main {
 // uppercase with a ">" prompt in front. The prompt is decorative; the "/ ''"
 // alt text keeps screen readers from reading it out where supported.
 .sys-msg {
-  text-transform: uppercase;
   text-wrap: balance;
 
   &::before {
     content: "> ";
-    content: unquote('"> " / ""');
+    content: string.unquote('"> " / ""');
   }
 }
 

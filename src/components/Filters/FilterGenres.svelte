@@ -1,19 +1,20 @@
 <script lang="ts">
   import { DEFAULT_DROPDOWN_VALUE } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
+  import { clickOutside } from "../../lib/actions";
   import type { Genre } from "../../lib/types";
   import {
     openDropdown,
     currentFilters,
-    useFilters,
     resetFiltersSignal,
   } from "../../lib/stores";
   import Button from "../ui/Button.svelte";
 
+  // Short on-screen label ("GNR") and the full name read out by screen readers
   export let label: string;
+  export let name: string = "";
   export let options: Genre[] = [];
   export let onChange: (option: string[]) => void;
-  export const closeDropdown = () => (open = false);
   export let id: string;
   let genreIds: string[] = [];
   let genreNames: string[] = [DEFAULT_DROPDOWN_VALUE];
@@ -21,22 +22,8 @@
   let selected: Genre[] = [];
   let open: boolean = false;
 
-  let genreListElement: HTMLUListElement;
-
   // ADD BUTTONS FOR EACH GENRE, INSTEAD OF JUST ONE
   // BUTTON WITH A DYNAMIC LABEL
-
-  const checkSelectedGenres = () => {
-    const genres = genreListElement?.querySelectorAll(".option");
-    genres?.forEach((child) => {
-      const genre = child.getAttribute("data-id")!;
-      if ($currentFilters?.genres?.includes(genre)) {
-        child.classList.add("selected");
-      } else if (!$currentFilters?.genres?.includes(genre)) {
-        child.classList.remove("selected");
-      }
-    });
-  };
 
   const selectOption = (option: Genre) => {
     if (selected.includes(option)) {
@@ -50,12 +37,9 @@
     genreNames = selected.map((genre) => genre.name);
     onChange?.(genreIds);
     checkFilterEnable();
-    checkSelectedGenres();
   };
 
   const toggleDropdown = () => {
-    checkSelectedGenres();
-
     openDropdown.update((current) => {
       if (current === id) {
         open = false;
@@ -67,47 +51,51 @@
       }
     });
   };
-  $: openDropdown.subscribe((activeId) => {
-    if (activeId !== id) {
-      open = false;
-    }
-  });
 
-  $: resetFiltersSignal.subscribe(() => {
-    if ($resetFiltersSignal == true) {
-      genreNames = [DEFAULT_DROPDOWN_VALUE];
-      selected = [];
-    }
-  });
+  const closeDropdown = () => {
+    if (open) toggleDropdown();
+  };
 
-  // $: currentFilters.subscribe(() => {
-  //     if ($currentFilters.genres?.includes(id)) {
-  //         console.log("eyo its here! ", label);
-  //     }
-  // });
+  $: fullName = name || label;
+
+  // Opening another dropdown closes this one
+  $: if ($openDropdown !== id) open = false;
+
+  $: if ($resetFiltersSignal) {
+    genreNames = [DEFAULT_DROPDOWN_VALUE];
+    selected = [];
+  }
 </script>
 
-<section data-open={open}>
-  <div class="header" >
-    <h3 class="title">{label}</h3>
+<section data-open={open} use:clickOutside={closeDropdown}>
+  <div class="header">
+    <span class="title">{label}</span>
     <button
       class="value"
+      aria-expanded={open}
+      aria-label={`${fullName}: ${genreNames.length ? genreNames.join(", ") : DEFAULT_DROPDOWN_VALUE}`}
       on:click={() => toggleDropdown()}
       on:keydown={(event) => {
         if (event.key === "Escape") {
           toggleDropdown();
         }
       }}
-      >{genreNames.length
-        ? genreNames.join(", ")
-        : DEFAULT_DROPDOWN_VALUE}</button
     >
+      {genreNames.length ? genreNames.join(", ") : DEFAULT_DROPDOWN_VALUE}
+    </button>
   </div>
-  <ul class="options" bind:this={genreListElement} >
+  <div class="options" role="group" aria-label={fullName}>
     {#each options as option}
       <Button
-        classes={["option", "no-border"]}
+        classes={[
+          "option",
+          "no-border",
+          ...($currentFilters?.genres?.includes(String(option.id))
+            ? ["selected"]
+            : []),
+        ]}
         ariaLabel={option.name}
+        pressed={$currentFilters?.genres?.includes(String(option.id)) ?? false}
         id={option.id}
         on:keydown={(event) => {
           if (event.key === "Escape") {
@@ -119,13 +107,13 @@
         onClick={() => selectOption(option)}
       />
     {/each}
-  </ul>
-  <!-- {#if open}{/if} -->
+  </div>
 </section>
 
 <style lang="scss">
-  @use "../../styles/mixins";
+  @use "../../styles/filters";
   @use "../../styles/variables";
+
   section {
     border: variables.$border-default;
 
@@ -138,40 +126,25 @@
       }
     }
   }
+
   .header {
-    // display: flex;
-    display: grid;
-    grid-template-columns: 1fr 6fr;
+    @include filters.filter-header();
     border-bottom: variables.$border-default;
   }
+
   .title {
-    @include mixins.ui-button();
-    pointer-events: none;
-    border-right: variables.$border-default;
-    font-weight: bold;
+    @include filters.filter-title();
   }
 
   .options {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
-    &[data-open="false"] {
-      display: none;
-      .header {
-        border: none;
-      }
-    }
-
-    button {
-      background-color: red;
-    }
   }
 
   .value {
-    @include mixins.ui-button();
-    justify-content: flex-start;
+    @include filters.filter-value();
     flex: 1;
     white-space: nowrap;
-    overflow: scroll;
+    overflow: auto;
   }
 </style>

@@ -10,6 +10,24 @@ import {
 import {
   buildActiveFilterQuery,
   buildFilterQuery,
+  buildSearchQuery,
+  clampToRange,
+  directorsOf,
+  formatMovieTitle,
+  noMatchMessage,
+  imdbUrl,
+  loadErrorMessage,
+  mapCountries,
+  mapCredits,
+  mapMovieDetails,
+  overridesForCountry,
+  overridesForGenre,
+  overridesForRating,
+  overridesForRuntime,
+  overridesForYear,
+  parseMoviePath,
+  pickRandom,
+  rangePercent,
   checkFilterEnable,
   fetchJson,
   formatRuntime,
@@ -132,7 +150,9 @@ describe("fetchJson", () => {
   it("throws on a non-2xx response", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
     );
 
     await expect(fetchJson(`${API.MOVIE}/0`)).rejects.toThrow("404");
@@ -141,7 +161,9 @@ describe("fetchJson", () => {
   it("exposes the HTTP status on the error", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }),
     );
 
     await expect(fetchJson(`${API.MOVIE}/0`)).rejects.toMatchObject({
@@ -151,7 +173,10 @@ describe("fetchJson", () => {
 
   it("does not parse the body of a failed response", async () => {
     const json = vi.fn();
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 500, json }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 500, json }),
+    );
 
     await expect(fetchJson(`${API.MOVIE}/1`)).rejects.toThrow();
     expect(json).not.toHaveBeenCalled();
@@ -494,5 +519,426 @@ describe("query edge cases", () => {
 
   it("buildActiveFilterQuery copes with a completely empty filter object", () => {
     expect(buildActiveFilterQuery({})).toBe("");
+  });
+});
+
+describe("buildSearchQuery", () => {
+  const withFilters = (patch: object) => ({ ...DEFAULT_FILTER, ...patch });
+
+  it("uses only the overrides when filters are not in use", () => {
+    expect(buildSearchQuery(undefined, { country: "FR" })).toBe(
+      "&with_origin_country=FR",
+    );
+  });
+
+  it("is empty with no filters and no overrides", () => {
+    expect(buildSearchQuery(undefined)).toBe("");
+  });
+
+  it("keeps the active filters when there are no overrides", () => {
+    expect(buildSearchQuery(withFilters({ genres: ["28"] }))).toBe(
+      "&with_genres=28",
+    );
+  });
+
+  it("keeps the other filters and replaces the country for this search", () => {
+    const filters = withFilters({
+      country: "US",
+      genres: ["28"],
+      ratingFrom: 7,
+    });
+    const query = buildSearchQuery(filters, { country: "FR" });
+    expect(query).toContain("with_origin_country=FR");
+    expect(query).not.toContain("US");
+    expect(query).toContain("with_genres=28");
+    expect(query).toContain("vote_average.gte=7");
+  });
+
+  it("replaces the year range instead of sending the bounds twice", () => {
+    const filters = withFilters({ yearFrom: 1990, yearTo: 1999 });
+    const query = buildSearchQuery(filters, { yearFrom: 1995, yearTo: 1995 });
+    expect(query).toBe(
+      "&primary_release_date.gte=1995-01-01&primary_release_date.lte=1995-12-31",
+    );
+  });
+});
+
+describe("clampToRange", () => {
+  it("leaves a value inside the range alone", () => {
+    expect(clampToRange(5, 0, 10)).toBe(5);
+  });
+
+  it("clamps to the nearest bound", () => {
+    expect(clampToRange(-3, 0, 10)).toBe(0);
+    expect(clampToRange(42, 0, 10)).toBe(10);
+  });
+
+  it("uses the fallback for NaN and for a cleared input (null)", () => {
+    expect(clampToRange(NaN, 0, 10, 10)).toBe(10);
+    expect(clampToRange(null as unknown as number, 0, 10, 10)).toBe(10);
+  });
+
+  it("falls back to min when no fallback is given", () => {
+    expect(clampToRange(NaN, 2, 10)).toBe(2);
+  });
+});
+
+describe("rangePercent", () => {
+  it("covers the whole track for the full range", () => {
+    expect(rangePercent(0, 10, 0, 10)).toEqual({ left: 0, right: 0 });
+  });
+
+  it("measures each edge from its own side", () => {
+    expect(rangePercent(2.5, 7.5, 0, 10)).toEqual({ left: 25, right: 25 });
+  });
+
+  it("handles a range that does not start at zero", () => {
+    expect(rangePercent(1950, 2000, 1900, 2000)).toEqual({
+      left: 50,
+      right: 0,
+    });
+  });
+
+  it("does not divide by zero for an empty span", () => {
+    expect(rangePercent(5, 5, 5, 5)).toEqual({ left: 0, right: 0 });
+  });
+});
+
+describe("formatMovieTitle", () => {
+  it("keeps the original title for English-language films", () => {
+    expect(formatMovieTitle("Heat", "Heat", "en")).toBe("Heat");
+  });
+
+  it("adds the English title for foreign-language films", () => {
+    expect(formatMovieTitle("Parasite", "Parasite", "ko")).toBe("Parasite");
+    expect(formatMovieTitle("Amélie", "Amelie", "fr")).toBe("Amélie (Amelie)");
+  });
+
+  it("does not repeat an English title that is the same", () => {
+    expect(formatMovieTitle("Roma", "Roma", "es")).toBe("Roma");
+  });
+});
+
+describe("mapMovieDetails", () => {
+  const countries = [
+    { code: "FR", name: "France", native: "France" },
+    { code: "US", name: "United States", native: "United States" },
+  ];
+  const details = {
+    id: 5,
+    title: "Amelie",
+    original_title: "Amélie",
+    original_language: "fr",
+    release_date: "2001-04-25",
+    vote_average: 7.9876,
+    runtime: 122,
+    origin_country: ["FR"],
+    genres: [{ id: 35, name: "Comedy" }],
+    overview: "A shy waitress...",
+    poster_path: "/poster.jpg",
+    backdrop_path: "/backdrop.jpg",
+  };
+
+  it("maps the basic fields", () => {
+    const movie = mapMovieDetails(details, countries);
+    expect(movie.id).toBe(5);
+    expect(movie.title).toEqual({ imdb: "", name: "Amélie (Amelie)" });
+    expect(movie.year).toBe(2001);
+    expect(movie.rating).toBe(8);
+    expect(movie.runtime).toBe(122);
+    expect(movie.country).toEqual(countries[0]);
+    expect(movie.genres).toEqual(details.genres);
+    expect(movie.plot).toBe("A shy waitress...");
+  });
+
+  it("builds image urls from the paths", () => {
+    const movie = mapMovieDetails(details, countries);
+    expect(movie.poster).toBe(`${API.POSTER}/${details.poster_path}`);
+    expect(movie.backdrop).toBe(`${API.POSTER}/${details.backdrop_path}`);
+  });
+
+  it("leaves image fields out when TMDB has none", () => {
+    const movie = mapMovieDetails(
+      { ...details, poster_path: null, backdrop_path: undefined },
+      countries,
+    );
+    expect("poster" in movie).toBe(false);
+    expect("backdrop" in movie).toBe(false);
+  });
+
+  it("treats a zero rating, zero runtime or missing date as unknown", () => {
+    const movie = mapMovieDetails(
+      { ...details, vote_average: 0, runtime: 0, release_date: "" },
+      countries,
+    );
+    expect(movie.rating).toBeUndefined();
+    expect(movie.runtime).toBeUndefined();
+    expect(movie.year).toBeUndefined();
+  });
+
+  it("has no country when the origin is unknown or missing", () => {
+    expect(
+      mapMovieDetails({ ...details, origin_country: ["ZZ"] }, countries)
+        .country,
+    ).toBeUndefined();
+    expect(
+      mapMovieDetails({ ...details, origin_country: undefined }, countries)
+        .country,
+    ).toBeUndefined();
+  });
+});
+
+describe("credits helpers", () => {
+  const crew = [
+    { id: 1, name: "A", job: "Director" },
+    { id: 2, name: "B", job: "Writer" },
+    { id: 3, name: "C", job: "Director" },
+  ];
+
+  it("directorsOf keeps only directors", () => {
+    expect(directorsOf(crew).map((p) => p.id)).toEqual([1, 3]);
+  });
+
+  it("mapCredits returns directors and the first five actors", () => {
+    const cast = Array.from({ length: 8 }, (_, i) => ({
+      id: 10 + i,
+      name: `Actor ${i}`,
+      character: "x",
+    }));
+    const credits = mapCredits({ crew, cast });
+    expect(credits.directors).toEqual([
+      { id: 1, name: "A" },
+      { id: 3, name: "C" },
+    ]);
+    expect(credits.actors).toHaveLength(5);
+    expect(credits.actors[0]).toEqual({ id: 10, name: "Actor 0" });
+  });
+});
+
+describe("mapCountries", () => {
+  it("renames TMDB's fields", () => {
+    expect(
+      mapCountries([
+        {
+          iso_3166_1: "MK",
+          english_name: "North Macedonia",
+          native_name: "Македонија",
+        },
+      ]),
+    ).toEqual([{ code: "MK", name: "North Macedonia", native: "Македонија" }]);
+  });
+});
+
+describe("imdbUrl", () => {
+  it("builds the title link", () => {
+    expect(imdbUrl("tt0211915")).toBe("https://www.imdb.com/title/tt0211915/");
+  });
+
+  it("is empty when TMDB has no IMDb id", () => {
+    expect(imdbUrl(null)).toBe("");
+    expect(imdbUrl(undefined)).toBe("");
+    expect(imdbUrl("")).toBe("");
+  });
+});
+
+describe("pickRandom", () => {
+  it("returns undefined for an empty or missing list", () => {
+    expect(pickRandom([])).toBeUndefined();
+    expect(pickRandom(undefined)).toBeUndefined();
+  });
+
+  it("picks by the random value, including both ends of the list", () => {
+    const items = ["a", "b", "c"];
+    expect(pickRandom(items, () => 0)).toBe("a");
+    expect(pickRandom(items, () => 0.5)).toBe("b");
+    expect(pickRandom(items, () => 0.999)).toBe("c");
+  });
+});
+
+describe("parseMoviePath", () => {
+  it("reads the id from a movie path", () => {
+    expect(parseMoviePath("/movie/603")).toBe(603);
+    expect(parseMoviePath("/movie/603/")).toBe(603);
+  });
+
+  it("returns null for anything else", () => {
+    expect(parseMoviePath("/")).toBeNull();
+    expect(parseMoviePath("/movie")).toBeNull();
+    expect(parseMoviePath("/movie/abc")).toBeNull();
+    expect(parseMoviePath("/movie/12abc")).toBeNull();
+    expect(parseMoviePath("/other/12")).toBeNull();
+  });
+});
+
+describe("loadErrorMessage", () => {
+  it("says not found for a 404", () => {
+    expect(loadErrorMessage({ status: 404 })).toBe(ERROR_MESSAGES.NOT_FOUND);
+  });
+
+  it("says failed for other errors, including non-objects", () => {
+    expect(loadErrorMessage({ status: 500 })).toBe(ERROR_MESSAGES.FAILED);
+    expect(loadErrorMessage(new Error("network"))).toBe(ERROR_MESSAGES.FAILED);
+    expect(loadErrorMessage(null)).toBe(ERROR_MESSAGES.FAILED);
+  });
+});
+
+// Every filter set in the Filters tab, combined with every info-tab click.
+// Expected values are spelled out here rather than computed with the code under
+// test: a tab's value must replace the matching filter, every other filter must
+// survive, and no parameter may be sent twice.
+describe("filters combined with an info-tab click", () => {
+  type Params = Record<string, string>;
+
+  // Query parameters each active filter produces
+  const filterCases: Record<string, { filters: object; params: Params }> = {
+    country: {
+      filters: { country: "US" },
+      params: { with_origin_country: "US" },
+    },
+    genres: {
+      filters: { genres: ["28", "12"] },
+      params: { with_genres: "28,12" },
+    },
+    years: {
+      filters: { yearFrom: 1990, yearTo: 1999 },
+      params: {
+        "primary_release_date.gte": "1990-01-01",
+        "primary_release_date.lte": "1999-12-31",
+      },
+    },
+    rating: {
+      filters: { ratingFrom: 6, ratingTo: 8 },
+      params: { "vote_average.gte": "6", "vote_average.lte": "8" },
+    },
+    "all filters": {
+      filters: {
+        country: "US",
+        genres: ["28", "12"],
+        yearFrom: 1990,
+        yearTo: 1999,
+        ratingFrom: 6,
+        ratingTo: 8,
+      },
+      params: {
+        with_origin_country: "US",
+        with_genres: "28,12",
+        "primary_release_date.gte": "1990-01-01",
+        "primary_release_date.lte": "1999-12-31",
+        "vote_average.gte": "6",
+        "vote_average.lte": "8",
+      },
+    },
+    "no filters": { filters: {}, params: {} },
+  };
+
+  // What each tab click searches for, and the parameters it should send
+  const tabCases: Record<string, { overrides: object; params: Params }> = {
+    country: {
+      overrides: overridesForCountry("FR"),
+      params: { with_origin_country: "FR" },
+    },
+    year: {
+      overrides: overridesForYear(2005),
+      params: {
+        "primary_release_date.gte": "2005-01-01",
+        "primary_release_date.lte": "2005-12-31",
+      },
+    },
+    rating: {
+      overrides: overridesForRating(7.5),
+      params: { "vote_average.gte": "7.25", "vote_average.lte": "7.75" },
+    },
+    runtime: {
+      overrides: overridesForRuntime(120),
+      params: { "with_runtime.gte": "120", "with_runtime.lte": "120" },
+    },
+    genre: {
+      overrides: overridesForGenre(18),
+      params: { with_genres: "18" },
+    },
+  };
+
+  const parse = (query: string) => [...new URLSearchParams(query)];
+
+  for (const [filterName, filterCase] of Object.entries(filterCases)) {
+    describe(`with ${filterName} set`, () => {
+      for (const [tabName, tabCase] of Object.entries(tabCases)) {
+        it(`${tabName} tab click replaces its own filter and keeps the rest`, () => {
+          const query = buildSearchQuery(
+            { ...DEFAULT_FILTER, ...filterCase.filters },
+            tabCase.overrides,
+          );
+          const pairs = parse(query);
+
+          // No parameter appears twice
+          const keys = pairs.map(([key]) => key);
+          expect(new Set(keys).size).toBe(keys.length);
+
+          expect(Object.fromEntries(pairs)).toEqual({
+            ...filterCase.params,
+            ...tabCase.params,
+          });
+        });
+      }
+    });
+  }
+
+  it("ignores the filters when they are not in use", () => {
+    for (const [tabName, tabCase] of Object.entries(tabCases)) {
+      expect(
+        Object.fromEntries(
+          parse(buildSearchQuery(undefined, tabCase.overrides)),
+        ),
+        tabName,
+      ).toEqual(tabCase.params);
+    }
+  });
+});
+
+describe("tab override helpers", () => {
+  it("search the exact year or runtime", () => {
+    expect(overridesForYear(1999)).toEqual({ yearFrom: 1999, yearTo: 1999 });
+    expect(overridesForRuntime(90)).toEqual({
+      runtimeFrom: 90,
+      runtimeTo: 90,
+    });
+  });
+
+  it("search a small range around a rating", () => {
+    expect(overridesForRating(8)).toEqual({ ratingFrom: 7.75, ratingTo: 8.25 });
+  });
+
+  it("search one country or one genre", () => {
+    expect(overridesForCountry("MK")).toEqual({ country: "MK" });
+    expect(overridesForGenre(28)).toEqual({ genres: ["28"] });
+  });
+});
+
+describe("noMatchMessage", () => {
+  const withFilters = (patch: object) => ({ ...DEFAULT_FILTER, ...patch });
+
+  it("names every limit the search had", () => {
+    const message = noMatchMessage(
+      withFilters({ country: "US", genres: ["28"], yearFrom: 1990 }),
+    );
+    expect(message).toContain("country + genre + years");
+  });
+
+  it("includes a tab's override, and counts a replaced filter once", () => {
+    const filters = withFilters({ country: "US" });
+    expect(noMatchMessage(filters, { country: "FR" })).toContain(
+      "no matches for country;",
+    );
+    expect(
+      noMatchMessage(filters, { runtimeFrom: 90, runtimeTo: 90 }),
+    ).toContain("country + runtime");
+  });
+
+  it("ignores filters that are not in use or at their defaults", () => {
+    expect(noMatchMessage(undefined, { ratingFrom: 7, ratingTo: 8 })).toContain(
+      "no matches for rating;",
+    );
+    expect(noMatchMessage(DEFAULT_FILTER)).toBe(ERROR_MESSAGES.NO_MATCH);
+    expect(noMatchMessage(undefined)).toBe(ERROR_MESSAGES.NO_MATCH);
   });
 });

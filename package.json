@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "rollup": "^4.53.3"
@@ -16,7 +17,11 @@
   "devDependencies": {
     "@sveltejs/adapter-netlify": "^5.2.4",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.4",
+    "jsdom": "^31.0.1",
+    "prettier": "^3.10.1",
+    "prettier-plugin-svelte": "^4.2.0",
     "sass": "^1.90.0",
     "svelte": "^5.23.1",
     "svelte-check": "^4.1.5",

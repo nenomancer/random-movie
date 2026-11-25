@@ -25,7 +25,9 @@
   const countryLabel = derived(currentMovie, (m) =>
     m.country ? m.country.code : "-",
   );
-  const ratingLabel = derived(currentMovie, (m) => m.rating?.toString());
+  const ratingLabel = derived(currentMovie, (m) =>
+    m.rating ? m.rating.toString() : "-",
+  );
 </script>
 
 <section class="extra-information" aria-label="Extra information">
@@ -44,9 +46,9 @@
   <Button
     label={$countryLabel}
     onClick={() =>
-      $currentMovie.country && getMoviesByCountry($currentMovie.country?.code)}
+      $currentMovie.country && getMoviesByCountry($currentMovie.country.code)}
     ariaLabel={$currentMovie.country
-      ? `Country: ${$currentMovie.country.name}.`
+      ? `Country: ${$currentMovie.country.name} (${$currentMovie.country.code}).`
       : "Country: unknown."}
     description={$currentMovie.country
       ? `This movie's country of origin. Click to find another movie from ${$currentMovie.country.name}`
@@ -70,7 +72,7 @@
     onClick={() =>
       $currentMovie.runtime && getMoviesByRuntime($currentMovie.runtime)}
     ariaLabel={$currentMovie.runtime
-      ? `Runtime: ${$currentMovie.runtime} minutes.`
+      ? `Runtime: ${formatRuntime($currentMovie.runtime)} (${$currentMovie.runtime} minutes).`
       : "Runtime: unknown."}
     description={$currentMovie.runtime
       ? `Runtime: ${$currentMovie.runtime} minutes. Click to find another movie with the same runtime.`
@@ -84,8 +86,5 @@
     display: flex;
     justify-content: stretch;
     font-size: 0.75rem;
-    button {
-      padding: 200px;
-    }
   }
 </style>

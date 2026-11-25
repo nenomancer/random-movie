@@ -3,8 +3,8 @@
   export let name: string;
 </script>
 
-<article class={`tab-content ${$activeTab !== name ? "hidden" : ""}`}>
-  <slot></slot>
+<article class="tab-content" data-tab={name} class:hidden={$activeTab !== name}>
+  <slot />
 </article>
 
 <style lang="scss">

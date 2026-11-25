@@ -1,97 +1,56 @@
 <section>
   <h2>Filters</h2>
   <p>
-    Filter possible results by Country, Genre, Years (range) or Rating (range).
+    Narrow down the results by country, genre, release years (a range) or rating
+    (a range). Switch on "Enable" in the control panel to use them, and hit
+    "Reset" to clear them all.
   </p>
 
   <h3>Country</h3>
   <ul>
-    <li>Search and filter a country from the list.</li>
-    <li>Some countries will not have any results.</li>
+    <li>Search for a country in the list and pick it.</li>
+    <li>Some countries won't have any results.</li>
     <li>Some films will have the wrong country.</li>
   </ul>
 
   <h3>Genre</h3>
   <ul>
-    <li>Filter one or multiple genres.</li>
+    <li>Pick one or multiple genres.</li>
     <li>
-      The filters are inclusive?, meaning it will try to find a result with ALL
+      The filter is inclusive, meaning it will try to find a result with ALL the
       chosen genres.
     </li>
     <li>
-      Even though adult movies are blocked, they can sometimes return as a
+      Even though adult movies are blocked, they can sometimes come back as a
       Documentary or Romance.
     </li>
   </ul>
 
-  <h3>Genre</h3>
+  <h3>Years</h3>
   <ul>
-    <li>Filter one or multiple genres.</li>
-    <li>
-      The filters are inclusive?, meaning it will try to find a result with ALL
-      chosen genres.
-    </li>
-    <li>
-      Even though adult movies are blocked, they can sometimes return as a
-      Documentary or Romance.
-    </li>
+    <li>Drag the sliders or type the years in the boxes.</li>
+    <li>Very narrow ranges rarely find a result.</li>
   </ul>
 
-  <p>
-    This project is still in progress, it might fail at times and some
-    functionalities might not work as expected.
-  </p>
-  <h3>Currently known issues include:</h3>
+  <h3>Rating</h3>
   <ul>
-    <li>Many of the listed countries won't produce a result.</li>
     <li>
-      Sometimes Adult movies might come up disguised as Drama, Romance or
-      Documentary.
+      This is the TMDB rating, from 0 to 10. Drag the sliders or type it in.
     </li>
-    <li>
-      Rating and year filters will rarely find a result with the exact settings.
-    </li>
-    <li>
-      The repo is a mess, but
-      <a href="https://github.com/nenomancer/random-movie" target="_blank"
-        >take a look</a
-      >
-      if you want.
-    </li>
+    <li>Very narrow ranges rarely find a result.</li>
   </ul>
 
-  <p>
-    This product uses the
-    <a href="https://developer.themoviedb.org/reference/" target="_blank"
-      >TMDB API</a
-    >
-    but is not endorsed or certified by
-    <a href="https://www.themoviedb.org/" target="_blank">The Movie Database</a
-    >.
-  </p>
-  <h2>Contact</h2>
-  <p>
-    If you have any feedback or suggestions, reach out to me on my
-    <a href="mailto: nebojsa.kovacevik@gmail.com">email</a> or on
-    <a href="https://www.instagram.com/loopmaster.n/" target="_blank"
-      >Instagram</a
-    >.
-  </p>
+  <h3>While browsing</h3>
+  <ul>
+    <li>
+      Clicking a year, country, rating, runtime or genre on the info screen
+      searches for that value, and your other filters still apply.
+    </li>
+    <li>Cast and directors ignore your filters.</li>
+  </ul>
 </section>
 
 <style>
-  /* section * {
-    margin: auto;
-    padding: auto;
-  } */
-  * {
-    /* all: unset; */
-  }
-
-  h1 {
-    font-size: 4rem;
-  }
-
   h2 {
     font-size: 2.2rem;
   }

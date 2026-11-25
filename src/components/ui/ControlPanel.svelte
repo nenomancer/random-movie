@@ -1,18 +1,29 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import { TAB_NAME } from "../../lib/constants";
   import { resetFilters } from "../../lib/helpers";
   import { activeTab, useFilters } from "../../lib/stores";
 
-  import FilterEnable from "../Filters/FilterEnable.svelte";
-
   export let fetchMovies: () => void;
 
-  function toggleTab(tabName: string) {
+  function toggleTab(tabName: string, event?: MouseEvent) {
     if ($activeTab != tabName) {
       activeTab.set(tabName);
+      // The filters sit before these buttons in the tab order, so for keyboard
+      // users the next Tab would skip them. (detail is 0 for Enter / Space.)
+      if (tabName === TAB_NAME.FILTERS && event?.detail === 0) {
+        focusFirstFilter();
+      }
     } else {
       activeTab.set(TAB_NAME.INFO);
     }
+  }
+
+  async function focusFirstFilter() {
+    await tick();
+    document
+      .querySelector<HTMLElement>(`[data-tab="${TAB_NAME.FILTERS}"] button`)
+      ?.focus();
   }
 
   function handleCheck(event: Event) {
@@ -33,7 +44,7 @@
   <div class="controls-main">
     <button
       class="control-button search"
-      aria-label="Find a random movie"
+      aria-label="Search for a random movie"
       on:click={() => fetchMovies()}
       class:active={$activeTab === TAB_NAME.LOADING}
       disabled={$activeTab === TAB_NAME.LOADING}
@@ -44,23 +55,21 @@
       aria-pressed={$activeTab === TAB_NAME.ABOUT}
       on:click={() => toggleTab(TAB_NAME.ABOUT)}
       class:active={$activeTab === TAB_NAME.ABOUT}
-      style="display: block;"
     ></button>
   </div>
   <div class="controls-filters">
     <button
       class="control-button set"
-      aria-label="Filter settings"
+      aria-label="Set filters"
       aria-pressed={$activeTab === TAB_NAME.FILTERS}
-      on:click={() => toggleTab(TAB_NAME.FILTERS)}
+      on:click={(event) => toggleTab(TAB_NAME.FILTERS, event)}
       class:active={$activeTab === TAB_NAME.FILTERS}
     ></button>
-    <!-- <FilterEnable /> -->
     <div class="control-button use">
       <input
         type="checkbox"
         id="useFilters"
-        aria-label="Use filters"
+        aria-label="Enable filters"
         on:change={(event) => handleCheck(event)}
         on:keydown={(event) => handleEnter(event)}
         bind:checked={$useFilters}
@@ -71,7 +80,6 @@
       class="control-button reset"
       aria-label="Reset filters"
       on:click={resetFilters}
-      style="display: block;"
     ></button>
   </div>
 </div>
@@ -79,14 +87,11 @@
 <style lang="scss">
   @use "../../styles/mixins";
   @use "../../styles/variables";
-  @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
   .controls-container {
     @include mixins.monitor-edge();
 
     grid-area: controls;
-    display: flex;
-    flex-direction: column;
     display: grid;
     padding: 1.5rem;
     background-color: variables.$monitor-color;
@@ -141,21 +146,30 @@
       aspect-ratio: unset;
       padding-block: 1rem;
       outline-offset: -0.5rem;
-      @include mixins.control-button($content: "Search");
+      @include mixins.control-button($content: "Search", $state: "class");
     }
     &.about {
-      @include mixins.control-button-lightable($content: "About");
+      @include mixins.control-button-lightable(
+        $content: "About",
+        $state: "class"
+      );
     }
 
     &.set {
-      @include mixins.control-button-lightable($content: "Set");
+      @include mixins.control-button-lightable(
+        $content: "Set",
+        $state: "class"
+      );
     }
     &.use {
-      @include mixins.control-button-lightable($content: "Enable");
+      @include mixins.control-button-lightable(
+        $content: "Enable",
+        $state: "checkbox"
+      );
     }
 
     &.reset {
-      @include mixins.control-button($content: "Reset");
+      @include mixins.control-button($content: "Reset", $state: "none");
     }
   }
 </style>

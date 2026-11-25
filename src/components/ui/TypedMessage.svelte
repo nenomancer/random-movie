@@ -59,12 +59,10 @@
   <span class="stack" aria-hidden="true">
     <!-- Invisible full text (and cursor) reserves the final size so nothing jumps -->
     <span class="sizer">{text}<span class="cursor"></span></span>
-    <span class="live"
-      >{typed}{#if typing || blink}<span
-          class="cursor"
-          class:idle={!typing}
-        ></span>{/if}</span
-    >
+    <span class="live">
+      {typed}{#if typing || blink}<span class="cursor" class:idle={!typing}
+        ></span>{/if}
+    </span>
   </span>
 </p>
 

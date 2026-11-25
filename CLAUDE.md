@@ -4,9 +4,10 @@ Svelte 5 + Vite SPA that shows a random movie from TMDB, with filters. Deployed 
 
 ## Commands
 - `npm run dev` — dev server (needs `TMDB_API_KEY` in `.env`, see below)
-- `npm test` — Vitest (logic tests in `src/lib/*.test.ts`)
+- `npm test` — Vitest (logic tests in `src/lib/*.test.ts`; `src/App.test.ts` renders the real App in jsdom against a fake TMDB and checks the request each tab click sends)
 - `npm run check` — svelte-check + tsc; should report 0 errors (warnings are known)
 - `npx vite build` — production build
+- `npm run format` — Prettier (config in `.prettierrc`); run it before committing
 Run test, check and build before calling a change done.
 
 ## Architecture

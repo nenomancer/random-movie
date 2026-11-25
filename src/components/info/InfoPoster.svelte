@@ -12,9 +12,7 @@
 {/if}
 {#if !$currentMovie.poster && $activeTab === TAB_NAME.INFO}
   <!-- Only mounted while visible, so it types out each time it appears -->
-  <div class="error">
-    <TypedMessage text="No image data on file" mode="plain" />
-  </div>
+  <TypedMessage text="No image data on file" mode="plain" />
 {/if}
 
 <style>
@@ -24,9 +22,5 @@
     object-fit: contain;
     mix-blend-mode: lighten;
     filter: brightness(0.75);
-  }
-
-  .error {
-    align-self: center;
   }
 </style>

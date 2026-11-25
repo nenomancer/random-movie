@@ -20,12 +20,25 @@
   import { addHistoryLog } from "./lib/useHistory";
 
   import {
-    buildActiveFilterQuery,
-    buildFilterQuery,
+    buildSearchQuery,
+    directorsOf,
     fetchJson,
+    imdbUrl,
+    loadErrorMessage,
+    noMatchMessage,
+    mapCountries,
+    mapCredits,
+    mapMovieDetails,
+    overridesForCountry,
+    overridesForGenre,
+    overridesForRating,
+    overridesForRuntime,
+    overridesForYear,
+    parseMoviePath,
+    pickRandom,
     showResultError,
   } from "./lib/helpers";
-  import type { Country, Genre, Movie, Person } from "./lib/types";
+  import type { Country, Filters, Genre } from "./lib/types";
   import {
     API,
     DEFAULT_FILTER,
@@ -45,7 +58,7 @@
     errorMessage,
   } from "./lib/stores";
 
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import AboutContent from "./components/info/AboutContent.svelte";
   import TypedMessage from "./components/ui/TypedMessage.svelte";
   import FilterContent from "./components/Filters/FilterContent.svelte";
@@ -53,10 +66,10 @@
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
 
-  let mainRef: HTMLElement;
   // Id of the movie the user most recently asked for. Responses for any other
   // id are stale (user clicked again before they arrived) and must be ignored.
   let latestMovieId: number | null = null;
+  let settleTimer: ReturnType<typeof setTimeout>;
 
   function handleGlobalKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter" && document.activeElement === document.body) {
@@ -69,9 +82,9 @@
     }
   }
   const handlePopState = () => {
-    const params = window.location.pathname.split("/");
-    if (params[1] === "movie" && params[2]) {
-      getMovie(Number(params[2]));
+    const movieId = parseMoviePath(window.location.pathname);
+    if (movieId !== null) {
+      getMovie(movieId);
     }
   };
 
@@ -81,68 +94,59 @@
   });
 
   onDestroy(() => {
+    clearTimeout(settleTimer);
     document.removeEventListener("keydown", handleGlobalKeyboard);
     window.removeEventListener("popstate", handlePopState);
   });
 
-  // Shared failure path for anything that loads a movie: log, show the error
-  // tab and stop the loading animation.
+  // Shared failure path for anything that loads a movie: log and show the
+  // error tab.
   function handleLoadError(err: unknown) {
     console.error(err);
-    const status = (err as { status?: number } | null)?.status;
-    showResultError(
-      status === 404 ? ERROR_MESSAGES.NOT_FOUND : ERROR_MESSAGES.FAILED
-    );
-    mainRef?.classList.remove("loading-anim");
+    showResultError(loadErrorMessage(err));
   }
 
-  function fetchMovies(uiQueries = "", totalPages = 500) {
+  // `overrides` (a tab's country, year, ...) replace the matching filter for
+  // this search only; every other active filter still applies.
+  function fetchMovies(overrides: Filters = {}, totalPages = 500) {
     activeTab.set(TAB_NAME.LOADING);
-    mainRef?.classList.add("loading-anim");
 
-    const filterQueries = $useFilters
-      ? buildActiveFilterQuery($currentFilters)
-      : "";
+    const activeFilters = $useFilters ? $currentFilters : undefined;
+    const filterQueries = buildSearchQuery(activeFilters, overrides);
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
-    fetchJson(
-      `${API.DISCOVER_MOVIE}?page=${pageNumber}${uiQueries}${filterQueries}`
-    )
+    fetchJson(`${API.DISCOVER_MOVIE}?page=${pageNumber}${filterQueries}`)
       .then((response) => {
         const hasResults = response.results?.length > 0;
         const hasPages = response.total_pages > 0;
         const isLastPage = response.total_pages === totalPages;
 
+        const noMatch = () =>
+          showResultError(noMatchMessage(activeFilters, overrides));
+
         if (!hasResults && isLastPage) {
-          return showResultError();
+          return noMatch();
         }
         if (!hasResults && hasPages) {
-          return fetchMovies(uiQueries, Math.min(500, response.total_pages));
+          return fetchMovies(overrides, Math.min(500, response.total_pages));
         }
         if (hasResults) {
           return getRandomMovie(response.results);
         }
 
-        return showResultError();
+        return noMatch();
       })
       .catch(handleLoadError);
   }
 
-  function getRandomMovie(data: Array<Movie>) {
-    mainRef?.classList?.add("loading-anim");
+  function getRandomMovie(data: Array<{ id: number }>) {
     activeTab.set(TAB_NAME.LOADING);
 
-    if (!data?.length) return showResultError(ERROR_MESSAGES.NO_RELATED);
+    const movie = pickRandom(data);
+    if (!movie) return showResultError(ERROR_MESSAGES.NO_RELATED);
 
-    const randomIndex = Math.floor(Math.random() * data.length);
-
-    for (const [index, movie] of data.entries()) {
-      if (index === randomIndex) {
-        getMovie(movie.id);
-        break;
-      }
-    }
+    getMovie(movie.id);
   }
 
   async function getMovie(movieId: number) {
@@ -153,54 +157,9 @@
       .then((data) => {
         if (movieId !== latestMovieId) return;
 
-        if (data.backdrop_path) {
-          currentMovie.update((movie) => ({
-            ...movie,
-            backdrop: `${API.POSTER}/${data.backdrop_path}`,
-          }));
-        }
-        if (data.poster_path) {
-          currentMovie.update((movie) => ({
-            ...movie,
-            poster: `${API.POSTER}/${data.poster_path}`,
-          }));
-        }
-
-        function generateTitle(
-          originalTitle: string,
-          englishTitle: string
-        ): string {
-          if (
-            data.original_language !== "en" &&
-            originalTitle != englishTitle
-          ) {
-            return `${originalTitle} (${englishTitle})`;
-          }
-
-          return originalTitle;
-        }
-
         currentMovie.update((movie) => ({
           ...movie,
-          id: movieId,
-          title: {
-            imdb: "",
-            name: generateTitle(data.original_title, data.title),
-          },
-          year: data.release_date
-            ? new Date(data.release_date).getFullYear()
-            : undefined,
-
-          rating:
-            data.vote_average > 0
-              ? Math.round(data.vote_average * 10) / 10
-              : undefined,
-          runtime: data.runtime > 0 ? data.runtime : undefined,
-          country: allCountries.find(
-            (country) => country.code === data.origin_country[0]
-          )!,
-          genres: data.genres,
-          plot: data.overview,
+          ...mapMovieDetails(data, allCountries),
         }));
 
         document.title = `${$currentMovie.title.name} | ${DOCUMENT_TITLE}`;
@@ -223,18 +182,32 @@
         // A newer request owns the screen now, don't touch it.
         if (movieId !== latestMovieId) return;
 
-        // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
-
-        setTimeout(() => {
-          mainRef?.classList?.remove("loading-anim");
-        }, 500);
-        setTimeout(() => {
+        // Keep the loading screen up a moment so it doesn't just flash
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => {
           // Never replace the error screen, or a newer movie's loading screen
           if (!failed && movieId === latestMovieId) {
             activeTab.set(TAB_NAME.INFO);
+            restoreFocus();
           }
         }, 1000);
       });
+  }
+
+  // A tab click removes the focused button while the loading screen shows, which
+  // drops focus to the page, so the next Tab would start from the very top. Put
+  // focus on the title instead, so it carries on from the new movie. Never on
+  // the first load, and never when focus is already somewhere.
+  let hasShownMovie = false;
+  async function restoreFocus() {
+    const focusLost =
+      !document.activeElement || document.activeElement === document.body;
+    const wasFirstLoad = !hasShownMovie;
+    hasShownMovie = true;
+    if (wasFirstLoad || !focusLost) return;
+
+    await tick();
+    document.getElementById("title")?.focus({ preventScroll: true });
   }
 
   function getMovieCredits(movieId: number) {
@@ -242,21 +215,7 @@
       .then((data) => {
         if (movieId !== latestMovieId) return;
 
-        const directors = data.crew.filter(
-          (person: Person) => person.job == "Director"
-        );
-
-        currentMovie.update((movie) => ({
-          ...movie,
-          directors: directors.map((director: Person) => ({
-            name: director.name,
-            id: director.id,
-          })),
-          actors: data.cast.slice(0, 5).map((actor: Person) => ({
-            id: actor.id,
-            name: actor.name,
-          })),
-        }));
+        currentMovie.update((movie) => ({ ...movie, ...mapCredits(data) }));
       })
       // Credits are optional extras; log but keep showing the movie
       .catch((err) => console.error(err));
@@ -270,7 +229,7 @@
         currentMovie.update((movie) => ({
           ...movie,
           title: {
-            imdb: `https://www.imdb.com/title/${data.imdb_id}/`,
+            imdb: imdbUrl(data.imdb_id),
             name: $currentMovie.title.name,
           },
         }));
@@ -292,19 +251,17 @@
   async function generateCountries() {
     return fetchJson(API.COUNTRIES)
       .then((response) => {
-        allCountries = response.map((country: any) => ({
-          code: country.iso_3166_1,
-          name: country.english_name,
-          native: country.native_name,
-        }));
+        allCountries = mapCountries(response);
       })
       .catch((err) => {
         console.error(err);
       });
   }
 
+  // Actor and director clicks pick from that person's whole filmography
+  // (/person/:id) on purpose: the active filters do not apply to them, unlike
+  // the year, country, rating, runtime and genre clicks (see fetchMovies).
   function getMoviesByActor(actorId: number) {
-    // resetFilter();
     fetchJson(`${API.PERSON}/${actorId}?append_to_response=movie_credits`)
       .then((response) => {
         const temp = response.movie_credits.cast;
@@ -316,43 +273,33 @@
   function getMoviesByDirector(directorId: number) {
     fetchJson(`${API.PERSON}/${directorId}?append_to_response=movie_credits`)
       .then((response) => {
-        const temp = response.movie_credits.crew.filter(
-          (credit: any) => credit.job === "Director"
+        return getRandomMovie(
+          directorsOf<{ id: number; job?: string }>(
+            response.movie_credits.crew,
+          ),
         );
-        return getRandomMovie(temp);
       })
       .catch(handleLoadError);
   }
 
   export function getMoviesByReleaseDate(year: number) {
-    fetchMovies(buildFilterQuery({ yearFrom: year, yearTo: year }));
+    fetchMovies(overridesForYear(year));
   }
 
   export function getMoviesByRuntime(runtime: number) {
-    fetchMovies(buildFilterQuery({ runtimeFrom: runtime, runtimeTo: runtime }));
+    fetchMovies(overridesForRuntime(runtime));
   }
 
-  // Fuzzy search, votes are not too reliable and the API allows only averages
   export function getMoviesByRating(rating: number) {
-    const range = 0.25;
-    fetchMovies(
-      buildFilterQuery({
-        ratingFrom: rating - range,
-        ratingTo: rating + range,
-      })
-    );
+    fetchMovies(overridesForRating(rating));
   }
 
   export function getMoviesByCountry(countryCode: string) {
-    fetchJson(`${API.DISCOVER_MOVIE}?with_origin_country=${countryCode}`)
-      .then((response) => {
-        getRandomMovie(response.results);
-      })
-      .catch(handleLoadError);
+    fetchMovies(overridesForCountry(countryCode));
   }
 
   function getMoviesByGenre(genreId: number) {
-    fetchMovies(`&with_genres=${genreId}`);
+    fetchMovies(overridesForGenre(genreId));
   }
 
   function initApp() {
@@ -371,7 +318,7 @@
   initApp();
 </script>
 
-<main bind:this={mainRef}>
+<main>
   <Monitor classes={["main"]}>
     <Screen>
       <TabContent name={TAB_NAME.INFO}>
@@ -419,6 +366,7 @@
         <FilterCountries
           id="country"
           label={"CTR"}
+          name="Country"
           options={allCountries}
           onChange={(countryCode) =>
             currentFilters.update((filters) => ({
@@ -429,6 +377,7 @@
         <FilterGenres
           id="genre"
           label={"GNR"}
+          name="Genre"
           options={allGenres}
           onChange={(genreCodes) =>
             currentFilters.update((filters) => ({
@@ -436,9 +385,10 @@
               genres: genreCodes,
             }))}
         />
-        <FilterYears label={"YRS"} />
+        <FilterYears label={"YRS"} name="Release year" />
         <FilterRating
           label={"RTG"}
+          name="Rating"
           onChange={(fromValue, toValue) =>
             currentFilters.update((filters) => ({
               ...filters,
@@ -488,26 +438,16 @@
       </TabContent>
     </Screen>
   </Monitor>
-  <!-- <Disk /> -->
   <ControlPanel {fetchMovies} />
   <Monitor classes={["history"]}>
     <Screen>
       <History {getMovie} />
     </Screen>
   </Monitor>
-  <Monitor classes={["tooltip"]} padding={1.5}>
+  <Monitor classes={["tooltip"]}>
     <!-- <Screen>
       <div">Tooltip in progress</div>
     </Screen> -->
   </Monitor>
   <!-- <Extras /> -->
 </main>
-
-<style global lang="scss">
-  @use "./styles/mixins";
-  .kurac {
-    @include mixins.text-bevel();
-    font-weight: bold;
-    // font-size: 2rem;
-  }
-</style>

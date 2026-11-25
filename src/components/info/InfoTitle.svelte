@@ -3,7 +3,7 @@
 </script>
 
 <section aria-labelledby="title" class="row">
-  <h1 class="title" id="title">
+  <h1 class="title" id="title" tabindex="-1">
     {#if $currentMovie.title.imdb}
       <a
         href={$currentMovie.title.imdb}
@@ -15,7 +15,7 @@
         {$currentMovie.title.name}
       </a>
     {:else}
-      {$currentMovie.title.name}
+      <span class="name">{$currentMovie.title.name}</span>
     {/if}
   </h1>
 </section>
@@ -24,18 +24,27 @@
   @use "../../styles/mixins";
   .title {
     display: flex;
-    overflow-x: scroll;
-
+    overflow-x: auto;
     justify-content: start;
     align-items: stretch;
-    display: flex;
     font-size: 2rem;
     font-weight: 400;
   }
 
+  // The title as a link, or plain text when there is no IMDb page. Both get the
+  // same padding so the text doesn't jump between the two.
   .title a {
     @include mixins.ui-button();
-    padding-inline: 0.5rem;
     flex: 1;
+  }
+
+  .title .name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding-inline: 0.5rem;
+    padding-block: 0.4rem;
+    white-space: nowrap;
   }
 </style>

@@ -1,16 +1,21 @@
 @use "variables";
 @use "sass:color";
-@import url("https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100..800;1,100..800&display=swap");
 
 @mixin monitor-edge() {
   @include edge-bevel(
     $size: 2px,
     $blur: 1px,
     $radius: 12px,
-    $light:
-      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
-    $shadow:
-      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+    $light: color.adjust(
+        variables.$monitor-color,
+        $lightness: 40%,
+        $saturation: -20%
+      ),
+    $shadow: color.adjust(
+        variables.$monitor-color,
+        $lightness: -60%,
+        $saturation: 10%
+      )
   );
 }
 
@@ -20,10 +25,16 @@
     $radius: 0.5rem,
     $blur: 1px,
     $shadow-size: 1rem,
-    $light:
-      color.adjust(variables.$monitor-color, $lightness: 40%, $saturation: -20%),
-    $shadow:
-      color.adjust(variables.$monitor-color, $lightness: -60%, $saturation: 10%)
+    $light: color.adjust(
+        variables.$monitor-color,
+        $lightness: 40%,
+        $saturation: -20%
+      ),
+    $shadow: color.adjust(
+        variables.$monitor-color,
+        $lightness: -60%,
+        $saturation: 10%
+      )
   );
 }
 
@@ -35,7 +46,8 @@
   $light: white,
   $shadow: black
 ) {
-  box-shadow: inset $size $size $blur $size rgba($light, $opacity),
+  box-shadow:
+    inset $size $size $blur $size rgba($light, $opacity),
     inset $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
 
   border-radius: $radius;
@@ -51,7 +63,8 @@
   $shadow: black
 ) {
   position: relative;
-  box-shadow: $size $size $blur $size rgba($light, $opacity),
+  box-shadow:
+    $size $size $blur $size rgba($light, $opacity),
     $size * -1 $size * -1 $blur $size rgba($shadow, $opacity);
   // box-shadow: inset 0 0 10px 10px black;
   border-radius: $radius;
@@ -65,21 +78,10 @@
   }
 }
 
-@mixin text-bevel($color: variables.$monitor-color) {
-  color: transparent;
-  text-shadow: 0 0 0.5px $color,
-    0.5px 0.5px 0.5px color.adjust($color, $lightness: -40%),
-    -0.5px -0.5px 0.5px color.adjust($color, $lightness: 30%);
-}
-
-@mixin text-inset($color: variables.$monitor-color) {
-  color: transparent;
-
-  text-shadow: 0 0 0.5px $color, 0.5px 0.5px 0.5px red,
-    -0.5px -0.5px 0.5px darken($color, 40);
-}
-
-@mixin ui-button() {
+// $selected / $no-border also emit the .selected / .no-border modifier rules.
+// Off by default so components that never use those classes don't get
+// "unused selector" warnings for them.
+@mixin ui-button($selected: false, $no-border: false) {
   background-color: transparent;
   color: variables.$ui-color-foreground;
   border: none;
@@ -99,22 +101,59 @@
     outline: none;
   }
 
-  &.selected {
-    background-color: variables.$ui-color-foreground;
-    color: variables.$ui-color-background;
+  &:disabled {
+    cursor: not-allowed;
   }
 
-  &.no-border {
-    border: none;
+  @if $selected {
+    &.selected {
+      background-color: variables.$ui-color-foreground;
+      color: variables.$ui-color-background;
+    }
+  }
+
+  @if $no-border {
+    &.no-border {
+      border: none;
+    }
   }
 }
 
-@mixin control-button-lightable(
-  $content: "Button",
-  $background: variables.$monitor-color,
-  $height: 3px
-) {
-  @include control-button($content, $background, $height);
+// The "pressed in" look shared by every way a control button can be pressed
+@mixin control-button-pressed() {
+  background: linear-gradient(
+    to bottom right,
+    color.adjust(variables.$monitor-color, $lightness: -10%, $saturation: -10%),
+    color.adjust(variables.$monitor-color, $lightness: -20%, $saturation: -10%)
+  );
+  box-shadow:
+    -0.25px -0.25px 0.5px 0.5px
+      color.adjust(variables.$monitor-color, $lightness: 5%),
+    0 0 0 0 rgba(0, 0, 0, 0.7),
+    inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
+
+  &::after {
+    box-shadow:
+      0 0 5px 1px color.adjust(green, $lightness: 10%),
+      inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+      inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
+    background: linear-gradient(
+      to bottom,
+      green,
+      color.adjust(green, $lightness: 20%),
+      green
+    );
+  }
+
+  &::before,
+  &::after {
+    scale: 0.95;
+  }
+}
+
+@mixin control-button-lightable($content: "Button", $state: "class") {
+  @include control-button($content, $state);
   &::after {
     content: "";
     display: block;
@@ -127,29 +166,25 @@
     margin-inline: auto;
     margin-top: 0.25rem;
     border-radius: 0.25rem;
-    box-shadow: inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
+    box-shadow:
+      inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
       inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
   }
 }
 
-@mixin control-button(
-  $content: "Button",
-  $background: variables.$monitor-color,
-  $height: 3px
-) {
-  box-shadow: inset -1px -1px 1px 1px hsl(0, 100%, 0%, 0.5),
-    inset 1px 1px 1px 1px color.adjust($background, $lightness: 20%),
-    0 $height 1px 0 color.adjust($background, $lightness: -30%);
-
-  background-color: color.adjust(variables.$monitor-color, $lightness: 15%);
+// What the pressed look follows besides the momentary :active, so components
+// only get the selectors they can match (no "unused selector" warnings):
+//   "class"    - a .active class on the button
+//   "checkbox" - a checked <input> inside it
+//   "both"     - either
+//   "none"     - nothing, :active only
+@mixin control-button($content: "Button", $state: "both") {
   position: relative;
-  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   flex: 1;
-  font-family: "Inter";
   font-weight: bold;
   text-transform: uppercase;
   white-space: nowrap;
@@ -159,21 +194,25 @@
   border: none;
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
-  box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
+  box-shadow:
+    0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.7),
     0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.7),
     inset -1px -1px 0.5px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 0.5px lighten(variables.$monitor-color, 5%);
-  background-color: darken(variables.$monitor-color, 5%);
+    inset 1px 1px 0.5px color.adjust(variables.$monitor-color, $lightness: 5%);
   background: linear-gradient(
     to bottom right,
-    desaturate(darken(variables.$monitor-color, 0%), 10%),
-    desaturate(darken(variables.$monitor-color, 10%), 10%)
+    color.adjust(variables.$monitor-color, $lightness: -0%, $saturation: -10%),
+    color.adjust(variables.$monitor-color, $lightness: -10%, $saturation: -10%)
   );
 
   font-family: "Glory", sans-serif;
   font-optical-sizing: auto;
 
   color: variables.$screen-color;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 
   &::before,
   &::after {
@@ -186,26 +225,19 @@
     display: block;
   }
 
-  &:active,
-  &.active,
-  &:has(input:checked) {
-    background: linear-gradient(
-      to bottom right,
-      desaturate(darken(variables.$monitor-color, 10%), 10%),
-      desaturate(darken(variables.$monitor-color, 20%), 10%)
-    );
-    box-shadow: -0.25px -0.25px 0.5px 0.5px lighten(variables.$monitor-color, 5%),
-      0 0 0 0 rgba(0, 0, 0, 0.7), inset -1px -1px 0.5px rgba(0, 0, 0, 0.5),
-      inset 1px 1px 0.5px rgba(0, 0, 0, 0.5);
-    &::after {
-      box-shadow: 0 0 5px 1px lighten(green, 10%),
-        inset -0.5px -0.5px 0 rgba(0, 0, 0, 0.4),
-        inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.4);
-      background: linear-gradient(to bottom, green, lighten(green, 20%), green);
+  &:active {
+    @include control-button-pressed();
+  }
+
+  @if $state == "class" or $state == "both" {
+    &.active {
+      @include control-button-pressed();
     }
-    &::before,
-    &::after {
-      scale: 0.95;
+  }
+
+  @if $state == "checkbox" or $state == "both" {
+    &:has(input:checked) {
+      @include control-button-pressed();
     }
   }
 }

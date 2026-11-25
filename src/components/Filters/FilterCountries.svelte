@@ -1,28 +1,29 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import { DEFAULT_COUNTRY } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
+  import { clickOutside } from "../../lib/actions";
   import type { Country } from "../../lib/types";
   import {
     openDropdown,
     currentFilters,
-    useFilters,
     resetFiltersSignal,
   } from "../../lib/stores";
 
   export let id: string;
 
+  // Short on-screen label ("CTR") and the full name read out by screen readers
   export let label: string;
+  export let name: string = "";
   export let options: Country[];
   export let onChange: (option: Country) => void;
-  export const closeDropdown = () => (open = false);
-  let country;
 
   let selected: Country;
   let open: boolean = false;
   let searchTerm: string = "";
   let inputRef: HTMLInputElement;
+  let valueRef: HTMLButtonElement;
 
-  // TO-DO: CLOSE DROPDOWN ON CLICK ANYWHERE ELSE
   const toggleDropdown = (close: boolean = false) => {
     openDropdown.update((current) => {
       if (close) {
@@ -52,38 +53,52 @@
     checkFilterEnable();
   };
 
-  $: openDropdown.subscribe((activeId) => {
-    if (activeId !== id) {
-      open = false;
-    }
-    if (open) {
-      inputRef?.focus();
-    }
-  });
+  // The X button: back to "Any" country and an empty search. Focus goes to the
+  // value button, since the X disappears with the dropdown.
+  const clearCountry = async () => {
+    selected = DEFAULT_COUNTRY;
+    searchTerm = "";
+    onChange?.(selected);
+    checkFilterEnable();
+    toggleDropdown(true);
+    await tick();
+    valueRef?.focus();
+  };
+
+  $: fullName = name || label;
+
+  // Opening another dropdown closes this one
+  $: if ($openDropdown !== id) open = false;
+
+  // The input only exists once the dropdown has rendered open
+  $: if (open && inputRef) inputRef.focus();
 
   $: filteredCountries = options.filter((option) =>
-    option.name.toLowerCase().includes(searchTerm.toLowerCase())
+    option.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  $: resetFiltersSignal.subscribe(() => {
-    if ($resetFiltersSignal == true) {
-      selected = DEFAULT_COUNTRY;
-    }
-  });
+  $: if ($resetFiltersSignal) selected = DEFAULT_COUNTRY;
 </script>
 
-<section>
+<section use:clickOutside={() => open && toggleDropdown(true)}>
   <div class="header">
-    <h3 class="title">{label}</h3>
+    <span class="title">{label}</span>
     {#if !open}
-      <button class="value" on:click={() => toggleDropdown(false)}
-        >{selected ? selected.name : $currentFilters.country}</button
+      <button
+        class="value"
+        bind:this={valueRef}
+        aria-expanded={open}
+        aria-label={`${fullName}: ${selected ? selected.name : $currentFilters.country}`}
+        on:click={() => toggleDropdown(false)}
       >
+        {selected ? selected.name : $currentFilters.country}
+      </button>
     {/if}
     {#if open}
       <div class="input-container">
         <input
           type="text"
+          aria-label={`Search ${fullName.toLowerCase()}`}
           bind:value={searchTerm}
           placeholder={selected ? selected.name : DEFAULT_COUNTRY.name}
           bind:this={inputRef}
@@ -93,18 +108,22 @@
             }
           }}
         />
-        <button on:click={() => toggleDropdown(false)} class="button-close"
-          >X</button
+        <button
+          class="button-close"
+          aria-label={`Clear ${fullName.toLowerCase()}`}
+          on:click={clearCountry}
         >
+          X
+        </button>
       </div>
     {/if}
   </div>
   {#if open}
-    <ul class="options" tabindex="-1">
+    <div class="options" role="group" aria-label={fullName}>
       {#each filteredCountries as option}
         <button
           class="option"
-          aria-label={`Filter ${label.toLowerCase()}: ${option.name}`}
+          aria-label={`Filter ${fullName.toLowerCase()}: ${option.name}`}
           data-info={`Pick to find movies from  ${option.name}`}
           on:click={() => selectOption(option)}
           on:keydown={(event) => {
@@ -116,86 +135,12 @@
           {option.name}
         </button>
       {/each}
-    </ul>
+    </div>
   {/if}
 </section>
 
 <style lang="scss">
-  @use "../../styles/variables";
-  @use "../../styles/mixins";
-  section {
-    // border: variables.$border-default;
-  }
-  .header {
-    display: grid;
-    grid-template-columns: 1fr 6fr;
-    border: variables.$border-default;
-  }
+  @use "../../styles/filters";
 
-  .value {
-    @include mixins.ui-button();
-    // text-align: left;
-    justify-content: flex-start;
-  }
-
-  .input-container {
-    position: relative;
-    // width: 100%;
-    input {
-      width: 100%;
-      @include mixins.ui-button();
-      // text-align: center;
-    }
-
-    input:focus + .button-close {
-      color: variables.$ui-color-background;
-    }
-
-    .button-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      border: none;
-      height: 100%;
-      width: 20%;
-      background-color: transparent;
-      color: variables.$ui-color-foreground;
-      cursor: pointer;
-
-      &:hover &:focus,
-      &:focus-visible,
-      &:active {
-        outline: none;
-        color: variables.$ui-color-background;
-        background-color: variables.$ui-color-foreground;
-      }
-    }
-  }
-
-  .title {
-    @include mixins.ui-button();
-    pointer-events: none;
-
-    border-right: variables.$border-default;
-    // text-align: center;
-    font-weight: bold;
-  }
-
-  .options {
-    display: flex;
-    flex-direction: column;
-    /* display: none; */
-    max-height: 200px;
-    overflow: scroll;
-    border: variables.$border-default;
-    border-top: none;
-  }
-
-  .option {
-    @include mixins.ui-button();
-    border-bottom: variables.$border-default;
-    &:last-child {
-      border-bottom: none;
-    }
-  }
+  @include filters.search-dropdown();
 </style>
