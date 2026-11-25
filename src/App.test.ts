@@ -5,12 +5,22 @@
 // set, sends the right request. Only the request URL is checked. Which movie
 // comes back is random and decided by TMDB, so the fake always returns the same
 // one. The filter-merging rules themselves are covered in helpers.test.ts.
-import { fireEvent, render, screen, waitFor } from "@testing-library/svelte";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/svelte";
 import { get } from "svelte/store";
 import { tick } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App.svelte";
-import { DEFAULT_FILTER, DEFAULT_MOVIE } from "./lib/constants";
+import {
+  DEFAULT_COUNTRY,
+  DEFAULT_FILTER,
+  DEFAULT_MOVIE,
+} from "./lib/constants";
 import {
   activeTab,
   currentFilters,
@@ -276,6 +286,40 @@ describe("keyboard", () => {
     // Close it, then open from the keyboard (Enter / Space: detail 0)
     await fireEvent.click(setFilters, { detail: 1 });
     await fireEvent.click(setFilters, { detail: 0 });
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: /^Country: Any/ }),
+      ),
+    );
+  });
+});
+
+describe("country filter", () => {
+  it("the X button clears the picked country", async () => {
+    await renderLoadedApp();
+    await fireEvent.click(screen.getByRole("button", { name: "Set filters" }));
+
+    await fireEvent.click(
+      screen.getByRole("button", { name: /^Country: Any/ }),
+    );
+    await fireEvent.click(
+      await screen.findByRole("button", { name: "Filter country: France" }),
+    );
+    expect(get(currentFilters).country).toBe("FR");
+
+    // The info tab has a "Country: France" button too; use the filter's own
+    const filters = within(
+      document.querySelector<HTMLElement>('[data-tab="Filters"]')!,
+    );
+    await fireEvent.click(
+      filters.getByRole("button", { name: /^Country: France/ }),
+    );
+    await fireEvent.click(
+      screen.getByRole("button", { name: "Clear country" }),
+    );
+
+    expect(get(currentFilters).country).toBe(DEFAULT_COUNTRY.code);
+    // Back on the closed value button, showing no country
     await waitFor(() =>
       expect(document.activeElement).toBe(
         screen.getByRole("button", { name: /^Country: Any/ }),

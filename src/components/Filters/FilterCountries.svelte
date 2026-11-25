@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import { DEFAULT_COUNTRY } from "../../lib/constants";
   import { checkFilterEnable } from "../../lib/helpers";
   import { clickOutside } from "../../lib/actions";
@@ -21,6 +22,7 @@
   let open: boolean = false;
   let searchTerm: string = "";
   let inputRef: HTMLInputElement;
+  let valueRef: HTMLButtonElement;
 
   const toggleDropdown = (close: boolean = false) => {
     openDropdown.update((current) => {
@@ -51,6 +53,18 @@
     checkFilterEnable();
   };
 
+  // The X button: back to "Any" country and an empty search. Focus goes to the
+  // value button, since the X disappears with the dropdown.
+  const clearCountry = async () => {
+    selected = DEFAULT_COUNTRY;
+    searchTerm = "";
+    onChange?.(selected);
+    checkFilterEnable();
+    toggleDropdown(true);
+    await tick();
+    valueRef?.focus();
+  };
+
   $: fullName = name || label;
 
   // Opening another dropdown closes this one
@@ -72,6 +86,7 @@
     {#if !open}
       <button
         class="value"
+        bind:this={valueRef}
         aria-expanded={open}
         aria-label={`${fullName}: ${selected ? selected.name : $currentFilters.country}`}
         on:click={() => toggleDropdown(false)}
@@ -95,8 +110,8 @@
         />
         <button
           class="button-close"
-          aria-label={`Close ${fullName.toLowerCase()} list`}
-          on:click={() => toggleDropdown(false)}
+          aria-label={`Clear ${fullName.toLowerCase()}`}
+          on:click={clearCountry}
         >
           X
         </button>
