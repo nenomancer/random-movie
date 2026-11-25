@@ -14,6 +14,7 @@ import {
   clampToRange,
   directorsOf,
   formatMovieTitle,
+  noMatchMessage,
   imdbUrl,
   loadErrorMessage,
   mapCountries,
@@ -910,5 +911,34 @@ describe("tab override helpers", () => {
   it("search one country or one genre", () => {
     expect(overridesForCountry("MK")).toEqual({ country: "MK" });
     expect(overridesForGenre(28)).toEqual({ genres: ["28"] });
+  });
+});
+
+describe("noMatchMessage", () => {
+  const withFilters = (patch: object) => ({ ...DEFAULT_FILTER, ...patch });
+
+  it("names every limit the search had", () => {
+    const message = noMatchMessage(
+      withFilters({ country: "US", genres: ["28"], yearFrom: 1990 }),
+    );
+    expect(message).toContain("country + genre + years");
+  });
+
+  it("includes a tab's override, and counts a replaced filter once", () => {
+    const filters = withFilters({ country: "US" });
+    expect(noMatchMessage(filters, { country: "FR" })).toContain(
+      "no matches for country;",
+    );
+    expect(
+      noMatchMessage(filters, { runtimeFrom: 90, runtimeTo: 90 }),
+    ).toContain("country + runtime");
+  });
+
+  it("ignores filters that are not in use or at their defaults", () => {
+    expect(noMatchMessage(undefined, { ratingFrom: 7, ratingTo: 8 })).toContain(
+      "no matches for rating;",
+    );
+    expect(noMatchMessage(DEFAULT_FILTER)).toBe(ERROR_MESSAGES.NO_MATCH);
+    expect(noMatchMessage(undefined)).toBe(ERROR_MESSAGES.NO_MATCH);
   });
 });

@@ -25,6 +25,7 @@
     fetchJson,
     imdbUrl,
     loadErrorMessage,
+    noMatchMessage,
     mapCountries,
     mapCredits,
     mapMovieDetails,
@@ -65,7 +66,6 @@
   let allCountries: Country[] = [];
   let allGenres: Genre[] = [];
 
-  let mainRef: HTMLElement;
   // Id of the movie the user most recently asked for. Responses for any other
   // id are stale (user clicked again before they arrived) and must be ignored.
   let latestMovieId: number | null = null;
@@ -97,24 +97,20 @@
     window.removeEventListener("popstate", handlePopState);
   });
 
-  // Shared failure path for anything that loads a movie: log, show the error
-  // tab and stop the loading animation.
+  // Shared failure path for anything that loads a movie: log and show the
+  // error tab.
   function handleLoadError(err: unknown) {
     console.error(err);
     showResultError(loadErrorMessage(err));
-    mainRef?.classList.remove("loading-anim");
   }
 
   // `overrides` (a tab's country, year, ...) replace the matching filter for
   // this search only; every other active filter still applies.
   function fetchMovies(overrides: Filters = {}, totalPages = 500) {
     activeTab.set(TAB_NAME.LOADING);
-    mainRef?.classList.add("loading-anim");
 
-    const filterQueries = buildSearchQuery(
-      $useFilters ? $currentFilters : undefined,
-      overrides,
-    );
+    const activeFilters = $useFilters ? $currentFilters : undefined;
+    const filterQueries = buildSearchQuery(activeFilters, overrides);
 
     const pageNumber = Math.ceil(Math.random() * totalPages);
 
@@ -124,8 +120,11 @@
         const hasPages = response.total_pages > 0;
         const isLastPage = response.total_pages === totalPages;
 
+        const noMatch = () =>
+          showResultError(noMatchMessage(activeFilters, overrides));
+
         if (!hasResults && isLastPage) {
-          return showResultError();
+          return noMatch();
         }
         if (!hasResults && hasPages) {
           return fetchMovies(overrides, Math.min(500, response.total_pages));
@@ -134,13 +133,12 @@
           return getRandomMovie(response.results);
         }
 
-        return showResultError();
+        return noMatch();
       })
       .catch(handleLoadError);
   }
 
   function getRandomMovie(data: Array<{ id: number }>) {
-    mainRef?.classList?.add("loading-anim");
     activeTab.set(TAB_NAME.LOADING);
 
     const movie = pickRandom(data);
@@ -182,11 +180,7 @@
         // A newer request owns the screen now, don't touch it.
         if (movieId !== latestMovieId) return;
 
-        // TUKA NEKOE TAJMERCHE OFFSETCHE DEMEK SE LOADIRA PODOLGO ZA ANIMACIJATA DA ZAVRSHI SO DISKOT
-
-        setTimeout(() => {
-          mainRef?.classList?.remove("loading-anim");
-        }, 500);
+        // Keep the loading screen up a moment so it doesn't just flash
         setTimeout(() => {
           // Never replace the error screen, or a newer movie's loading screen
           if (!failed && movieId === latestMovieId) {
@@ -304,7 +298,7 @@
   initApp();
 </script>
 
-<main bind:this={mainRef}>
+<main>
   <Monitor classes={["main"]}>
     <Screen>
       <TabContent name={TAB_NAME.INFO}>

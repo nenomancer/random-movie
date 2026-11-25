@@ -197,10 +197,36 @@ export function buildSearchQuery(
   filters: Filters | undefined,
   overrides: Filters = {},
 ) {
-  return buildFilterQuery({
-    ...(filters ? activeFilters(filters) : {}),
-    ...overrides,
-  });
+  return buildFilterQuery(mergeSearchFilters(filters, overrides));
+}
+
+function mergeSearchFilters(
+  filters: Filters | undefined,
+  overrides: Filters,
+): Filters {
+  return { ...(filters ? activeFilters(filters) : {}), ...overrides };
+}
+
+/**
+ * "Nothing matched" message for a search, naming what it was limited by so the
+ * user knows what to loosen. Falls back to the generic message when the search
+ * had no limits at all.
+ */
+export function noMatchMessage(
+  filters: Filters | undefined,
+  overrides: Filters = {},
+) {
+  const f = mergeSearchFilters(filters, overrides);
+  const limits = [
+    f.country && f.country !== DEFAULT_DROPDOWN_VALUE && "country",
+    f.genres?.length && "genre",
+    (f.yearFrom !== undefined || f.yearTo !== undefined) && "years",
+    (f.ratingFrom !== undefined || f.ratingTo !== undefined) && "rating",
+    (f.runtimeFrom || f.runtimeTo) && "runtime",
+  ].filter(Boolean);
+
+  if (!limits.length) return ERROR_MESSAGES.NO_MATCH;
+  return `Archive scan complete: no matches for ${limits.join(" + ")}; recalibrate and scan again`;
 }
 
 // JSON.stringify with object keys sorted, so the same values compare equal

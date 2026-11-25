@@ -43,4 +43,6 @@ button,
 textarea,
 select {
   font: inherit;
+  /* `font` doesn't include it, and buttons default to `normal` */
+  letter-spacing: inherit;
 }

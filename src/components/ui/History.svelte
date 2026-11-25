@@ -60,7 +60,6 @@
     text-align: center;
     flex: 1;
     color: variables.$ui-color-foreground;
-    letter-spacing: -1.2px;
 
     &[data-selected="true"] {
       border: variables.$border-default;
@@ -69,7 +68,6 @@
 
   .note {
     @include mixins.ui-button($selected: true);
-    letter-spacing: -1.2px;
 
     padding-block: 0;
     width: 100%;

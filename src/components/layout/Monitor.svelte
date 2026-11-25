@@ -16,8 +16,8 @@
     display: flex;
     flex-direction: column;
     font-family: "Quantico";
-    letter-spacing: -1.2px;
-    font-weight: 350;
+    letter-spacing: -0.5px;
+    font-weight: 400;
   }
 
   .main {
