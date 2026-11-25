@@ -15,7 +15,8 @@
     background-color: variables.$monitor-color;
     display: flex;
     flex-direction: column;
-    font-family: "Quantico";
+    // Quantico has no Cyrillic or Greek; those characters fall back to Exo 2
+    font-family: "Quantico", "Exo 2", sans-serif;
     letter-spacing: -0.5px;
     font-weight: 400;
   }

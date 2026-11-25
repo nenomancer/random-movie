@@ -15,7 +15,7 @@
         {$currentMovie.title.name}
       </a>
     {:else}
-      {$currentMovie.title.name}
+      <span class="name">{$currentMovie.title.name}</span>
     {/if}
   </h1>
 </section>
@@ -31,9 +31,20 @@
     font-weight: 400;
   }
 
+  // The title as a link, or plain text when there is no IMDb page. Both get the
+  // same padding so the text doesn't jump between the two.
   .title a {
     @include mixins.ui-button();
-    padding-inline: 0.5rem;
     flex: 1;
+  }
+
+  .title .name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding-inline: 0.5rem;
+    padding-block: 0.4rem;
+    white-space: nowrap;
   }
 </style>
