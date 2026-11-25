@@ -6,12 +6,15 @@
 // comes back is random and decided by TMDB, so the fake always returns the same
 // one. The filter-merging rules themselves are covered in helpers.test.ts.
 import { fireEvent, render, screen, waitFor } from "@testing-library/svelte";
+import { get } from "svelte/store";
+import { tick } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App.svelte";
 import { DEFAULT_FILTER, DEFAULT_MOVIE } from "./lib/constants";
 import {
   activeTab,
   currentFilters,
+  currentHistory,
   currentMovie,
   useFilters,
 } from "./lib/stores";
@@ -225,4 +228,58 @@ describe("clicking an actor or director", () => {
       expect(urlsContaining("/discover/movie")).toHaveLength(0);
     });
   }
+});
+
+describe("keyboard", () => {
+  it("lists history newest first, so Tab goes down the list", async () => {
+    const { container } = render(App);
+    currentHistory.set([
+      { id: 1, name: "Oldest" },
+      { id: 2, name: "Newest" },
+    ]);
+
+    await waitFor(() =>
+      expect(
+        [...container.querySelectorAll(".note")].map((n) =>
+          n.textContent?.trim(),
+        ),
+      ).toEqual(["Newest", "Oldest"]),
+    );
+  });
+
+  it("moves focus to the title after a tab click, but not on first load", async () => {
+    await renderLoadedApp();
+    // Nothing has been clicked yet, so the first load must not take focus
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    expect(document.activeElement).toBe(document.body);
+
+    await fireEvent.click(
+      screen.getByRole("button", { name: tabCases.year.button }),
+    );
+
+    await waitFor(
+      () =>
+        expect(document.activeElement).toBe(document.getElementById("title")),
+      { timeout: 3000 },
+    );
+  });
+  it("focuses the first filter when 'Set filters' is used from the keyboard, not the mouse", async () => {
+    await renderLoadedApp();
+    const setFilters = screen.getByRole("button", { name: "Set filters" });
+
+    // Mouse click (detail 1): focus stays where it is
+    await fireEvent.click(setFilters, { detail: 1 });
+    expect(get(activeTab)).toBe("Filters");
+    await tick();
+    expect(document.activeElement).toBe(document.body);
+
+    // Close it, then open from the keyboard (Enter / Space: detail 0)
+    await fireEvent.click(setFilters, { detail: 1 });
+    await fireEvent.click(setFilters, { detail: 0 });
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: /^Country: Any/ }),
+      ),
+    );
+  });
 });

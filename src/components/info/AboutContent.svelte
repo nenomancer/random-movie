@@ -21,6 +21,10 @@
         on while you click around (except for cast and directors).
       </li>
       <li>Keep track of the last 6 results.</li>
+      <li>
+        No mouse needed: press Enter to search, Tab to move around and Escape to
+        let go of whatever is focused.
+      </li>
     </ul>
 
     <h2>Disclaimer</h2>

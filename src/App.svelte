@@ -58,7 +58,7 @@
     errorMessage,
   } from "./lib/stores";
 
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import AboutContent from "./components/info/AboutContent.svelte";
   import TypedMessage from "./components/ui/TypedMessage.svelte";
   import FilterContent from "./components/Filters/FilterContent.svelte";
@@ -69,6 +69,7 @@
   // Id of the movie the user most recently asked for. Responses for any other
   // id are stale (user clicked again before they arrived) and must be ignored.
   let latestMovieId: number | null = null;
+  let settleTimer: ReturnType<typeof setTimeout>;
 
   function handleGlobalKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter" && document.activeElement === document.body) {
@@ -93,6 +94,7 @@
   });
 
   onDestroy(() => {
+    clearTimeout(settleTimer);
     document.removeEventListener("keydown", handleGlobalKeyboard);
     window.removeEventListener("popstate", handlePopState);
   });
@@ -181,13 +183,31 @@
         if (movieId !== latestMovieId) return;
 
         // Keep the loading screen up a moment so it doesn't just flash
-        setTimeout(() => {
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => {
           // Never replace the error screen, or a newer movie's loading screen
           if (!failed && movieId === latestMovieId) {
             activeTab.set(TAB_NAME.INFO);
+            restoreFocus();
           }
         }, 1000);
       });
+  }
+
+  // A tab click removes the focused button while the loading screen shows, which
+  // drops focus to the page, so the next Tab would start from the very top. Put
+  // focus on the title instead, so it carries on from the new movie. Never on
+  // the first load, and never when focus is already somewhere.
+  let hasShownMovie = false;
+  async function restoreFocus() {
+    const focusLost =
+      !document.activeElement || document.activeElement === document.body;
+    const wasFirstLoad = !hasShownMovie;
+    hasShownMovie = true;
+    if (wasFirstLoad || !focusLost) return;
+
+    await tick();
+    document.getElementById("title")?.focus({ preventScroll: true });
   }
 
   function getMovieCredits(movieId: number) {

@@ -15,7 +15,8 @@
     </button>
   </div>
   <div class="list">
-    {#each $currentHistory as log}
+    <!-- Newest first, so Tab goes down the list in reading order -->
+    {#each [...$currentHistory].reverse() as log}
       <button
         class="note"
         class:selected={$currentMovie.id == log.id}
@@ -41,8 +42,8 @@
 
   .list {
     display: flex;
-    flex-direction: column-reverse;
-    justify-content: start;
+    flex-direction: column;
+    justify-content: flex-end;
     overflow: hidden;
     border: variables.$border-default;
     border-left: none;

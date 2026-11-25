@@ -3,7 +3,7 @@
   export let name: string;
 </script>
 
-<article class="tab-content" class:hidden={$activeTab !== name}>
+<article class="tab-content" data-tab={name} class:hidden={$activeTab !== name}>
   <slot />
 </article>
 

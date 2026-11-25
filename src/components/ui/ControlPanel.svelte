@@ -1,16 +1,29 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import { TAB_NAME } from "../../lib/constants";
   import { resetFilters } from "../../lib/helpers";
   import { activeTab, useFilters } from "../../lib/stores";
 
   export let fetchMovies: () => void;
 
-  function toggleTab(tabName: string) {
+  function toggleTab(tabName: string, event?: MouseEvent) {
     if ($activeTab != tabName) {
       activeTab.set(tabName);
+      // The filters sit before these buttons in the tab order, so for keyboard
+      // users the next Tab would skip them. (detail is 0 for Enter / Space.)
+      if (tabName === TAB_NAME.FILTERS && event?.detail === 0) {
+        focusFirstFilter();
+      }
     } else {
       activeTab.set(TAB_NAME.INFO);
     }
+  }
+
+  async function focusFirstFilter() {
+    await tick();
+    document
+      .querySelector<HTMLElement>(`[data-tab="${TAB_NAME.FILTERS}"] button`)
+      ?.focus();
   }
 
   function handleCheck(event: Event) {
@@ -49,7 +62,7 @@
       class="control-button set"
       aria-label="Set filters"
       aria-pressed={$activeTab === TAB_NAME.FILTERS}
-      on:click={() => toggleTab(TAB_NAME.FILTERS)}
+      on:click={(event) => toggleTab(TAB_NAME.FILTERS, event)}
       class:active={$activeTab === TAB_NAME.FILTERS}
     ></button>
     <div class="control-button use">

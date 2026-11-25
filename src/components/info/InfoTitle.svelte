@@ -3,7 +3,7 @@
 </script>
 
 <section aria-labelledby="title" class="row">
-  <h1 class="title" id="title">
+  <h1 class="title" id="title" tabindex="-1">
     {#if $currentMovie.title.imdb}
       <a
         href={$currentMovie.title.imdb}
